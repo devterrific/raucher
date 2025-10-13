@@ -1,0 +1,2 @@
+Hier kommen nur die fertigen Prefabs hin.
+Das bedeutet alles ist drin wie z.B. Script, Collider usw.

@@ -1,0 +1,12 @@
+Hier sollen alle Scripts rein.
+Das soll aber noch größer sein.
+Beispiel
+
+|--- Scripts Folder -----|
+|			             |
+||-----Player Script----||
+||			            ||
+||			            ||
+||----------------------||
+|------------------------|
+usw.
