@@ -12,7 +12,7 @@ public class Player_Main : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        Console.WriteLine(movementspeed + " UND " + sprintspeed); // Diese Zeile ist dafuer da damit der Editor nicht nervt weil wir die Variablen nicht benutzen
+        Debug.Log(movementspeed + " UND " + sprintspeed); // Diese Zeile ist dafuer da damit der Editor nicht nervt weil wir die Variablen nicht benutzen
     }
 
     // Update is called once per frame
