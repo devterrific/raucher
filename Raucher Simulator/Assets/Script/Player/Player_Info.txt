@@ -3,5 +3,6 @@ Was soll der Player können?
 - Der Player soll sprinten können (einfach nur schneller per shift)
 - Animationen soll für alles existieren (Idle, Movement)
 - Am Arbeitsplatz sitzen (Was soll da gemacht werden?)
+- Dialoge soll der auch spielen können
 Weiter weiß ich nicht
 Was soll der Player noch können?
