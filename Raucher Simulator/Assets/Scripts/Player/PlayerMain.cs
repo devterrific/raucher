@@ -44,7 +44,7 @@ public class PlayerMain : MonoBehaviour
         xInput = Input.GetAxisRaw("Horizontal"); // -1, 0 oder 1
     }
 
-    // --- Sprint + Ausdauer sehr simpel ---
+    // --- Sprint + Ausdauer ---
     private void HandleSprintAndStamina()
     {
         bool wantsSprint = Input.GetKey(KeyCode.LeftShift) && Mathf.Abs(xInput) > 0.01f;

@@ -205,7 +205,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   walkSpeed: 3.5
   sprintSpeed: 5.5
-  maxStamina: 100
+  maxStamina: 50
   drainPerSec: 20
   regenPerSec: 12
 --- !u!4 &224133207
