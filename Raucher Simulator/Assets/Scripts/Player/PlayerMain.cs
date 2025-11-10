@@ -1,94 +1,135 @@
 ﻿using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody2D))]
 public class PlayerMain : MonoBehaviour
 {
     [Header("Movement")]
-    public float walkSpeed = 3.5f;
-    public float sprintSpeed = 5.5f;
+    [Min(0f)] public float walkSpeed = 3.5f;
+    [Min(0f)] public float sprintSpeed = 5.5f;
+    [Min(0f)] public float accel = 30f;
+    [Min(0f)] public float decel = 40f;
 
     [Header("Stamina")]
-    public float maxStamina = 100f;        // volle Ausdauer
-    public float drainPerSec = 20f;        // wie schnell Ausdauer beim Sprinten runtergeht
-    public float regenPerSec = 12f;        // wie schnell Ausdauer wieder hochgeht
+    [Min(0f)] public float maxStamina = 100f;
+    [Min(0f)] public float drainPerSec = 20f;
+    [Min(0f)] public float regenPerSec = 12f;
+    [Min(0f)] public float minSprintThreshold = 5f;
+    [Min(0f)] public float regenDelay = 0.6f;
+
+    [Header("Interaction")]
+    [Tooltip("Wie weit der Spieler Objekte ansprechen kann.")]
+    [SerializeField] private float interactRange = 1.5f;
+    [Tooltip("Welche Layer als Interactable gelten.")]
+    [SerializeField] private LayerMask interactLayer;
+    [SerializeField] private KeyCode interactKey = KeyCode.E;
+
+    [Header("Input")]
+    [SerializeField] private KeyCode sprintKey = KeyCode.LeftShift;
+    [SerializeField] private string horizontalAxis = "Horizontal";
+
+    [Header("Flip")]
+    public bool flipByScale = true;
 
     private Rigidbody2D rb;
     private float xInput;
-    private float currentSpeed;
     private float stamina;
+    private float regenCooldown;
+    private float targetSpeed;
 
-    void Start()
+    void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-        rb.gravityScale = 0f;      // kein Jump → keine Schwerkraft
+        rb.gravityScale = 0f;
         rb.freezeRotation = true;
 
-        stamina = maxStamina;      // Start voll
-        currentSpeed = walkSpeed;  // Start langsam
+        stamina = maxStamina;
+        targetSpeed = walkSpeed;
     }
 
     void Update()
     {
         ReadInput();
-        HandleSprintAndStamina();   // sehr simple Logik
-        HandleFlip();               // nach links/rechts schauen
+        HandleSprintAndStamina();
+        HandleFlip();
+        HandleInteract();
     }
 
     void FixedUpdate()
     {
-        MovePlayer();               // Movement ist jetzt eigene Methode
+        MovePlayer();
     }
 
-    // --- Eingaben nur horizontal (A/D oder Pfeile) ---
-    private void ReadInput()
+    void ReadInput()
     {
-        xInput = Input.GetAxisRaw("Horizontal"); // -1, 0 oder 1
+        xInput = Input.GetAxisRaw(horizontalAxis);
     }
 
-    // --- Sprint + Ausdauer ---
-    private void HandleSprintAndStamina()
+    void HandleSprintAndStamina()
     {
-        bool wantsSprint = Input.GetKey(KeyCode.LeftShift) && Mathf.Abs(xInput) > 0.01f;
+        bool wantsSprint = Input.GetKey(sprintKey) && Mathf.Abs(xInput) > 0.01f;
+        bool canSprint = stamina > minSprintThreshold;
 
-        if (wantsSprint && stamina > 0f)
+        if (wantsSprint && canSprint)
         {
-            currentSpeed = sprintSpeed;
-            stamina -= drainPerSec * Time.deltaTime;
-            if (stamina < 0f) stamina = 0f; // clamp
+            targetSpeed = sprintSpeed;
+            stamina = Mathf.Max(0f, stamina - drainPerSec * Time.deltaTime);
+            regenCooldown = regenDelay;
         }
         else
         {
-            currentSpeed = walkSpeed;
-            stamina += regenPerSec * Time.deltaTime;
-            if (stamina > maxStamina) stamina = maxStamina; // clamp
+            targetSpeed = walkSpeed;
+
+            if (regenCooldown > 0f)
+                regenCooldown -= Time.deltaTime;
+            else
+                stamina = Mathf.Min(maxStamina, stamina + regenPerSec * Time.deltaTime);
         }
     }
 
-    // --- Blickrichtung drehen, je nach Input ---
-    private void HandleFlip()
+    void HandleFlip()
     {
+        if (!flipByScale) return;
+
         if (xInput > 0.01f)
         {
-            Vector3 s = transform.localScale;
+            var s = transform.localScale;
             s.x = Mathf.Abs(s.x);
             transform.localScale = s;
         }
         else if (xInput < -0.01f)
         {
-            Vector3 s = transform.localScale;
+            var s = transform.localScale;
             s.x = -Mathf.Abs(s.x);
             transform.localScale = s;
         }
     }
 
-    // --- Bewegung anwenden (eigene Methode) ---
-    private void MovePlayer()
+    void MovePlayer()
     {
-        rb.velocity = new Vector2(xInput * currentSpeed, 0f);
+        float targetVelX = xInput * targetSpeed;
+        float velX = rb.velocity.x;
+
+        float rate = Mathf.Abs(targetVelX) > Mathf.Abs(velX) ? accel : decel;
+        float newVelX = Mathf.MoveTowards(velX, targetVelX, rate * Time.fixedDeltaTime);
+
+        rb.velocity = new Vector2(newVelX, 0f);
     }
 
-    // optional: public Getter für UI-Anzeige (Stamina-Bar)
-    public float Stamina01()
+    void HandleInteract()
     {
-        return maxStamina <= 0f ? 0f : stamina / maxStamina;
+        if (Input.GetKeyDown(interactKey))
+        {
+            Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, interactRange, interactLayer);
+
+            foreach (var hit in hits)
+            {
+                Interactable interactable = hit.GetComponent<Interactable>();
+                if (interactable != null)
+                {
+                    interactable.Interact(this);
+                    break;
+                }
+            }
+        }
     }
 }
