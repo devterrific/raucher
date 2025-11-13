@@ -2,10 +2,11 @@
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System.Collections;
+using Unity.PlasticSCM.Editor.WebApi;
 
 public class MiniGameFlow : MonoBehaviour
 {
-    public enum State { Countdown, WaitPaperClick, FilterAiming, WaitTobaccoClick, Assemble, Results }
+    public enum State { Countdown, WaitPaperClick, WaitFilterClick, FilterAiming, WaitTobaccoClick, Assemble, Results }
     [Header("UI")]
     [SerializeField] private CanvasGroup countdownPanel;
     [SerializeField] private Text countdownText;
@@ -23,6 +24,7 @@ public class MiniGameFlow : MonoBehaviour
     [Header("Packs & Anchors")]
     [SerializeField] private Button paperPackBtn;          // rechts
     [SerializeField] private Button tobaccoPackBtn;        // links
+    [SerializeField] private Button filterPackBtn;         // oben
     [SerializeField] private RectTransform paperAnchor;    // unten Mitte
     [SerializeField] private RectTransform filterAnchor;   // über Papier
 
@@ -39,16 +41,27 @@ public class MiniGameFlow : MonoBehaviour
     private FilterAimer filterAimer;
     private bool filterEvaluated;
     private int earnedPointsThisRun;
+    private State currentState;
 
     private void Awake()
     {
         resultPanel.SetActive(false);
+
+        //  Startzustand: nur Papier-Pack klickbar
+        paperPackBtn.interactable = false;
+        filterPackBtn.interactable = false;
         tobaccoPackBtn.interactable = false;
+        
         paperPackBtn.onClick.AddListener(OnPaperClicked);
+        filterPackBtn.onClick.AddListener(OnFilterPackClicked);
         tobaccoPackBtn.onClick.AddListener(OnTobaccoClicked);
+
         scoreManager.ResetRun();
         UpdateScoreUI();
-        countdownPanel.alpha = 0f; countdownPanel.gameObject.SetActive(true);
+        countdownPanel.alpha = 0f; 
+        countdownPanel.gameObject.SetActive(true);
+
+        SetZonesVisible(false);
     }
 
     private IEnumerator Start()
@@ -76,11 +89,18 @@ public class MiniGameFlow : MonoBehaviour
 
     private void EnterState(State s)
     {
+        currentState = s;
+
         switch (s)
         {
             case State.WaitPaperClick:
                 SetHint("Klicke die Papierpackung (rechts), um ein Blatt zu entnehmen.");
                 paperPackBtn.interactable = true;
+                break;
+
+            case State.WaitFilterClick:
+                SetHint("Klicke die Filterpackung oben, um einen Filter zu nehmen.");
+                filterPackBtn.interactable = true;
                 break;
 
             case State.FilterAiming:
@@ -106,12 +126,42 @@ public class MiniGameFlow : MonoBehaviour
 
     private void SetHint(string msg) => topHintText.text = msg;
 
+    private void SetZonesVisible(bool visible)
+    {
+        // TargetZone selbst (falls die auch eine Hintergrundfarbe hat)
+        var tzImg = targetZone.GetComponent<Image>();
+        if (tzImg != null) tzImg.enabled = visible;
+
+        var okImg = zoneOkay.GetComponent<Image>();
+        if (okImg != null) okImg.enabled = visible;
+
+        var goodImg = zoneGood.GetComponent<Image>();
+        if (goodImg != null) goodImg.enabled = visible;
+
+        var perfImg = zonePerfect.GetComponent<Image>();
+        if (perfImg != null) perfImg.enabled = visible;
+    }
+
     private void OnPaperClicked()
     {
         paperPackBtn.interactable = false;
+
         spawnedPaper = Instantiate(paperPrefab, paperAnchor);
         spawnedPaper.rectTransform.anchoredPosition = Vector2.zero;
+        
+        EnterState(State.WaitFilterClick);
+    }
+
+    private void OnFilterPackClicked()
+    {
+        if (filterEvaluated) return;
+
+        filterPackBtn.interactable = false;
+
+        SetZonesVisible(true);
+
         EnterState(State.FilterAiming);
+
     }
 
     private void StartFilterAiming()
@@ -121,33 +171,57 @@ public class MiniGameFlow : MonoBehaviour
         rt.anchoredPosition = Vector2.zero;
 
         filterAimer = filterImg.gameObject.AddComponent<FilterAimer>();
-        // Range = Breite der TargetZone; du kannst auch fix 1000 px nehmen
-        float range = targetZone.rect.width;
-        filterAimer.Init(filterAnchor, settings.filterSpeed, settings.rightToLeft, range, OnFilterPassedLimits);
+
+        float range = settings.movementRange; // Breite der Zielzone als Bewegungsbereich
+
+        filterAimer.Init(
+            filterAnchor,
+            settings.filterSpeed,
+            range,
+            settings.rightToLeft,
+            settings.loopMovement,
+            OnFilterPassedLimits
+        );
 
         filterEvaluated = false;
     }
 
+
     private void Update()
     {
-        // Space = Drop & Score
-        if (!filterEvaluated && Input.GetKeyDown(KeyCode.Space) && filterAimer != null)
+        if (CurrentStateIsFilterAiming() && !filterEvaluated && Input.GetKeyDown(KeyCode.Space) && filterAimer != null)
         {
-            filterAimer.Freeze();
+            filterEvaluated = true;
+
+            // 1) Optischer Drop
+            filterAimer.Drop();
+
+            // 2) Scoring
             EvaluateFilter();
+
+            // 3) Weiter zum Tabak
             EnterState(State.WaitTobaccoClick);
         }
+    }
+    private bool CurrentStateIsFilterAiming()
+    {
+        return currentState == State.FilterAiming;
     }
 
     private void OnFilterPassedLimits()
     {
         if (filterEvaluated) return;
-        // Spieler hat nicht rechtzeitig gedrückt → Auswertung "Miss"
+
         earnedPointsThisRun = 0;
         scoreManager.Add(earnedPointsThisRun);
         UpdateScoreUI();
         filterEvaluated = true;
+
+        // direkt zu Tabak
         EnterState(State.WaitTobaccoClick);
+
+        // Zonen wieder verstecken
+        SetZonesVisible(false);
     }
 
     private void EvaluateFilter()
@@ -172,6 +246,8 @@ public class MiniGameFlow : MonoBehaviour
         UpdateScoreUI();
     }
 
+
+
     private void OnTobaccoClicked()
     {
         if (!filterEvaluated) return; // erst filtern
@@ -179,9 +255,12 @@ public class MiniGameFlow : MonoBehaviour
 
         // Simple Visual: Tabak auf dem Papier anzeigen
         var tob = Instantiate(tobaccoPrefab, paperAnchor);
-        tob.rectTransform.anchoredPosition = new Vector2(0f, 30f);
+        tob.rectTransform.anchoredPosition = new Vector2(0f, 0.5f);
 
         EnterState(State.Assemble);
+        
+        //  Zonen wieder verstecken 
+        SetZonesVisible(false);
     }
 
     private IEnumerator FinishAssemble()

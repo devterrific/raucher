@@ -1,48 +1,116 @@
+using System.Collections;
 using UnityEngine;
 
 public class FilterAimer : MonoBehaviour
 {
     private RectTransform rt;
     private float speed;
-    private bool moving = false;
-    private bool rightToLeft = true;
-    private float leftLimitX, rightLimitX; // in local anchoredPosition
-    private System.Action onPassedLimits;
+    private float leftX;
+    private float rightX;
+    private int dir;
+    private bool isMoving;
+    private bool hasDropped;
+    private bool loopMovement;
+    private System.Action onMiss;
 
-    public void Init(RectTransform host, float speed, bool rightToLeft, float rangeWidth, System.Action onPassedLimits)
+    /// <summary>
+    /// parent:   der RectTransform, in dessen lokaler Fläche wir uns bewegen (z.B. FilterAnchor)
+    /// rangeWidth: Gesamtbreite, die der Filter horizontal abfahren darf
+    /// startRightToLeft: Startet rechts und geht nach links (true) oder umgekehrt (false)
+    /// loopMovement: true = Hin-und-Her-Bewegung, false = nur ein Durchlauf, danach onMiss
+    /// onMiss: Callback, wenn der Filter den Bereich verlässt, ohne gedroppt zu werden
+    /// </summary>
+    public void Init(RectTransform parent, float speed, float rangeWidth,
+                     bool startRightToLeft, bool loopMovement, System.Action onMiss)
     {
-        this.rt = GetComponent<RectTransform>();
+        rt = GetComponent<RectTransform>();
         this.speed = speed;
-        this.rightToLeft = rightToLeft;
-        this.onPassedLimits = onPassedLimits;
+        this.loopMovement = loopMovement;
+        this.onMiss = onMiss;
 
-        // Start rechts, laufe nach links
-        float startX = rangeWidth * 0.5f;
-        float endX = -rangeWidth * 0.5f;
-        rightLimitX = Mathf.Max(startX, endX);
-        leftLimitX = Mathf.Min(startX, endX);
+        float halfRange = rangeWidth * 0.5f;
+        leftX = -halfRange;
+        rightX = halfRange;
 
-        rt.anchoredPosition = new Vector2(rightToLeft ? rightLimitX : leftLimitX, 0f);
-        moving = true;
+        dir = startRightToLeft ? -1 : 1;
+
+        // Startposition: ganz rechts oder ganz links
+        rt.anchoredPosition = new Vector2(startRightToLeft ? rightX : leftX, 0f);
+        isMoving = true;
+        hasDropped = false;
     }
 
     private void Update()
     {
-        if (!moving) return;
-        var p = rt.anchoredPosition;
-        float dir = rightToLeft ? -1f : 1f;
-        p.x += dir * speed * Time.deltaTime;
-        rt.anchoredPosition = p;
+        if (!isMoving || hasDropped) return;
 
-        // Wenn komplett aus dem Bereich -> Auto-Ende (Miss)
-        if (rightToLeft && p.x <= leftLimitX || (!rightToLeft && p.x >= rightLimitX))
+        var p = rt.anchoredPosition;
+        p.x += dir * speed * Time.deltaTime;
+
+        if (p.x <= leftX)
         {
-            moving = false;
-            onPassedLimits?.Invoke();
+            p.x = leftX;
+            if (loopMovement)
+            {
+                dir = 1; // Richtung umdrehen
+            }
+            else
+            {
+                isMoving = false;
+                onMiss?.Invoke();
+            }
         }
+        else if (p.x >= rightX)
+        {
+            p.x = rightX;
+            if (loopMovement)
+            {
+                dir = -1; // Richtung umdrehen
+            }
+            else
+            {
+                isMoving = false;
+                onMiss?.Invoke();
+            }
+        }
+
+        rt.anchoredPosition = p;
     }
 
-    public void Freeze() => moving = false;
+    /// <summary>
+    /// Wird beim Drücken der Leertaste aufgerufen: Stoppt horizontale Bewegung
+    /// und lässt den Filter leicht nach unten „einrasten“.
+    /// </summary>
+    public void Drop(float dropDistance = 195f, float dropTime = 0.25f)
+    {
+        if (hasDropped) return;
+        hasDropped = true;
+        isMoving = false;
+        StartCoroutine(DropRoutine(dropDistance, dropTime));
+    }
 
-    public Vector2 CenterWorld() => rt.TransformPoint(rt.rect.center);
+    private IEnumerator DropRoutine(float dropDistance, float dropTime)
+    {
+        Vector2 start = rt.anchoredPosition;
+        Vector2 end = start + new Vector2(0f, -dropDistance);
+
+        float t = 0f;
+        while (t < dropTime)
+        {
+            t += Time.deltaTime;
+            float lerp = Mathf.Clamp01(t / dropTime);
+            rt.anchoredPosition = Vector2.Lerp(start, end, lerp);
+            yield return null;
+        }
+
+        rt.anchoredPosition = end;
+    }
+
+    /// <summary>
+    /// Weltposition der Mitte (fürs Scoring)
+    /// </summary>
+    public Vector2 CenterWorld()
+    {
+        return rt.TransformPoint(rt.rect.center);
+    }
 }
