@@ -199,6 +199,9 @@ public class MiniGameFlow : MonoBehaviour
             // 2) Scoring
             EvaluateFilter();
 
+            // 2b)
+            SetZonesVisible(false);
+
             // 3) Weiter zum Tabak
             EnterState(State.WaitTobaccoClick);
         }
@@ -258,9 +261,6 @@ public class MiniGameFlow : MonoBehaviour
         tob.rectTransform.anchoredPosition = new Vector2(0f, 0.5f);
 
         EnterState(State.Assemble);
-        
-        //  Zonen wieder verstecken 
-        SetZonesVisible(false);
     }
 
     private IEnumerator FinishAssemble()
