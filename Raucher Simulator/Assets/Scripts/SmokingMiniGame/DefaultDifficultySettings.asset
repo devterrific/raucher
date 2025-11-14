@@ -12,9 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d01cf646c6ad3b4093625c243b8c400, type: 3}
   m_Name: DefaultDifficultySettings
   m_EditorClassIdentifier: 
-  filterSpeed: 500
+  filterSpeed: 1000
   loopMovement: 1
   rightToLeft: 1
+  movementRange: 800
   pointsPerfect: 30
   pointsGood: 20
   pointsOkay: 10
