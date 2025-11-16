@@ -128,7 +128,8 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      GizaPapes_auf_0: 824390848635962682
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

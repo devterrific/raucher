@@ -128,7 +128,8 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      GizaFilterPack_0: 781459200511930984
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
