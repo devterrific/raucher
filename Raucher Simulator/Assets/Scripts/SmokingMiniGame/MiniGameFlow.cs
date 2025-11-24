@@ -42,6 +42,13 @@ public class MiniGameFlow : MonoBehaviour
     [SerializeField] private DifficultySettings settings;
     [SerializeField] private ScoreManager scoreManager;
 
+    // NEU => 24.11
+    [Header("Pack Intros")]
+    [SerializeField] private PackFlyIn paperPackIntro;
+    [SerializeField] private PackFlyIn filterPackIntro;
+    [SerializeField] private PackFlyIn tobaccoPackIntro;
+
+
     private Image spawnedPaper;
     private FilterAimer filterAimer;
     private bool filterEvaluated;
@@ -84,9 +91,16 @@ public class MiniGameFlow : MonoBehaviour
 
     private IEnumerator Start()
     {
+        // 1) Countdown
         yield return StartCoroutine(RunCountdown());
+
+        // 2) Einflug aller Packs
+        yield return StartCoroutine(PlayPackIntros());
+
+        // 3) Jetzt darf der Spieler Papier anklicken
         EnterState(State.WaitPaperClick);
     }
+
 
     private IEnumerator RunCountdown()
     {
@@ -360,6 +374,31 @@ public class MiniGameFlow : MonoBehaviour
                               $"Gesamt-Highscore: {ScoreManager.GetTotal()}";
         }
     }
+
+    private IEnumerator PlayPackIntros()
+    {
+        // Alle drei gleichzeitig einfliegen lassen
+        Coroutine c1 = null, c2 = null, c3 = null;
+
+        if (paperPackIntro != null)
+            c1 = StartCoroutine(paperPackIntro.Play());
+        if (filterPackIntro != null)
+            c2 = StartCoroutine(filterPackIntro.Play());
+        if (tobaccoPackIntro != null)
+            c3 = StartCoroutine(tobaccoPackIntro.Play());
+
+        // Warten, bis alle fertig sind
+        bool AnyPlaying()
+        {
+            return (paperPackIntro != null && paperPackIntro.IsPlaying) ||
+                   (filterPackIntro != null && filterPackIntro.IsPlaying) ||
+                   (tobaccoPackIntro != null && tobaccoPackIntro.IsPlaying);
+        }
+
+        while (AnyPlaying())
+            yield return null;
+    }
+
 
     public void OnBtnRetry() => SceneManager.LoadScene("SmokingMinigame");
     public void OnBtnWeiter() => SceneManager.LoadScene("Vorraum_Placeholder");

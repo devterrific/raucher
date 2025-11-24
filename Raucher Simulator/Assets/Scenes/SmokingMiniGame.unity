@@ -1012,6 +1012,7 @@ GameObject:
   - component: {fileID: 1253166754}
   - component: {fileID: 1253166753}
   - component: {fileID: 1253166752}
+  - component: {fileID: 1253166755}
   m_Layer: 5
   m_Name: PaperPack
   m_TagString: Untagged
@@ -1121,6 +1122,27 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1253166750}
   m_CullTransparentMesh: 1
+--- !u!114 &1253166755
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1253166750}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0977cd071e9dd254ba864b4b542889d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rect: {fileID: 0}
+  startOffset: {x: 800, y: 0}
+  duration: 2
+  curve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &1292203857
 GameObject:
   m_ObjectHideFlags: 0
@@ -1270,6 +1292,7 @@ GameObject:
   - component: {fileID: 1307622869}
   - component: {fileID: 1307622868}
   - component: {fileID: 1307622867}
+  - component: {fileID: 1307622870}
   m_Layer: 5
   m_Name: TabaccoPack
   m_TagString: Untagged
@@ -1379,6 +1402,27 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1307622865}
   m_CullTransparentMesh: 1
+--- !u!114 &1307622870
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1307622865}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0977cd071e9dd254ba864b4b542889d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rect: {fileID: 0}
+  startOffset: {x: -800, y: 0}
+  duration: 6
+  curve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &1328194697
 GameObject:
   m_ObjectHideFlags: 0
@@ -1735,6 +1779,7 @@ GameObject:
   - component: {fileID: 1684432428}
   - component: {fileID: 1684432427}
   - component: {fileID: 1684432426}
+  - component: {fileID: 1684432429}
   m_Layer: 5
   m_Name: FilterPack
   m_TagString: Untagged
@@ -1844,6 +1889,27 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1684432424}
   m_CullTransparentMesh: 1
+--- !u!114 &1684432429
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1684432424}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0977cd071e9dd254ba864b4b542889d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rect: {fileID: 0}
+  startOffset: {x: 0, y: 500}
+  duration: 4
+  curve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &1751058900
 GameObject:
   m_ObjectHideFlags: 0
@@ -2365,6 +2431,9 @@ MonoBehaviour:
   tobaccoPackOpenPrefab: {fileID: 5112690371429572149, guid: 076405ef45bd3ee449aa62f08e043842, type: 3}
   settings: {fileID: 11400000, guid: b1be14c5d061ecc4a97ae28958885569, type: 2}
   scoreManager: {fileID: 2003218055}
+  paperPackIntro: {fileID: 1253166755}
+  filterPackIntro: {fileID: 1684432429}
+  tobaccoPackIntro: {fileID: 1307622870}
 --- !u!4 &2003218054
 Transform:
   m_ObjectHideFlags: 0
