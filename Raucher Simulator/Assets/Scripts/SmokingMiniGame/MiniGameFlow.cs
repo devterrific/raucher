@@ -33,6 +33,11 @@ public class MiniGameFlow : MonoBehaviour
     [SerializeField] private Image filterPrefab;
     [SerializeField] private Image tobaccoPrefab;
 
+    // NEU => 24.11
+    [Header("Prefabs geöffnet")]
+    [SerializeField] private Image paperPackOpenPrefab;
+    [SerializeField] private Image tobaccoPackOpenPrefab;
+
     [Header("Config")]
     [SerializeField] private DifficultySettings settings;
     [SerializeField] private ScoreManager scoreManager;
@@ -42,6 +47,13 @@ public class MiniGameFlow : MonoBehaviour
     private bool filterEvaluated;
     private int earnedPointsThisRun;
     private State currentState;
+
+    // NEU => 24.11
+    private bool paperPackOpened;
+    private bool tobaccoPackOpened;
+    private Image spawnedPaperPackOpen;
+    private Image spawnedTobaccoPackOpen;
+
 
     private void Awake()
     {
@@ -62,6 +74,12 @@ public class MiniGameFlow : MonoBehaviour
         countdownPanel.gameObject.SetActive(true);
 
         SetZonesVisible(false);
+
+        // NEU => 24.11
+        paperPackOpened = false;
+        tobaccoPackOpened = false;
+        spawnedPaperPackOpen = null;
+        spawnedTobaccoPackOpen = null;
     }
 
     private IEnumerator Start()
@@ -144,13 +162,40 @@ public class MiniGameFlow : MonoBehaviour
 
     private void OnPaperClicked()
     {
+        // STAGE 1: Packung öffnen
+        if (!paperPackOpened)
+        {
+            paperPackOpened = true;
+
+            // Optional: geschlossenes Packungsbild ausblenden
+            var btnImg = paperPackBtn.GetComponent<Image>();
+            if (btnImg != null) btnImg.enabled = false;
+
+            // Offene Packung als Prefab über dem Button anzeigen
+            if (spawnedPaperPackOpen == null && paperPackOpenPrefab != null)
+            {
+                spawnedPaperPackOpen = Instantiate(paperPackOpenPrefab, paperPackBtn.transform);
+                var rt = spawnedPaperPackOpen.rectTransform;
+                rt.anchorMin = new Vector2(0.5f, 0.5f);
+                rt.anchorMax = new Vector2(0.5f, 0.5f);
+                rt.anchoredPosition = Vector2.zero;
+            }
+
+            // Hinweistext anpassen
+            SetHint("Klicke die geöffnete Papierpackung erneut, um ein Blatt zu entnehmen.");
+            // Button bleibt interactable
+            return;
+        }
+
+        // STAGE 2: Papier entnehmen & platzieren (wie bisher)
         paperPackBtn.interactable = false;
 
         spawnedPaper = Instantiate(paperPrefab, paperAnchor);
         spawnedPaper.rectTransform.anchoredPosition = Vector2.zero;
-        
+
         EnterState(State.WaitFilterClick);
     }
+
 
     private void OnFilterPackClicked()
     {
@@ -254,6 +299,32 @@ public class MiniGameFlow : MonoBehaviour
     private void OnTobaccoClicked()
     {
         if (!filterEvaluated) return; // erst filtern
+
+        // STAGE 1: Tabakbeutel öffnen
+        if (!tobaccoPackOpened)
+        {
+            tobaccoPackOpened = true;
+
+            // Optional: geschlossenes Beutelbild ausblenden
+            var btnImg = tobaccoPackBtn.GetComponent<Image>();
+            if (btnImg != null) btnImg.enabled = false;
+
+            // Offener Tabakbeutel an gleicher Stelle anzeigen
+            if (spawnedTobaccoPackOpen == null && tobaccoPackOpenPrefab != null)
+            {
+                spawnedTobaccoPackOpen = Instantiate(tobaccoPackOpenPrefab, tobaccoPackBtn.transform);
+                var rt = spawnedTobaccoPackOpen.rectTransform;
+                rt.anchorMin = new Vector2(0.5f, 0.5f);
+                rt.anchorMax = new Vector2(0.5f, 0.5f);
+                rt.anchoredPosition = Vector2.zero;
+            }
+
+            SetHint("Klicke den geöffneten Tabakbeutel erneut, um den Tabak zu platzieren.");
+            // Button bleibt aktiv
+            return;
+        }
+
+        // STAGE 2: Tabak platzieren (wie bisher)
         tobaccoPackBtn.interactable = false;
 
         // Simple Visual: Tabak auf dem Papier anzeigen
@@ -261,7 +332,11 @@ public class MiniGameFlow : MonoBehaviour
         tob.rectTransform.anchoredPosition = new Vector2(0f, 0.5f);
 
         EnterState(State.Assemble);
+
+        // Zonen sicherheitshalber aus
+        SetZonesVisible(false);
     }
+
 
     private IEnumerator FinishAssemble()
     {

@@ -1037,7 +1037,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
   m_AnchoredPosition: {x: 710, y: 0}
-  m_SizeDelta: {x: 240, y: 320}
+  m_SizeDelta: {x: 180, y: 250}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1253166752
 MonoBehaviour:
@@ -1295,7 +1295,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -720, y: 0}
-  m_SizeDelta: {x: 240, y: 320}
+  m_SizeDelta: {x: 180, y: 250}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1307622867
 MonoBehaviour:
@@ -1760,7 +1760,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: 0, y: 270}
-  m_SizeDelta: {x: 240, y: 320}
+  m_SizeDelta: {x: 180, y: 250}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1684432426
 MonoBehaviour:
@@ -2361,6 +2361,8 @@ MonoBehaviour:
   paperPrefab: {fileID: 4968351494442460684, guid: 259227a54752cd0469bd7176d94f02d5, type: 3}
   filterPrefab: {fileID: 666867296833487198, guid: f2da1ce85f68b5b45b083fc9d732148d, type: 3}
   tobaccoPrefab: {fileID: 7183574483210983918, guid: 421b01eb81c31b845be5b879a2466396, type: 3}
+  paperPackOpenPrefab: {fileID: 3469212422405452109, guid: 5870729925f7cae4ca154073dfd8695d, type: 3}
+  tobaccoPackOpenPrefab: {fileID: 5112690371429572149, guid: 076405ef45bd3ee449aa62f08e043842, type: 3}
   settings: {fileID: 11400000, guid: b1be14c5d061ecc4a97ae28958885569, type: 2}
   scoreManager: {fileID: 2003218055}
 --- !u!4 &2003218054
