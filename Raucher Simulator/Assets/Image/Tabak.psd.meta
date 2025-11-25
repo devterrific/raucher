@@ -128,7 +128,8 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Tabak_0: 4442070485452812928
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

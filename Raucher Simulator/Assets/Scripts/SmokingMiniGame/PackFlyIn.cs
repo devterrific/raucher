@@ -4,14 +4,18 @@ using UnityEngine;
 public class PackFlyIn : MonoBehaviour
 {
     [SerializeField] private RectTransform rect;
-    [SerializeField] private Vector2 startOffset = new Vector2(500f, 0f); // von wo aus reinkommen
+    [SerializeField] private Vector2 startOffset = new Vector2(500f, 0f);
     [SerializeField] private float duration = 0.5f;
     [SerializeField] private AnimationCurve curve = null;
 
-    private Vector2 targetPos;
+    // NEU: Soll das Pack vor dem Fly-In unsichtbar sein?
+    [SerializeField] private bool hideBeforePlay = true;
 
-    private bool initialized;
     public bool IsPlaying { get; private set; }
+
+    // NEU: zum Ein-/Ausblenden
+    private CanvasGroup canvasGroup;
+    private UnityEngine.UI.Image image;
 
     private void Awake()
     {
@@ -21,26 +25,64 @@ public class PackFlyIn : MonoBehaviour
         if (curve == null)
             curve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
 
-        // Zielposition merken & Startposition nach außen versetzen
-        targetPos = rect.anchoredPosition;
-        rect.anchoredPosition = targetPos + startOffset;
-        initialized = true;
+        canvasGroup = GetComponent<CanvasGroup>();
+        image = GetComponent<UnityEngine.UI.Image>();
+
+        // Direkt beim Start unsichtbar machen (aber GameObject bleibt aktiv)
+        if (hideBeforePlay)
+            HideVisual();
+    }
+
+    private void HideVisual()
+    {
+        if (canvasGroup != null)
+        {
+            canvasGroup.alpha = 0f;
+            canvasGroup.interactable = false;
+            canvasGroup.blocksRaycasts = false;
+        }
+        else if (image != null)
+        {
+            image.enabled = false;
+        }
+    }
+
+    private void ShowVisual()
+    {
+        if (canvasGroup != null)
+        {
+            canvasGroup.alpha = 1f;
+            canvasGroup.interactable = true;
+            canvasGroup.blocksRaycasts = true;
+        }
+        else if (image != null)
+        {
+            image.enabled = true;
+        }
     }
 
     public IEnumerator Play()
     {
-        if (!initialized) yield break;
+        if (rect == null)
+            yield break;
 
         IsPlaying = true;
 
-        Vector2 startPos = targetPos + startOffset;
-        float t = 0f;
+        // NEU: Ab hier wird das Pack überhaupt sichtbar
+        ShowVisual();
 
+        Vector2 targetPos = rect.anchoredPosition;
+        Vector2 startPos = targetPos + startOffset;
+
+        rect.anchoredPosition = startPos;
+
+        float t = 0f;
         while (t < duration)
         {
             t += Time.deltaTime;
             float k = Mathf.Clamp01(t / duration);
             float eased = curve.Evaluate(k);
+
             rect.anchoredPosition = Vector2.Lerp(startPos, targetPos, eased);
             yield return null;
         }
