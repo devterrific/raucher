@@ -641,7 +641,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: '"Klicke die Papierpackung.." (Platzhalter)'
+  m_Text: 
 --- !u!1 &955873080
 GameObject:
   m_ObjectHideFlags: 0
@@ -1161,6 +1161,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  hideBeforePlay: 1
 --- !u!1 &1292203857
 GameObject:
   m_ObjectHideFlags: 0
@@ -1459,6 +1460,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  hideBeforePlay: 1
 --- !u!1 &1328194697
 GameObject:
   m_ObjectHideFlags: 0
@@ -1964,6 +1966,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  hideBeforePlay: 1
 --- !u!1 &1751058900
 GameObject:
   m_ObjectHideFlags: 0
