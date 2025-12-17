@@ -10,6 +10,9 @@ public class SnitchPatrolling : MonoBehaviour
     [SerializeField] private float speed;
     [SerializeField] private float waitTime = 2.2f;
 
+    //public vars...
+    [HideInInspector] public bool canMove = true;
+
     // private vars...
     private bool isWaiting = false;
 
@@ -20,7 +23,7 @@ public class SnitchPatrolling : MonoBehaviour
 
     private void Update()
     {
-        if (!isWaiting)
+        if (!isWaiting && canMove)
             MoveSnitch(speed);
     }
 
