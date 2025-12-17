@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,6 +8,10 @@ public class SnitchPatrolling : MonoBehaviour
     [SerializeField] private Transform[] patrolPoints;
     [SerializeField] private int targetPoint;
     [SerializeField] private float speed;
+    [SerializeField] private float waitTime = 2.2f;
+
+    // private vars...
+    private bool isWaiting = false;
 
     private void Start()
     {
@@ -15,22 +20,29 @@ public class SnitchPatrolling : MonoBehaviour
 
     private void Update()
     {
-        MoveSnitch(speed);
+        if (!isWaiting)
+            MoveSnitch(speed);
     }
 
     private void MoveSnitch(float speed)
     {
-        if (transform.position == patrolPoints[targetPoint].position)
-        {
-            increaseTargetInt();
-        }  
+        if (Vector2.Distance(transform.position, patrolPoints[targetPoint].position) < .05f)
+            StartCoroutine(WaitAtPoint(waitTime));
 
-        transform.position = Vector2.MoveTowards(transform.position, patrolPoints[targetPoint].position, speed * Time.deltaTime);
+        transform.position = Vector2.MoveTowards(transform.position,
+                                                patrolPoints[targetPoint].position,
+                                                speed * Time.deltaTime);
     }
 
-    private void 
+    private IEnumerator WaitAtPoint(float time)
+    {
+        isWaiting = true;
+        yield return new WaitForSeconds(time);
+        IncreaseTargetInt();
+        isWaiting = false;
+    }
 
-    private void increaseTargetInt()
+    private void IncreaseTargetInt()
     {
         targetPoint++;
         if (targetPoint >= patrolPoints.Length)
