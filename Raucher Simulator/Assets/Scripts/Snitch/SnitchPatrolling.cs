@@ -15,14 +15,25 @@ public class SnitchPatrolling : MonoBehaviour
 
     private void Update()
     {
+        MoveSnitch(speed);
+    }
+
+    private void MoveSnitch(float speed)
+    {
         if (transform.position == patrolPoints[targetPoint].position)
+        {
             increaseTargetInt();
+        }  
 
         transform.position = Vector2.MoveTowards(transform.position, patrolPoints[targetPoint].position, speed * Time.deltaTime);
     }
 
+    private void 
+
     private void increaseTargetInt()
     {
         targetPoint++;
+        if (targetPoint >= patrolPoints.Length)
+            targetPoint = 0;
     }
 }
