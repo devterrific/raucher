@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 7fa680af547fdba41b6ccfae571ac0c1
+guid: 7af0da5d70720884896dde787d70f062
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -2311659948842064771
-    second: Player_0
+      213: -2126135258883424569
+    second: PlayerCrouched_0
   externalObjects: {}
   serializedVersion: 12
   mipmaps:
@@ -98,13 +98,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Player_0
+      name: PlayerCrouched_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 295
-        height: 858
+        height: 626
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -112,8 +112,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: d7465c336855befd0800000000000000
-      internalID: -2311659948842064771
+      spriteID: 7cef1dd2f337e72e0800000000000000
+      internalID: -2126135258883424569
       vertices: []
       indices: 
       edges: []
@@ -121,7 +121,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 0a569ee122614eb43955df413becd2c1
+    spriteID: e69a04e8ba11eeb4ca9d86f51024d3ce
     internalID: 0
     vertices: []
     indices: 
@@ -129,7 +129,7 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Player_0: -2311659948842064771
+      PlayerCrouched_0: -2126135258883424569
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

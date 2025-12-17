@@ -128,6 +128,26 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 632439980894514817, guid: 9b6023025af342e44b619a10d3fd2f66, type: 3}
+      propertyPath: m_SpriteTilingProperty.newSize.y
+      value: 6.26
+      objectReference: {fileID: 0}
+    - target: {fileID: 632439980894514817, guid: 9b6023025af342e44b619a10d3fd2f66, type: 3}
+      propertyPath: m_SpriteTilingProperty.oldSize.y
+      value: 6.26
+      objectReference: {fileID: 0}
+    - target: {fileID: 1516948019197317933, guid: 9b6023025af342e44b619a10d3fd2f66, type: 3}
+      propertyPath: m_Size.y
+      value: 6.26
+      objectReference: {fileID: 0}
+    - target: {fileID: 1516948019197317933, guid: 9b6023025af342e44b619a10d3fd2f66, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -2311659948842064771, guid: 7fa680af547fdba41b6ccfae571ac0c1, type: 3}
+    - target: {fileID: 1516948019197317933, guid: 9b6023025af342e44b619a10d3fd2f66, type: 3}
+      propertyPath: m_WasSpriteAssigned
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8954813135247013437, guid: 9b6023025af342e44b619a10d3fd2f66, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.3469
@@ -138,11 +158,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8954813135247013437, guid: 9b6023025af342e44b619a10d3fd2f66, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -7.3
+      value: -7.88
       objectReference: {fileID: 0}
     - target: {fileID: 8954813135247013437, guid: 9b6023025af342e44b619a10d3fd2f66, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.16
+      value: -2.47
       objectReference: {fileID: 0}
     - target: {fileID: 8954813135247013437, guid: 9b6023025af342e44b619a10d3fd2f66, type: 3}
       propertyPath: m_LocalPosition.z
