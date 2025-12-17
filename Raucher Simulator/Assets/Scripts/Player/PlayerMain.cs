@@ -35,6 +35,17 @@ public class PlayerMain : MonoBehaviour
     private float stamina;
     private float regenCooldown;
     private float targetSpeed;
+    private bool canMove = true;
+    public bool CanMove => canMove;
+
+
+    private bool detectable;
+    public bool Detectable
+    {
+        get { return detectable; }
+        set { detectable = value; }
+    }
+
 
     void Awake()
     {
@@ -44,15 +55,26 @@ public class PlayerMain : MonoBehaviour
 
         stamina = maxStamina;
         targetSpeed = walkSpeed;
+        Detectable = true;
     }
 
     void Update()
     {
+        HandleInteract();
+
+        if (!Detectable)
+        {
+            xInput = 0f;
+            regenCooldown = regenDelay;
+            return;
+        }
+
         ReadInput();
         HandleSprintAndStamina();
         HandleFlip();
-        HandleInteract();
     }
+
+
 
     void FixedUpdate()
     {
@@ -106,6 +128,12 @@ public class PlayerMain : MonoBehaviour
 
     void MovePlayer()
     {
+        if (!Detectable)
+        {
+            rb.velocity = Vector2.zero;
+            return;
+        }
+
         float targetVelX = xInput * targetSpeed;
         float velX = rb.velocity.x;
 
@@ -115,14 +143,18 @@ public class PlayerMain : MonoBehaviour
         rb.velocity = new Vector2(newVelX, 0f);
     }
 
+
     void HandleInteract()
     {
         if (Input.GetKeyDown(interactKey))
         {
             Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, interactRange, interactLayer);
+            Debug.Log("Hits: " + hits.Length);
 
             foreach (var hit in hits)
             {
+                Debug.Log("Hit: " + hit.name + " Layer: " + LayerMask.LayerToName(hit.gameObject.layer));
+
                 Interactable interactable = hit.GetComponent<Interactable>();
                 if (interactable != null)
                 {
@@ -132,4 +164,7 @@ public class PlayerMain : MonoBehaviour
             }
         }
     }
+
+
+
 }

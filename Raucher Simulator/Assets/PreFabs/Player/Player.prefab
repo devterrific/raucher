@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1516948019197317933}
   - component: {fileID: 2945350228409422398}
   - component: {fileID: 632439980894514817}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -59,7 +59,7 @@ MonoBehaviour:
   interactRange: 1.5
   interactLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
   interactKey: 101
   sprintKey: 304
   horizontalAxis: Horizontal
