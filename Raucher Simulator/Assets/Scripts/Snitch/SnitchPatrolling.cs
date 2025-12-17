@@ -26,12 +26,24 @@ public class SnitchPatrolling : MonoBehaviour
 
     private void MoveSnitch(float speed)
     {
+        FaceDirection();
+
         if (Vector2.Distance(transform.position, patrolPoints[targetPoint].position) < .05f)
             StartCoroutine(WaitAtPoint(waitTime));
 
         transform.position = Vector2.MoveTowards(transform.position,
                                                 patrolPoints[targetPoint].position,
                                                 speed * Time.deltaTime);
+    }
+
+    private void FaceDirection()
+    {
+        float direction = patrolPoints[targetPoint].position.x - transform.position.x;
+
+        if (direction > 0)
+            transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+        else if (direction < 0)
+            transform.rotation = Quaternion.Euler(0f, 180f, 0f);
     }
 
     private IEnumerator WaitAtPoint(float time)
