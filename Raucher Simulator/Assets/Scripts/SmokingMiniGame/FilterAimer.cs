@@ -93,7 +93,7 @@ public class FilterAimer : MonoBehaviour
     }
 
     /// <summary>
-    /// Fail-Fall: fällt langsam nach unten und verschwindet.
+    /// ✅Fail-Fall: fällt langsam nach unten und verschwindet.
     /// Überschreibt IMMER evtl. laufende Coroutines.
     /// </summary>
     public void FailFall()

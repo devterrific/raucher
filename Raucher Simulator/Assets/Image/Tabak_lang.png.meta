@@ -98,7 +98,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Tabak_lang_0
+      name: Tabak_perfect
       rect:
         serializedVersion: 2
         x: 80
@@ -129,7 +129,7 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Tabak_lang_0: 7165189728349261499
+      Tabak_perfect: 7165189728349261499
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

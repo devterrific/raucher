@@ -2893,7 +2893,7 @@ MonoBehaviour:
   filterAnchor: {fileID: 1663561617}
   paperPrefab: {fileID: 4968351494442460684, guid: 259227a54752cd0469bd7176d94f02d5, type: 3}
   filterPrefab: {fileID: 666867296833487198, guid: f2da1ce85f68b5b45b083fc9d732148d, type: 3}
-  tobaccoPrefab: {fileID: 7183574483210983918, guid: 421b01eb81c31b845be5b879a2466396, type: 3}
+  tobaccoPrefab: {fileID: 7183574483210983918, guid: 6735289dceda4c04c91ade4dfc740279, type: 3}
   tobaccoPrefabOkay: {fileID: 7183574483210983918, guid: 421b01eb81c31b845be5b879a2466396, type: 3}
   tobaccoPrefabGood: {fileID: 7183574483210983918, guid: 6735289dceda4c04c91ade4dfc740279, type: 3}
   tobaccoPrefabPerfect: {fileID: 7183574483210983918, guid: c71d02c348f866048871e7f6ad451abc, type: 3}

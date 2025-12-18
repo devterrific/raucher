@@ -98,7 +98,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Tabak_mittel_0
+      name: Tabak_good
       rect:
         serializedVersion: 2
         x: 150
@@ -129,7 +129,7 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Tabak_mittel_0: -7286393971559196701
+      Tabak_good: -7286393971559196701
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

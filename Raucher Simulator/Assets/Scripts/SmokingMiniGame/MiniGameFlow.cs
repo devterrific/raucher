@@ -428,16 +428,11 @@ public class MiniGameFlow : MonoBehaviour
         scoreManager.Add(earnedPointsThisRun);
         UpdateScoreUI();
 
-        //  NEU: Tabak-Länge nur bei MAX-HIT vergeben
-        // Default: Wenn NICHT max getroffen, immer kurzer Tabak (Okay)
-        lastPlacement = PlacementRating.Okay;
+        //  Tabak-Länge nach gewonnener Zone (auch ohne Max-Hit)
+        if (basePoints == settings.pointsPerfect) lastPlacement = PlacementRating.Perfect;
+        else if (basePoints == settings.pointsGood) lastPlacement = PlacementRating.Good;
+        else lastPlacement = PlacementRating.Okay;
 
-        if (isMaxHit)
-        {
-            if (basePoints == settings.pointsPerfect) lastPlacement = PlacementRating.Perfect;
-            else if (basePoints == settings.pointsGood) lastPlacement = PlacementRating.Good;
-            else if (basePoints == settings.pointsOkay) lastPlacement = PlacementRating.Okay;
-        }
 
 
         // Banner NUR bei Max-Hit anzeigen
