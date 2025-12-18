@@ -1,12 +1,14 @@
 ﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.SocialPlatforms.Impl;
 using UnityEngine.UI;
 
 public class MiniGameFlow : MonoBehaviour
 {
     public enum State { Countdown, WaitPaperClick, WaitFilterClick, FilterAiming, WaitTobaccoClick, Assemble, Results }
+
+    // ✅ NEU: Rating merken, um Tabak-Länge zu bestimmen
+    private enum PlacementRating { None, Okay, Good, Perfect, Fail }
 
     [Header("UI")]
     [SerializeField] private CanvasGroup countdownPanel;
@@ -16,45 +18,47 @@ public class MiniGameFlow : MonoBehaviour
     [SerializeField] private GameObject resultPanel;
     [SerializeField] private Text resultText;
 
-    //  NEU: 18.12. - Für die Einbindung der einzelnen Bilder, beim richtigen Filterdrop
     [Header("Placement Banner (Sprites)")]
-    [SerializeField] private Image placementBanner; // UI Image in Canvas
+    [SerializeField] private Image placementBanner;
     [SerializeField] private Sprite bannerPerfect;
     [SerializeField] private Sprite bannerGood;
     [SerializeField] private Sprite bannerOkay;
     [SerializeField] private Sprite bannerFail;
     [SerializeField] private float bannerShowTime = 0.6f;
 
-    //  NEU: 18.12. - Für die getrennte AudioSource 
     [Header("Audio")]
     [SerializeField] private AudioSource countdownAudioSource;
     [SerializeField] private AudioClip countdown321GoClip;
     [SerializeField, Range(0f, 1f)] private float countdownVolume = 1f;
 
-    //  NEU: 18.12 - Für das "Hochzählen" im ResultPannel
     [Header("Results Count-Up")]
-    [SerializeField] private float countUpDuration = 0.8f;  // Dauer der Zähl-Animation
-    [SerializeField] private float totalCountUpDuration = 0.8f; // optional
+    [SerializeField] private float countUpDuration = 0.8f;
+    [SerializeField] private float totalCountUpDuration = 0.8f;
 
     [Header("Zone Refs")]
-    [SerializeField] private RectTransform targetZone;     // gesamtes Feld
-    [SerializeField] private RectTransform zoneOkay;       // äußerer Bereich
-    [SerializeField] private RectTransform zoneGood;       // mittlerer Bereich
-    [SerializeField] private RectTransform zonePerfect;    // Kernbereich
+    [SerializeField] private RectTransform targetZone;
+    [SerializeField] private RectTransform zoneOkay;
+    [SerializeField] private RectTransform zoneGood;
+    [SerializeField] private RectTransform zonePerfect;
 
     [Header("Packs & Anchors")]
-    [SerializeField] private Button paperPackBtn;          // rechts
-    [SerializeField] private Button tobaccoPackBtn;        // links
-    [SerializeField] private Button filterPackBtn;         // oben
-    [SerializeField] private RectTransform paperAnchor;    // unten Mitte
-    [SerializeField] private RectTransform filterAnchor;   // über Papier
+    [SerializeField] private Button paperPackBtn;
+    [SerializeField] private Button tobaccoPackBtn;
+    [SerializeField] private Button filterPackBtn;
+    [SerializeField] private RectTransform paperAnchor;
+    [SerializeField] private RectTransform filterAnchor;
 
     [Header("Prefabs")]
     [SerializeField] private Image paperPrefab;
     [SerializeField] private Image filterPrefab;
-    [SerializeField] private Image tobaccoPrefab;
 
-    // NEU => 24.11
+    //  NEU: 3 Tabak-Längen (kurz/mittel/lang)
+    [Header("Tobacco Prefabs (Length by Rating)")]
+    [SerializeField] private Image tobaccoPrefab;
+    [SerializeField] private Image tobaccoPrefabOkay;     // kurz
+    [SerializeField] private Image tobaccoPrefabGood;     // mittel
+    [SerializeField] private Image tobaccoPrefabPerfect;  // lang
+
     [Header("Prefabs geöffnet")]
     [SerializeField] private Image paperPackOpenPrefab;
     [SerializeField] private Image tobaccoPackOpenPrefab;
@@ -63,11 +67,14 @@ public class MiniGameFlow : MonoBehaviour
     [SerializeField] private DifficultySettings settings;
     [SerializeField] private ScoreManager scoreManager;
 
-    // NEU => 24.11
     [Header("Pack Intros")]
     [SerializeField] private PackFlyIn paperPackIntro;
     [SerializeField] private PackFlyIn filterPackIntro;
     [SerializeField] private PackFlyIn tobaccoPackIntro;
+
+    [Header("Tobacco Drag&Drop")]
+    [SerializeField] private TobaccoDragAndDrop tobaccoDrag;
+    [SerializeField] private Canvas mainCanvas;
 
     private Image spawnedPaper;
     private FilterAimer filterAimer;
@@ -75,22 +82,22 @@ public class MiniGameFlow : MonoBehaviour
     private int earnedPointsThisRun;
     private State currentState;
 
-    // NEU => 24.11
     private bool paperPackOpened;
     private bool tobaccoPackOpened;
     private Image spawnedPaperPackOpen;
     private Image spawnedTobaccoPackOpen;
 
+    // NEU: merkt sich, welche Zone (bzw. Bewertung) gewonnen hat
+    private PlacementRating lastPlacement = PlacementRating.None;
 
-    // =================================================================================================
-    //  1) Unity-Callbacks
-    // =================================================================================================
+    // -----------------------------
+    // Unity Callbacks
+    // -----------------------------
 
     private void Awake()
     {
         resultPanel.SetActive(false);
 
-        //  Startzustand: nur Papier-Pack klickbar
         paperPackBtn.interactable = false;
         filterPackBtn.interactable = false;
         tobaccoPackBtn.interactable = false;
@@ -102,34 +109,27 @@ public class MiniGameFlow : MonoBehaviour
 
         scoreManager.ResetRun();
         UpdateScoreUI();
+
         countdownPanel.alpha = 0f;
         countdownPanel.gameObject.SetActive(true);
 
         SetZonesVisible(false);
 
-        // NEU => 24.11
         paperPackOpened = false;
         tobaccoPackOpened = false;
         spawnedPaperPackOpen = null;
         spawnedTobaccoPackOpen = null;
 
-        //  NEU: 18.12. - Damit der Banner nicht die ganzezeit Angezeigt wird
         if (placementBanner != null)
             placementBanner.gameObject.SetActive(false);
     }
 
     private IEnumerator Start()
     {
-        // 1) Countdown
         yield return StartCoroutine(RunCountdown());
-
-        // 2) Einflug aller Packs
         yield return StartCoroutine(PlayPackIntros());
 
-        // 3) Score jetzt sichtbar machen
         scoreText.gameObject.SetActive(true);
-
-        // 4) Jetzt darf der Spieler Papier anklicken
         EnterState(State.WaitPaperClick);
     }
 
@@ -145,7 +145,7 @@ public class MiniGameFlow : MonoBehaviour
             // 2) Scoring
             EvaluateFilter();
 
-            // Wenn FailSequence läuft, gehen wir NICHT zum Tabak
+            // Wenn FailSequence läuft, gehen wir direkt in Results und stoppen hier
             if (earnedPointsThisRun <= 0)
                 return;
 
@@ -157,23 +157,15 @@ public class MiniGameFlow : MonoBehaviour
         }
     }
 
-
-    private bool CurrentStateIsFilterAiming()
-    {
-        return currentState == State.FilterAiming;
-    }
-
-
-    // =================================================================================================
-    //  2) State / Flow
-    // =================================================================================================
+    // -----------------------------
+    // State / Flow
+    // -----------------------------
 
     private IEnumerator RunCountdown()
     {
         SetHint("");
         countdownPanel.alpha = 1f;
 
-        //  NEU: 18.12. - Countdown spielt nun über countdownAudioSource
         if (countdownAudioSource != null && countdown321GoClip != null)
         {
             countdownAudioSource.Stop();
@@ -235,16 +227,14 @@ public class MiniGameFlow : MonoBehaviour
 
     private void OnPaperClicked()
     {
-        // STAGE 1: Packung öffnen
+        // STAGE 1: öffnen
         if (!paperPackOpened)
         {
             paperPackOpened = true;
 
-            // geschlossenes Packungsbild ausblenden (optional)
             var btnImg = paperPackBtn.GetComponent<Image>();
             if (btnImg != null) btnImg.enabled = false;
 
-            // Offene Packung als Prefab über dem Button anzeigen
             if (spawnedPaperPackOpen == null && paperPackOpenPrefab != null)
             {
                 spawnedPaperPackOpen = Instantiate(paperPackOpenPrefab, paperPackBtn.transform);
@@ -254,10 +244,7 @@ public class MiniGameFlow : MonoBehaviour
                 rt.anchorMax = new Vector2(0.5f, 0.5f);
                 rt.anchoredPosition = Vector2.zero;
 
-                // Wichtig: Open-Image soll keine Klicks blockieren
                 spawnedPaperPackOpen.raycastTarget = false;
-
-                // Open-Image wird TargetGraphic → Disabled-Tint funktioniert später
                 paperPackBtn.targetGraphic = spawnedPaperPackOpen;
             }
 
@@ -265,7 +252,7 @@ public class MiniGameFlow : MonoBehaviour
             return;
         }
 
-        // STAGE 2: Papier entnehmen & platzieren
+        // STAGE 2: Papier platzieren
         paperPackBtn.interactable = false;
 
         spawnedPaper = Instantiate(paperPrefab, paperAnchor);
@@ -279,26 +266,22 @@ public class MiniGameFlow : MonoBehaviour
         if (filterEvaluated) return;
 
         filterPackBtn.interactable = false;
-
         SetZonesVisible(true);
-
         EnterState(State.FilterAiming);
     }
 
     private void OnTobaccoClicked()
     {
-        if (!filterEvaluated) return; // erst filtern
+        if (!filterEvaluated) return;
 
-        // STAGE 1: Tabakbeutel öffnen
+        // STAGE 1: öffnen
         if (!tobaccoPackOpened)
         {
             tobaccoPackOpened = true;
 
-            // geschlossenes Beutelbild ausblenden (optional)
             var btnImg = tobaccoPackBtn.GetComponent<Image>();
             if (btnImg != null) btnImg.enabled = false;
 
-            // Offener Tabakbeutel an gleicher Stelle anzeigen
             if (spawnedTobaccoPackOpen == null && tobaccoPackOpenPrefab != null)
             {
                 spawnedTobaccoPackOpen = Instantiate(tobaccoPackOpenPrefab, tobaccoPackBtn.transform);
@@ -308,10 +291,7 @@ public class MiniGameFlow : MonoBehaviour
                 rt.anchorMax = new Vector2(0.5f, 0.5f);
                 rt.anchoredPosition = Vector2.zero;
 
-                // Wichtig: Open-Image soll keine Klicks blockieren
                 spawnedTobaccoPackOpen.raycastTarget = false;
-
-                // ✅ Open-Image wird TargetGraphic → Disabled-Tint funktioniert später
                 tobaccoPackBtn.targetGraphic = spawnedTobaccoPackOpen;
             }
 
@@ -319,22 +299,41 @@ public class MiniGameFlow : MonoBehaviour
             return;
         }
 
-        // STAGE 2: Tabak platzieren
+        // STAGE 2: Tabak Drag&Drop starten (mit passender Tabak-Länge)
         tobaccoPackBtn.interactable = false;
 
-        var tob = Instantiate(tobaccoPrefab, paperAnchor);
-        tob.rectTransform.anchoredPosition = new Vector2(0f, 0.5f);
+        if (tobaccoDrag != null && spawnedPaper != null && mainCanvas != null)
+        {
+            Image chosenTobacco = GetTobaccoPrefabByRating();
 
-        EnterState(State.Assemble);
+            SetHint("Platziere den Tabak auf dem Papier (Linksklick zum Ablegen).");
 
-        // Zonen sicherheitshalber aus
-        SetZonesVisible(false);
+            tobaccoDrag.BeginDrag(
+                mainCanvas,
+                spawnedPaper.rectTransform,
+                chosenTobacco,
+                () =>
+                {
+                    EnterState(State.Assemble);
+                    SetZonesVisible(false);
+                }
+            );
+        }
+        else
+        {
+            Debug.LogWarning("TobaccoDrag/MainCanvas/spawnedPaper fehlt – fallback zu Assemble.");
+            EnterState(State.Assemble);
+        }
     }
 
+    private bool CurrentStateIsFilterAiming()
+    {
+        return currentState == State.FilterAiming;
+    }
 
-    // =================================================================================================
-    //  3) Gameplay-Logik
-    // =================================================================================================
+    // -----------------------------
+    // Gameplay-Logik
+    // -----------------------------
 
     private void StartFilterAiming()
     {
@@ -344,7 +343,7 @@ public class MiniGameFlow : MonoBehaviour
 
         filterAimer = filterImg.gameObject.AddComponent<FilterAimer>();
 
-        float range = settings.movementRange; // Breite der Zielzone als Bewegungsbereich
+        float range = settings.movementRange;
 
         filterAimer.Init(
             filterAnchor,
@@ -356,6 +355,7 @@ public class MiniGameFlow : MonoBehaviour
         );
 
         filterEvaluated = false;
+        lastPlacement = PlacementRating.None; // ✅ NEU: reset
     }
 
     private void OnFilterPassedLimits()
@@ -363,19 +363,20 @@ public class MiniGameFlow : MonoBehaviour
         if (filterEvaluated) return;
 
         earnedPointsThisRun = 0;
+        lastPlacement = PlacementRating.Fail; // ✅ NEU
         scoreManager.Add(earnedPointsThisRun);
         UpdateScoreUI();
         filterEvaluated = true;
 
-        // direkt zu Tabak
-        EnterState(State.WaitTobaccoClick);
-
-        // Zonen wieder verstecken
         SetZonesVisible(false);
+        StartCoroutine(FailSequence());
     }
 
     private void EvaluateFilter()
     {
+        // Default erstmal Fail
+        lastPlacement = PlacementRating.Fail;
+
         // Filter Rect (Screen)
         Rect filterRect = GetScreenRect(filterAimer.Rect);
 
@@ -411,53 +412,143 @@ public class MiniGameFlow : MonoBehaviour
         if (bestOverlap <= 0f)
         {
             earnedPointsThisRun = 0;
+            lastPlacement = PlacementRating.Fail;
             StartCoroutine(FailSequence());
             return;
         }
 
-        // Punkte: nur volle Punkte, wenn 100% in Zone (Overlap == 1)
+        // Punkte: prozentual nach Overlap
         int points = Mathf.RoundToInt(basePoints * bestOverlap);
 
-        bool isMaxHit = bestOverlap >= 0.9999f;
-        if (isMaxHit)
-            points = basePoints;
+        // Max-Hit? (nur dann Banner zeigen!)
+        bool isMaxHit = bestOverlap >= 0.999f;
+        if (isMaxHit) points = basePoints;
 
         earnedPointsThisRun = Mathf.Max(points, 0);
         scoreManager.Add(earnedPointsThisRun);
         UpdateScoreUI();
 
-        // Banner nur zeigen, wenn Max-Punkte der Zone erreicht wurden
+        //  NEU: Tabak-Länge nur bei MAX-HIT vergeben
+        // Default: Wenn NICHT max getroffen, immer kurzer Tabak (Okay)
+        lastPlacement = PlacementRating.Okay;
+
+        if (isMaxHit)
+        {
+            if (basePoints == settings.pointsPerfect) lastPlacement = PlacementRating.Perfect;
+            else if (basePoints == settings.pointsGood) lastPlacement = PlacementRating.Good;
+            else if (basePoints == settings.pointsOkay) lastPlacement = PlacementRating.Okay;
+        }
+
+
+        // Banner NUR bei Max-Hit anzeigen
         if (isMaxHit)
             StartCoroutine(ShowBanner(banner, bannerShowTime));
     }
 
     private IEnumerator FailSequence()
     {
-        filterEvaluated = true;
-
-        // Zonen aus
-        SetZonesVisible(false);
-
-        // Filter fällt weit nach unten
+        // Filter soll ins Leere fallen & verschwinden (wenn du das schon hast, passt es)
         if (filterAimer != null)
-            filterAimer.DropToVoid(900f, 0.35f);
+            filterAimer.FailFall();
 
-        // Fail Banner
-        yield return StartCoroutine(ShowBanner(bannerFail, bannerShowTime));
+        // Fail Banner zeigen
+        if (bannerFail != null)
+            yield return StartCoroutine(ShowBanner(bannerFail, bannerShowTime));
 
-        // direkt Results (kein Tabak)
+        // Direkt Results
         EnterState(State.Results);
     }
 
-    // =================================================================================================
-    //  4) UI / Helpers
-    // =================================================================================================
+    // NEU: Tabak-Prefab anhand Rating auswählen
+    private Image GetTobaccoPrefabByRating()
+    {
+        switch (lastPlacement)
+        {
+            case PlacementRating.Perfect:
+                return tobaccoPrefabPerfect != null ? tobaccoPrefabPerfect : tobaccoPrefab;
+            case PlacementRating.Good:
+                return tobaccoPrefabGood != null ? tobaccoPrefabGood : tobaccoPrefab;
+            case PlacementRating.Okay:
+                return tobaccoPrefabOkay != null ? tobaccoPrefabOkay : tobaccoPrefab;
+            default:
+                return tobaccoPrefabOkay != null ? tobaccoPrefabOkay : tobaccoPrefab;
+        }
+    }
+
+    private IEnumerator FinishAssemble()
+    {
+        yield return new WaitForSeconds(settings.assembleSeconds);
+        EnterState(State.Results);
+    }
+
+    private void ShowResults()
+    {
+        resultPanel.SetActive(true);
+        StopAllCoroutines();
+        StartCoroutine(ShowResultsRoutine());
+    }
+
+    private IEnumerator ShowResultsRoutine()
+    {
+        int runPoints = earnedPointsThisRun;
+        int totalBefore = ScoreManager.GetTotal();
+
+        int totalAfter = totalBefore;
+        if (runPoints > 0)
+        {
+            scoreManager.AddRunToTotal();
+            totalAfter = ScoreManager.GetTotal();
+        }
+
+        int displayedRun = 0;
+        float t = 0f;
+
+        while (t < countUpDuration)
+        {
+            t += Time.deltaTime;
+            float k = Mathf.Clamp01(t / countUpDuration);
+            displayedRun = Mathf.RoundToInt(Mathf.Lerp(0, runPoints, k));
+
+            resultText.text = runPoints > 0
+                ? $"Ergebnis: {displayedRun} Punkte\nGesamt-Highscore: {totalBefore}"
+                : $"Mission Fail!\nGesamt-Highscore: {totalBefore}";
+
+            yield return null;
+        }
+
+        displayedRun = runPoints;
+        resultText.text = runPoints > 0
+            ? $"Ergebnis: {displayedRun} Punkte\nGesamt-Highscore: {totalBefore}"
+            : $"Mission Fail!\nGesamt-Highscore: {totalBefore}";
+
+        if (runPoints <= 0)
+            yield break;
+
+        int displayedTotal = totalBefore;
+        t = 0f;
+
+        while (t < totalCountUpDuration)
+        {
+            t += Time.deltaTime;
+            float k = Mathf.Clamp01(t / totalCountUpDuration);
+            displayedTotal = Mathf.RoundToInt(Mathf.Lerp(totalBefore, totalAfter, k));
+
+            resultText.text = $"Ergebnis: {runPoints} Punkte\nGesamt-Highscore: {displayedTotal}";
+            yield return null;
+        }
+
+        displayedTotal = totalAfter;
+        resultText.text = $"Ergebnis: {runPoints} Punkte\nGesamt-Highscore: {displayedTotal}";
+    }
+
+    // -----------------------------
+    // UI / Helpers
+    // -----------------------------
 
     private void SetHint(string msg) => topHintText.text = msg;
 
     private void SetZonesVisible(bool visible)
     {
-        // TargetZone selbst (falls die auch eine Hintergrundfarbe hat)
         var tzImg = targetZone.GetComponent<Image>();
         if (tzImg != null) tzImg.enabled = visible;
 
@@ -471,7 +562,6 @@ public class MiniGameFlow : MonoBehaviour
         if (perfImg != null) perfImg.enabled = visible;
     }
 
-    //  NEU: 18.12. - Helper funktion für EvaluateFilter()
     private Rect GetScreenRect(RectTransform rt)
     {
         Vector3[] corners = new Vector3[4];
@@ -515,98 +605,12 @@ public class MiniGameFlow : MonoBehaviour
         placementBanner.gameObject.SetActive(false);
     }
 
-
-    // =================================================================================================
-    //  Weitere bestehende Logik (Results / Pack Intros / Scene Buttons)
-    // =================================================================================================
-
-    private IEnumerator FinishAssemble()
-    {
-        yield return new WaitForSeconds(settings.assembleSeconds);
-        EnterState(State.Results);
-    }
-
-    private void ShowResults()
-    {
-        resultPanel.SetActive(true);
-        StopAllCoroutines(); // optional: verhindert doppelte CountUps
-        StartCoroutine(ShowResultsRoutine());
-    }
-
-    private IEnumerator ShowResultsRoutine()
-    {
-        // Sicherheitswerte
-        int runPoints = earnedPointsThisRun;
-        int totalBefore = ScoreManager.GetTotal();
-
-        // Erfolg: Total wird erhöht
-        int totalAfter = totalBefore;
-        if (runPoints > 0)
-        {
-            scoreManager.AddRunToTotal();
-            totalAfter = ScoreManager.GetTotal();
-        }
-
-        // 1) Run Score hochzählen
-        int displayedRun = 0;
-        float t = 0f;
-
-        while (t < countUpDuration)
-        {
-            t += Time.deltaTime;
-            float k = Mathf.Clamp01(t / countUpDuration);
-            displayedRun = Mathf.RoundToInt(Mathf.Lerp(0, runPoints, k));
-
-            // Text live updaten (Run)
-            resultText.text = runPoints > 0
-                ? $"Ergebnis: {displayedRun} Punkte\nGesamt-Highscore: {totalBefore}"
-                : $"Mission Fail!\nGesamt-Highscore: {totalBefore}";
-
-            yield return null;
-        }
-
-        // final sicher setzen
-        displayedRun = runPoints;
-        resultText.text = runPoints > 0
-            ? $"Ergebnis: {displayedRun} Punkte\nGesamt-Highscore: {totalBefore}"
-            : $"Mission Fail!\nGesamt-Highscore: {totalBefore}";
-
-        // Wenn Mission Fail, keine Total-Animation nötig
-        if (runPoints <= 0)
-            yield break;
-
-        // 2) Optional: Total hochzählen
-        int displayedTotal = totalBefore;
-        t = 0f;
-
-        while (t < totalCountUpDuration)
-        {
-            t += Time.deltaTime;
-            float k = Mathf.Clamp01(t / totalCountUpDuration);
-            displayedTotal = Mathf.RoundToInt(Mathf.Lerp(totalBefore, totalAfter, k));
-
-            resultText.text = $"Ergebnis: {runPoints} Punkte\nGesamt-Highscore: {displayedTotal}";
-            yield return null;
-        }
-
-        // final sicher setzen
-        displayedTotal = totalAfter;
-        resultText.text = $"Ergebnis: {runPoints} Punkte\nGesamt-Highscore: {displayedTotal}";
-    }
-
     private IEnumerator PlayPackIntros()
     {
-        // Alle drei gleichzeitig einfliegen lassen
-        Coroutine c1 = null, c2 = null, c3 = null;
+        if (paperPackIntro != null) StartCoroutine(paperPackIntro.Play());
+        if (filterPackIntro != null) StartCoroutine(filterPackIntro.Play());
+        if (tobaccoPackIntro != null) StartCoroutine(tobaccoPackIntro.Play());
 
-        if (paperPackIntro != null)
-            c1 = StartCoroutine(paperPackIntro.Play());
-        if (filterPackIntro != null)
-            c2 = StartCoroutine(filterPackIntro.Play());
-        if (tobaccoPackIntro != null)
-            c3 = StartCoroutine(tobaccoPackIntro.Play());
-
-        // Warten, bis alle fertig sind
         bool AnyPlaying()
         {
             return (paperPackIntro != null && paperPackIntro.IsPlaying) ||
