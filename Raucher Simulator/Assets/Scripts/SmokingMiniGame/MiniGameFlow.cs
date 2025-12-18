@@ -7,7 +7,6 @@ public class MiniGameFlow : MonoBehaviour
 {
     public enum State { Countdown, WaitPaperClick, WaitFilterClick, FilterAiming, WaitTobaccoClick, Assemble, Results }
 
-    // ✅ NEU: Rating merken, um Tabak-Länge zu bestimmen
     private enum PlacementRating { None, Okay, Good, Perfect, Fail }
 
     [Header("UI")]
@@ -52,12 +51,12 @@ public class MiniGameFlow : MonoBehaviour
     [SerializeField] private Image paperPrefab;
     [SerializeField] private Image filterPrefab;
 
-    //  NEU: 3 Tabak-Längen (kurz/mittel/lang)
+    //  NEU: 3 Tabak-Längen
     [Header("Tobacco Prefabs (Length by Rating)")]
     [SerializeField] private Image tobaccoPrefab;
-    [SerializeField] private Image tobaccoPrefabOkay;     // kurz
-    [SerializeField] private Image tobaccoPrefabGood;     // mittel
-    [SerializeField] private Image tobaccoPrefabPerfect;  // lang
+    [SerializeField] private Image tobaccoPrefabOkay;
+    [SerializeField] private Image tobaccoPrefabGood; 
+    [SerializeField] private Image tobaccoPrefabPerfect;
 
     [Header("Prefabs geöffnet")]
     [SerializeField] private Image paperPackOpenPrefab;
@@ -138,21 +137,13 @@ public class MiniGameFlow : MonoBehaviour
         if (CurrentStateIsFilterAiming() && !filterEvaluated && Input.GetKeyDown(KeyCode.Space) && filterAimer != null)
         {
             filterEvaluated = true;
-
-            // 1) Optischer Drop
             filterAimer.Drop();
-
-            // 2) Scoring
             EvaluateFilter();
 
-            // Wenn FailSequence läuft, gehen wir direkt in Results und stoppen hier
             if (earnedPointsThisRun <= 0)
                 return;
 
-            // 2b) Zonen aus
             SetZonesVisible(false);
-
-            // 3) Weiter zum Tabak
             EnterState(State.WaitTobaccoClick);
         }
     }
@@ -355,7 +346,7 @@ public class MiniGameFlow : MonoBehaviour
         );
 
         filterEvaluated = false;
-        lastPlacement = PlacementRating.None; // ✅ NEU: reset
+        lastPlacement = PlacementRating.None;
     }
 
     private void OnFilterPassedLimits()
@@ -363,7 +354,7 @@ public class MiniGameFlow : MonoBehaviour
         if (filterEvaluated) return;
 
         earnedPointsThisRun = 0;
-        lastPlacement = PlacementRating.Fail; // ✅ NEU
+        lastPlacement = PlacementRating.Fail;
         scoreManager.Add(earnedPointsThisRun);
         UpdateScoreUI();
         filterEvaluated = true;
@@ -374,23 +365,18 @@ public class MiniGameFlow : MonoBehaviour
 
     private void EvaluateFilter()
     {
-        // Default erstmal Fail
         lastPlacement = PlacementRating.Fail;
 
-        // Filter Rect (Screen)
         Rect filterRect = GetScreenRect(filterAimer.Rect);
 
-        // Zone Rects (Screen)
         Rect perfectRect = GetScreenRect(zonePerfect);
         Rect goodRect = GetScreenRect(zoneGood);
         Rect okayRect = GetScreenRect(zoneOkay);
 
-        // Overlap (0..1) bezogen auf Filterfläche
         float oPerfect = Overlap01(filterRect, perfectRect);
         float oGood = Overlap01(filterRect, goodRect);
         float oOkay = Overlap01(filterRect, okayRect);
 
-        // Zone mit höchstem Overlap gewinnt
         float bestOverlap = oPerfect;
         int basePoints = settings.pointsPerfect;
         Sprite banner = bannerPerfect;
@@ -408,7 +394,6 @@ public class MiniGameFlow : MonoBehaviour
             banner = bannerOkay;
         }
 
-        // Kein Overlap → Fail
         if (bestOverlap <= 0f)
         {
             earnedPointsThisRun = 0;
@@ -417,10 +402,8 @@ public class MiniGameFlow : MonoBehaviour
             return;
         }
 
-        // Punkte: prozentual nach Overlap
         int points = Mathf.RoundToInt(basePoints * bestOverlap);
 
-        // Max-Hit? (nur dann Banner zeigen!)
         bool isMaxHit = bestOverlap >= 0.999f;
         if (isMaxHit) points = basePoints;
 
@@ -428,29 +411,22 @@ public class MiniGameFlow : MonoBehaviour
         scoreManager.Add(earnedPointsThisRun);
         UpdateScoreUI();
 
-        //  Tabak-Länge nach gewonnener Zone (auch ohne Max-Hit)
         if (basePoints == settings.pointsPerfect) lastPlacement = PlacementRating.Perfect;
         else if (basePoints == settings.pointsGood) lastPlacement = PlacementRating.Good;
         else lastPlacement = PlacementRating.Okay;
 
-
-
-        // Banner NUR bei Max-Hit anzeigen
         if (isMaxHit)
             StartCoroutine(ShowBanner(banner, bannerShowTime));
     }
 
     private IEnumerator FailSequence()
     {
-        // Filter soll ins Leere fallen & verschwinden (wenn du das schon hast, passt es)
         if (filterAimer != null)
             filterAimer.FailFall();
 
-        // Fail Banner zeigen
         if (bannerFail != null)
             yield return StartCoroutine(ShowBanner(bannerFail, bannerShowTime));
 
-        // Direkt Results
         EnterState(State.Results);
     }
 
