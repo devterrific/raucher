@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class MiniGameFlow : MonoBehaviour
 {
     public enum State { Countdown, WaitPaperClick, WaitFilterClick, FilterAiming, WaitTobaccoClick, Assemble, Results }
+
     [Header("UI")]
     [SerializeField] private CanvasGroup countdownPanel;
     [SerializeField] private Text countdownText;
@@ -14,6 +15,15 @@ public class MiniGameFlow : MonoBehaviour
     [SerializeField] private Text scoreText;
     [SerializeField] private GameObject resultPanel;
     [SerializeField] private Text resultText;
+
+    //  NEU: 18.12. - Für die Einbindung der einzelnen Bilder, beim richtigen Filterdrop
+    [Header("Placement Banner (Sprites)")]
+    [SerializeField] private Image placementBanner; // UI Image in Canvas
+    [SerializeField] private Sprite bannerPerfect;
+    [SerializeField] private Sprite bannerGood;
+    [SerializeField] private Sprite bannerOkay;
+    [SerializeField] private Sprite bannerFail;
+    [SerializeField] private float bannerShowTime = 0.6f;
 
     //  NEU: 18.12. - Für die getrennte AudioSource 
     [Header("Audio")]
@@ -72,6 +82,10 @@ public class MiniGameFlow : MonoBehaviour
     private Image spawnedTobaccoPackOpen;
 
 
+    // =================================================================================================
+    //  1) Unity-Callbacks
+    // =================================================================================================
+
     private void Awake()
     {
         resultPanel.SetActive(false);
@@ -98,6 +112,10 @@ public class MiniGameFlow : MonoBehaviour
         tobaccoPackOpened = false;
         spawnedPaperPackOpen = null;
         spawnedTobaccoPackOpen = null;
+
+        //  NEU: 18.12. - Damit der Banner nicht die ganzezeit Angezeigt wird
+        if (placementBanner != null)
+            placementBanner.gameObject.SetActive(false);
     }
 
     private IEnumerator Start()
@@ -115,6 +133,40 @@ public class MiniGameFlow : MonoBehaviour
         EnterState(State.WaitPaperClick);
     }
 
+    private void Update()
+    {
+        if (CurrentStateIsFilterAiming() && !filterEvaluated && Input.GetKeyDown(KeyCode.Space) && filterAimer != null)
+        {
+            filterEvaluated = true;
+
+            // 1) Optischer Drop
+            filterAimer.Drop();
+
+            // 2) Scoring
+            EvaluateFilter();
+
+            // Wenn FailSequence läuft, gehen wir NICHT zum Tabak
+            if (earnedPointsThisRun <= 0)
+                return;
+
+            // 2b) Zonen aus
+            SetZonesVisible(false);
+
+            // 3) Weiter zum Tabak
+            EnterState(State.WaitTobaccoClick);
+        }
+    }
+
+
+    private bool CurrentStateIsFilterAiming()
+    {
+        return currentState == State.FilterAiming;
+    }
+
+
+    // =================================================================================================
+    //  2) State / Flow
+    // =================================================================================================
 
     private IEnumerator RunCountdown()
     {
@@ -130,7 +182,6 @@ public class MiniGameFlow : MonoBehaviour
             countdownAudioSource.Play();
         }
 
-
         float t = settings.countdownSeconds;
         while (t > 0f)
         {
@@ -144,7 +195,6 @@ public class MiniGameFlow : MonoBehaviour
         countdownPanel.alpha = 0f;
         countdownPanel.gameObject.SetActive(false);
     }
-
 
     private void EnterState(State s)
     {
@@ -183,24 +233,6 @@ public class MiniGameFlow : MonoBehaviour
         }
     }
 
-    private void SetHint(string msg) => topHintText.text = msg;
-
-    private void SetZonesVisible(bool visible)
-    {
-        // TargetZone selbst (falls die auch eine Hintergrundfarbe hat)
-        var tzImg = targetZone.GetComponent<Image>();
-        if (tzImg != null) tzImg.enabled = visible;
-
-        var okImg = zoneOkay.GetComponent<Image>();
-        if (okImg != null) okImg.enabled = visible;
-
-        var goodImg = zoneGood.GetComponent<Image>();
-        if (goodImg != null) goodImg.enabled = visible;
-
-        var perfImg = zonePerfect.GetComponent<Image>();
-        if (perfImg != null) perfImg.enabled = visible;
-    }
-
     private void OnPaperClicked()
     {
         // STAGE 1: Packung öffnen
@@ -225,7 +257,7 @@ public class MiniGameFlow : MonoBehaviour
                 // Wichtig: Open-Image soll keine Klicks blockieren
                 spawnedPaperPackOpen.raycastTarget = false;
 
-                // ✅ Open-Image wird TargetGraphic → Disabled-Tint funktioniert später
+                // Open-Image wird TargetGraphic → Disabled-Tint funktioniert später
                 paperPackBtn.targetGraphic = spawnedPaperPackOpen;
             }
 
@@ -251,95 +283,7 @@ public class MiniGameFlow : MonoBehaviour
         SetZonesVisible(true);
 
         EnterState(State.FilterAiming);
-
     }
-
-    private void StartFilterAiming()
-    {
-        var filterImg = Instantiate(filterPrefab, filterAnchor);
-        var rt = filterImg.rectTransform;
-        rt.anchoredPosition = Vector2.zero;
-
-        filterAimer = filterImg.gameObject.AddComponent<FilterAimer>();
-
-        float range = settings.movementRange; // Breite der Zielzone als Bewegungsbereich
-
-        filterAimer.Init(
-            filterAnchor,
-            settings.filterSpeed,
-            range,
-            settings.rightToLeft,
-            settings.loopMovement,
-            OnFilterPassedLimits
-        );
-
-        filterEvaluated = false;
-    }
-
-
-    private void Update()
-    {
-        if (CurrentStateIsFilterAiming() && !filterEvaluated && Input.GetKeyDown(KeyCode.Space) && filterAimer != null)
-        {
-            filterEvaluated = true;
-
-            // 1) Optischer Drop
-            filterAimer.Drop();
-
-            // 2) Scoring
-            EvaluateFilter();
-
-            // 2b)
-            SetZonesVisible(false);
-
-            // 3) Weiter zum Tabak
-            EnterState(State.WaitTobaccoClick);
-        }
-    }
-    private bool CurrentStateIsFilterAiming()
-    {
-        return currentState == State.FilterAiming;
-    }
-
-    private void OnFilterPassedLimits()
-    {
-        if (filterEvaluated) return;
-
-        earnedPointsThisRun = 0;
-        scoreManager.Add(earnedPointsThisRun);
-        UpdateScoreUI();
-        filterEvaluated = true;
-
-        // direkt zu Tabak
-        EnterState(State.WaitTobaccoClick);
-
-        // Zonen wieder verstecken
-        SetZonesVisible(false);
-    }
-
-    private void EvaluateFilter()
-    {
-        filterEvaluated = true;
-
-        Vector2 filterCenterScreen = RectTransformUtility.WorldToScreenPoint(null, filterAimer.CenterWorld());
-        bool inPerfect = RectTransformUtility.RectangleContainsScreenPoint(zonePerfect, filterCenterScreen);
-        bool inGood = RectTransformUtility.RectangleContainsScreenPoint(zoneGood, filterCenterScreen);
-        bool inOkay = RectTransformUtility.RectangleContainsScreenPoint(zoneOkay, filterCenterScreen);
-
-        if (inPerfect)
-            earnedPointsThisRun = settings.pointsPerfect;    // 30
-        else if (inGood)
-            earnedPointsThisRun = settings.pointsGood;       // 20
-        else if (inOkay)
-            earnedPointsThisRun = settings.pointsOkay;       // 10
-        else
-            earnedPointsThisRun = settings.pointsMiss;       // 0 (Mission Fail)
-
-        scoreManager.Add(earnedPointsThisRun);
-        UpdateScoreUI();
-    }
-
-
 
     private void OnTobaccoClicked()
     {
@@ -386,6 +330,195 @@ public class MiniGameFlow : MonoBehaviour
         // Zonen sicherheitshalber aus
         SetZonesVisible(false);
     }
+
+
+    // =================================================================================================
+    //  3) Gameplay-Logik
+    // =================================================================================================
+
+    private void StartFilterAiming()
+    {
+        var filterImg = Instantiate(filterPrefab, filterAnchor);
+        var rt = filterImg.rectTransform;
+        rt.anchoredPosition = Vector2.zero;
+
+        filterAimer = filterImg.gameObject.AddComponent<FilterAimer>();
+
+        float range = settings.movementRange; // Breite der Zielzone als Bewegungsbereich
+
+        filterAimer.Init(
+            filterAnchor,
+            settings.filterSpeed,
+            range,
+            settings.rightToLeft,
+            settings.loopMovement,
+            OnFilterPassedLimits
+        );
+
+        filterEvaluated = false;
+    }
+
+    private void OnFilterPassedLimits()
+    {
+        if (filterEvaluated) return;
+
+        earnedPointsThisRun = 0;
+        scoreManager.Add(earnedPointsThisRun);
+        UpdateScoreUI();
+        filterEvaluated = true;
+
+        // direkt zu Tabak
+        EnterState(State.WaitTobaccoClick);
+
+        // Zonen wieder verstecken
+        SetZonesVisible(false);
+    }
+
+    private void EvaluateFilter()
+    {
+        // Filter Rect (Screen)
+        Rect filterRect = GetScreenRect(filterAimer.Rect);
+
+        // Zone Rects (Screen)
+        Rect perfectRect = GetScreenRect(zonePerfect);
+        Rect goodRect = GetScreenRect(zoneGood);
+        Rect okayRect = GetScreenRect(zoneOkay);
+
+        // Overlap (0..1) bezogen auf Filterfläche
+        float oPerfect = Overlap01(filterRect, perfectRect);
+        float oGood = Overlap01(filterRect, goodRect);
+        float oOkay = Overlap01(filterRect, okayRect);
+
+        // Zone mit höchstem Overlap gewinnt
+        float bestOverlap = oPerfect;
+        int basePoints = settings.pointsPerfect;
+        Sprite banner = bannerPerfect;
+
+        if (oGood > bestOverlap)
+        {
+            bestOverlap = oGood;
+            basePoints = settings.pointsGood;
+            banner = bannerGood;
+        }
+        if (oOkay > bestOverlap)
+        {
+            bestOverlap = oOkay;
+            basePoints = settings.pointsOkay;
+            banner = bannerOkay;
+        }
+
+        // Kein Overlap → Fail
+        if (bestOverlap <= 0f)
+        {
+            earnedPointsThisRun = 0;
+            StartCoroutine(FailSequence());
+            return;
+        }
+
+        // Punkte: nur volle Punkte, wenn 100% in Zone (Overlap == 1)
+        int points = Mathf.RoundToInt(basePoints * bestOverlap);
+
+        bool isMaxHit = bestOverlap >= 0.9999f;
+        if (isMaxHit)
+            points = basePoints;
+
+        earnedPointsThisRun = Mathf.Max(points, 0);
+        scoreManager.Add(earnedPointsThisRun);
+        UpdateScoreUI();
+
+        // Banner nur zeigen, wenn Max-Punkte der Zone erreicht wurden
+        if (isMaxHit)
+            StartCoroutine(ShowBanner(banner, bannerShowTime));
+    }
+
+    private IEnumerator FailSequence()
+    {
+        filterEvaluated = true;
+
+        // Zonen aus
+        SetZonesVisible(false);
+
+        // Filter fällt weit nach unten
+        if (filterAimer != null)
+            filterAimer.DropToVoid(900f, 0.35f);
+
+        // Fail Banner
+        yield return StartCoroutine(ShowBanner(bannerFail, bannerShowTime));
+
+        // direkt Results (kein Tabak)
+        EnterState(State.Results);
+    }
+
+    // =================================================================================================
+    //  4) UI / Helpers
+    // =================================================================================================
+
+    private void SetHint(string msg) => topHintText.text = msg;
+
+    private void SetZonesVisible(bool visible)
+    {
+        // TargetZone selbst (falls die auch eine Hintergrundfarbe hat)
+        var tzImg = targetZone.GetComponent<Image>();
+        if (tzImg != null) tzImg.enabled = visible;
+
+        var okImg = zoneOkay.GetComponent<Image>();
+        if (okImg != null) okImg.enabled = visible;
+
+        var goodImg = zoneGood.GetComponent<Image>();
+        if (goodImg != null) goodImg.enabled = visible;
+
+        var perfImg = zonePerfect.GetComponent<Image>();
+        if (perfImg != null) perfImg.enabled = visible;
+    }
+
+    //  NEU: 18.12. - Helper funktion für EvaluateFilter()
+    private Rect GetScreenRect(RectTransform rt)
+    {
+        Vector3[] corners = new Vector3[4];
+        rt.GetWorldCorners(corners);
+
+        Vector2 min = RectTransformUtility.WorldToScreenPoint(null, corners[0]);
+        Vector2 max = RectTransformUtility.WorldToScreenPoint(null, corners[2]);
+
+        return Rect.MinMaxRect(min.x, min.y, max.x, max.y);
+    }
+
+    private float Overlap01(Rect a, Rect b)
+    {
+        float xMin = Mathf.Max(a.xMin, b.xMin);
+        float yMin = Mathf.Max(a.yMin, b.yMin);
+        float xMax = Mathf.Min(a.xMax, b.xMax);
+        float yMax = Mathf.Min(a.yMax, b.yMax);
+
+        float w = xMax - xMin;
+        float h = yMax - yMin;
+
+        if (w <= 0f || h <= 0f) return 0f;
+
+        float interArea = w * h;
+        float aArea = a.width * a.height;
+
+        if (aArea <= 0f) return 0f;
+
+        return Mathf.Clamp01(interArea / aArea);
+    }
+
+    private IEnumerator ShowBanner(Sprite sprite, float time)
+    {
+        if (placementBanner == null || sprite == null) yield break;
+
+        placementBanner.sprite = sprite;
+        placementBanner.gameObject.SetActive(true);
+
+        yield return new WaitForSecondsRealtime(time);
+
+        placementBanner.gameObject.SetActive(false);
+    }
+
+
+    // =================================================================================================
+    //  Weitere bestehende Logik (Results / Pack Intros / Scene Buttons)
+    // =================================================================================================
 
     private IEnumerator FinishAssemble()
     {
@@ -461,7 +594,6 @@ public class MiniGameFlow : MonoBehaviour
         resultText.text = $"Ergebnis: {runPoints} Punkte\nGesamt-Highscore: {displayedTotal}";
     }
 
-
     private IEnumerator PlayPackIntros()
     {
         // Alle drei gleichzeitig einfliegen lassen
@@ -485,7 +617,6 @@ public class MiniGameFlow : MonoBehaviour
         while (AnyPlaying())
             yield return null;
     }
-
 
     public void OnBtnRetry() => SceneManager.LoadScene("SmokingMinigame");
     public void OnBtnWeiter() => SceneManager.LoadScene("Vorraum_Placeholder");

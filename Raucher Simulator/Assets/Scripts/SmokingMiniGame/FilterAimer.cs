@@ -89,6 +89,18 @@ public class FilterAimer : MonoBehaviour
         StartCoroutine(DropRoutine(dropDistance, dropTime));
     }
 
+    // Zweite Drop-Methode, das der Filter wegfällt
+    public RectTransform Rect => rt;
+
+    public void DropToVoid(float dropDistance = 800f, float dropTime = 0.35f)
+    {
+        if (hasDropped) return;
+        hasDropped = true;
+        isMoving = false;
+        StartCoroutine(DropRoutine(dropDistance, dropTime));
+    }
+
+
     private IEnumerator DropRoutine(float dropDistance, float dropTime)
     {
         Vector2 start = rt.anchoredPosition;
