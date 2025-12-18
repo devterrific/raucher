@@ -2,7 +2,6 @@
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System.Collections;
-using Unity.PlasticSCM.Editor.WebApi;
 
 public class MiniGameFlow : MonoBehaviour
 {
@@ -14,6 +13,14 @@ public class MiniGameFlow : MonoBehaviour
     [SerializeField] private Text scoreText;
     [SerializeField] private GameObject resultPanel;
     [SerializeField] private Text resultText;
+
+    //  NEU: 18.12. - Für die getrennte AudioSource 
+    [Header("Audio")]
+    [SerializeField] private AudioSource countdownAudioSource;
+    [SerializeField] private AudioClip countdown321GoClip;
+    [SerializeField, Range(0f, 1f)] private float countdownVolume = 1f;
+
+
 
     [Header("Zone Refs")]
     [SerializeField] private RectTransform targetZone;     // gesamtes Feld
@@ -48,7 +55,6 @@ public class MiniGameFlow : MonoBehaviour
     [SerializeField] private PackFlyIn filterPackIntro;
     [SerializeField] private PackFlyIn tobaccoPackIntro;
 
-
     private Image spawnedPaper;
     private FilterAimer filterAimer;
     private bool filterEvaluated;
@@ -70,14 +76,14 @@ public class MiniGameFlow : MonoBehaviour
         paperPackBtn.interactable = false;
         filterPackBtn.interactable = false;
         tobaccoPackBtn.interactable = false;
-        
+
         paperPackBtn.onClick.AddListener(OnPaperClicked);
         filterPackBtn.onClick.AddListener(OnFilterPackClicked);
         tobaccoPackBtn.onClick.AddListener(OnTobaccoClicked);
 
         scoreManager.ResetRun();
         UpdateScoreUI();
-        countdownPanel.alpha = 0f; 
+        countdownPanel.alpha = 0f;
         countdownPanel.gameObject.SetActive(true);
 
         SetZonesVisible(false);
@@ -106,6 +112,17 @@ public class MiniGameFlow : MonoBehaviour
     {
         SetHint("");
         countdownPanel.alpha = 1f;
+
+        //  NEU: 18.12. - Countdown spielt nun über countdownAudioSource
+        if (countdownAudioSource != null && countdown321GoClip != null)
+        {
+            countdownAudioSource.Stop();
+            countdownAudioSource.clip = countdown321GoClip;
+            countdownAudioSource.volume = countdownVolume;
+            countdownAudioSource.Play();
+        }
+
+
         float t = settings.countdownSeconds;
         while (t > 0f)
         {
@@ -113,11 +130,13 @@ public class MiniGameFlow : MonoBehaviour
             t -= Time.unscaledDeltaTime;
             yield return null;
         }
-        countdownText.text = "Start!";
+
+        countdownText.text = "GO!";
         yield return new WaitForSecondsRealtime(0.5f);
         countdownPanel.alpha = 0f;
         countdownPanel.gameObject.SetActive(false);
     }
+
 
     private void EnterState(State s)
     {

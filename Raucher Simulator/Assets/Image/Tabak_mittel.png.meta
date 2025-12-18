@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 1869001d0216d8c47a1d66b6531fea64
+guid: 145cc08fdae583b4cb8259c8f1bd7c37
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -3862897123069505878
-    second: PabloTabak_zu_0
+      213: -7286393971559196701
+    second: Tabak_mittel_0
   externalObjects: {}
   serializedVersion: 12
   mipmaps:
@@ -98,13 +98,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: PabloTabak_zu_0
+      name: Tabak_mittel_0
       rect:
         serializedVersion: 2
-        x: 24
-        y: 0
-        width: 272
-        height: 488
+        x: 150
+        y: 144
+        width: 182
+        height: 62
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -112,8 +112,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: aae4097788b346ac0800000000000000
-      internalID: -3862897123069505878
+      spriteID: 3e79aafa94781ea90800000000000000
+      internalID: -7286393971559196701
       vertices: []
       indices: 
       edges: []
@@ -129,7 +129,7 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      PabloTabak_zu_0: -3862897123069505878
+      Tabak_mittel_0: -7286393971559196701
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

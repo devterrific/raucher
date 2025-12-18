@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 
 public class PackFlyIn : MonoBehaviour
@@ -10,6 +10,17 @@ public class PackFlyIn : MonoBehaviour
 
     // NEU: Soll das Pack vor dem Fly-In unsichtbar sein?
     [SerializeField] private bool hideBeforePlay = true;
+
+    //  NEU: 18.12. - Referenz auf die SFXSource setzen
+    [Header("Audio")]
+    [SerializeField] private AudioSource sfxAudioSource; // Referenz auf UIAudio (SFX Source)
+    [SerializeField] private AudioClip whooshClip;
+    [SerializeField, Range(0f, 1f)] private float whooshVolume = 0.8f;
+
+    [SerializeField] private bool randomPitch = true;
+    [SerializeField] private float minPitch = 0.95f;
+    [SerializeField] private float maxPitch = 1.05f;
+
 
     public bool IsPlaying { get; private set; }
 
@@ -68,7 +79,18 @@ public class PackFlyIn : MonoBehaviour
 
         IsPlaying = true;
 
-        // NEU: Ab hier wird das Pack �berhaupt sichtbar
+        //  NEU: UI Whoosh beim Einflug abspielen und den Pitch nach OneShoot zurücksetzen
+        if (sfxAudioSource != null && whooshClip != null)
+        {
+            float oldPitch = sfxAudioSource.pitch;
+            sfxAudioSource.pitch = randomPitch ? Random.Range(minPitch, maxPitch) : 1f;
+
+            sfxAudioSource.PlayOneShot(whooshClip, whooshVolume);
+
+            sfxAudioSource.pitch = oldPitch;
+        }
+
+        // NEU: Ab hier wird das Pack überhaupt sichtbar
         ShowVisual();
 
         Vector2 targetPos = rect.anchoredPosition;
