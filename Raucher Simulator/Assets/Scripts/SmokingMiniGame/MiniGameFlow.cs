@@ -1,7 +1,8 @@
-﻿using UnityEngine;
-using UnityEngine.UI;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.SceneManagement;
-using System.Collections;
+using UnityEngine.SocialPlatforms.Impl;
+using UnityEngine.UI;
 
 public class MiniGameFlow : MonoBehaviour
 {
@@ -20,7 +21,10 @@ public class MiniGameFlow : MonoBehaviour
     [SerializeField] private AudioClip countdown321GoClip;
     [SerializeField, Range(0f, 1f)] private float countdownVolume = 1f;
 
-
+    //  NEU: 18.12 - Für das "Hochzählen" im ResultPannel
+    [Header("Results Count-Up")]
+    [SerializeField] private float countUpDuration = 0.8f;  // Dauer der Zähl-Animation
+    [SerializeField] private float totalCountUpDuration = 0.8f; // optional
 
     [Header("Zone Refs")]
     [SerializeField] private RectTransform targetZone;     // gesamtes Feld
@@ -76,6 +80,7 @@ public class MiniGameFlow : MonoBehaviour
         paperPackBtn.interactable = false;
         filterPackBtn.interactable = false;
         tobaccoPackBtn.interactable = false;
+        scoreText.gameObject.SetActive(false);
 
         paperPackBtn.onClick.AddListener(OnPaperClicked);
         filterPackBtn.onClick.AddListener(OnFilterPackClicked);
@@ -103,7 +108,10 @@ public class MiniGameFlow : MonoBehaviour
         // 2) Einflug aller Packs
         yield return StartCoroutine(PlayPackIntros());
 
-        // 3) Jetzt darf der Spieler Papier anklicken
+        // 3) Score jetzt sichtbar machen
+        scoreText.gameObject.SetActive(true);
+
+        // 4) Jetzt darf der Spieler Papier anklicken
         EnterState(State.WaitPaperClick);
     }
 
@@ -200,7 +208,7 @@ public class MiniGameFlow : MonoBehaviour
         {
             paperPackOpened = true;
 
-            // Optional: geschlossenes Packungsbild ausblenden
+            // geschlossenes Packungsbild ausblenden (optional)
             var btnImg = paperPackBtn.GetComponent<Image>();
             if (btnImg != null) btnImg.enabled = false;
 
@@ -208,19 +216,24 @@ public class MiniGameFlow : MonoBehaviour
             if (spawnedPaperPackOpen == null && paperPackOpenPrefab != null)
             {
                 spawnedPaperPackOpen = Instantiate(paperPackOpenPrefab, paperPackBtn.transform);
+
                 var rt = spawnedPaperPackOpen.rectTransform;
                 rt.anchorMin = new Vector2(0.5f, 0.5f);
                 rt.anchorMax = new Vector2(0.5f, 0.5f);
                 rt.anchoredPosition = Vector2.zero;
+
+                // Wichtig: Open-Image soll keine Klicks blockieren
+                spawnedPaperPackOpen.raycastTarget = false;
+
+                // ✅ Open-Image wird TargetGraphic → Disabled-Tint funktioniert später
+                paperPackBtn.targetGraphic = spawnedPaperPackOpen;
             }
 
-            // Hinweistext anpassen
             SetHint("Klicke die geöffnete Papierpackung erneut, um ein Blatt zu entnehmen.");
-            // Button bleibt interactable
             return;
         }
 
-        // STAGE 2: Papier entnehmen & platzieren (wie bisher)
+        // STAGE 2: Papier entnehmen & platzieren
         paperPackBtn.interactable = false;
 
         spawnedPaper = Instantiate(paperPrefab, paperAnchor);
@@ -228,7 +241,6 @@ public class MiniGameFlow : MonoBehaviour
 
         EnterState(State.WaitFilterClick);
     }
-
 
     private void OnFilterPackClicked()
     {
@@ -338,7 +350,7 @@ public class MiniGameFlow : MonoBehaviour
         {
             tobaccoPackOpened = true;
 
-            // Optional: geschlossenes Beutelbild ausblenden
+            // geschlossenes Beutelbild ausblenden (optional)
             var btnImg = tobaccoPackBtn.GetComponent<Image>();
             if (btnImg != null) btnImg.enabled = false;
 
@@ -346,21 +358,26 @@ public class MiniGameFlow : MonoBehaviour
             if (spawnedTobaccoPackOpen == null && tobaccoPackOpenPrefab != null)
             {
                 spawnedTobaccoPackOpen = Instantiate(tobaccoPackOpenPrefab, tobaccoPackBtn.transform);
+
                 var rt = spawnedTobaccoPackOpen.rectTransform;
                 rt.anchorMin = new Vector2(0.5f, 0.5f);
                 rt.anchorMax = new Vector2(0.5f, 0.5f);
                 rt.anchoredPosition = Vector2.zero;
+
+                // Wichtig: Open-Image soll keine Klicks blockieren
+                spawnedTobaccoPackOpen.raycastTarget = false;
+
+                // ✅ Open-Image wird TargetGraphic → Disabled-Tint funktioniert später
+                tobaccoPackBtn.targetGraphic = spawnedTobaccoPackOpen;
             }
 
             SetHint("Klicke den geöffneten Tabakbeutel erneut, um den Tabak zu platzieren.");
-            // Button bleibt aktiv
             return;
         }
 
-        // STAGE 2: Tabak platzieren (wie bisher)
+        // STAGE 2: Tabak platzieren
         tobaccoPackBtn.interactable = false;
 
-        // Simple Visual: Tabak auf dem Papier anzeigen
         var tob = Instantiate(tobaccoPrefab, paperAnchor);
         tob.rectTransform.anchoredPosition = new Vector2(0f, 0.5f);
 
@@ -369,7 +386,6 @@ public class MiniGameFlow : MonoBehaviour
         // Zonen sicherheitshalber aus
         SetZonesVisible(false);
     }
-
 
     private IEnumerator FinishAssemble()
     {
@@ -380,19 +396,71 @@ public class MiniGameFlow : MonoBehaviour
     private void ShowResults()
     {
         resultPanel.SetActive(true);
-        if (earnedPointsThisRun > 0)
-        {
-            // Erfolg ⇒ zum globalen Highscore addieren
-            scoreManager.AddRunToTotal();
-            resultText.text = $"Ergebnis: {earnedPointsThisRun} Punkte\n" +
-                              $"Gesamt-Highscore: {ScoreManager.GetTotal()}";
-        }
-        else
-        {
-            resultText.text = "Mission Fail!\n" +
-                              $"Gesamt-Highscore: {ScoreManager.GetTotal()}";
-        }
+        StopAllCoroutines(); // optional: verhindert doppelte CountUps
+        StartCoroutine(ShowResultsRoutine());
     }
+
+    private IEnumerator ShowResultsRoutine()
+    {
+        // Sicherheitswerte
+        int runPoints = earnedPointsThisRun;
+        int totalBefore = ScoreManager.GetTotal();
+
+        // Erfolg: Total wird erhöht
+        int totalAfter = totalBefore;
+        if (runPoints > 0)
+        {
+            scoreManager.AddRunToTotal();
+            totalAfter = ScoreManager.GetTotal();
+        }
+
+        // 1) Run Score hochzählen
+        int displayedRun = 0;
+        float t = 0f;
+
+        while (t < countUpDuration)
+        {
+            t += Time.deltaTime;
+            float k = Mathf.Clamp01(t / countUpDuration);
+            displayedRun = Mathf.RoundToInt(Mathf.Lerp(0, runPoints, k));
+
+            // Text live updaten (Run)
+            resultText.text = runPoints > 0
+                ? $"Ergebnis: {displayedRun} Punkte\nGesamt-Highscore: {totalBefore}"
+                : $"Mission Fail!\nGesamt-Highscore: {totalBefore}";
+
+            yield return null;
+        }
+
+        // final sicher setzen
+        displayedRun = runPoints;
+        resultText.text = runPoints > 0
+            ? $"Ergebnis: {displayedRun} Punkte\nGesamt-Highscore: {totalBefore}"
+            : $"Mission Fail!\nGesamt-Highscore: {totalBefore}";
+
+        // Wenn Mission Fail, keine Total-Animation nötig
+        if (runPoints <= 0)
+            yield break;
+
+        // 2) Optional: Total hochzählen
+        int displayedTotal = totalBefore;
+        t = 0f;
+
+        while (t < totalCountUpDuration)
+        {
+            t += Time.deltaTime;
+            float k = Mathf.Clamp01(t / totalCountUpDuration);
+            displayedTotal = Mathf.RoundToInt(Mathf.Lerp(totalBefore, totalAfter, k));
+
+            resultText.text = $"Ergebnis: {runPoints} Punkte\nGesamt-Highscore: {displayedTotal}";
+            yield return null;
+        }
+
+        // final sicher setzen
+        displayedTotal = totalAfter;
+        resultText.text = $"Ergebnis: {runPoints} Punkte\nGesamt-Highscore: {displayedTotal}";
+    }
+
 
     private IEnumerator PlayPackIntros()
     {
@@ -422,5 +490,5 @@ public class MiniGameFlow : MonoBehaviour
     public void OnBtnRetry() => SceneManager.LoadScene("SmokingMinigame");
     public void OnBtnWeiter() => SceneManager.LoadScene("Vorraum_Placeholder");
 
-    private void UpdateScoreUI() => scoreText.text = $"Score (Run): {scoreManager.RunScore}";
+    private void UpdateScoreUI() => scoreText.text = $"Score: {scoreManager.RunScore}";
 }

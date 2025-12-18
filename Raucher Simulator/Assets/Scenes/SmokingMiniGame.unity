@@ -839,7 +839,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -1293,6 +1293,7 @@ MonoBehaviour:
   sfxAudioSource: {fileID: 1496609422}
   whooshClip: {fileID: 8300000, guid: a06e65518de65ef4797a2889c0dc76a5, type: 3}
   whooshVolume: 0.8
+  whooshLeadTime: 0.5
   randomPitch: 1
   minPitch: 0.95
   maxPitch: 1.05
@@ -1631,6 +1632,7 @@ MonoBehaviour:
   sfxAudioSource: {fileID: 1496609422}
   whooshClip: {fileID: 8300000, guid: a06e65518de65ef4797a2889c0dc76a5, type: 3}
   whooshVolume: 0.8
+  whooshLeadTime: 0.5
   randomPitch: 1
   minPitch: 0.95
   maxPitch: 1.05
@@ -1930,7 +1932,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -2271,6 +2273,7 @@ MonoBehaviour:
   sfxAudioSource: {fileID: 1496609422}
   whooshClip: {fileID: 8300000, guid: a06e65518de65ef4797a2889c0dc76a5, type: 3}
   whooshVolume: 0.8
+  whooshLeadTime: 0.5
   randomPitch: 1
   minPitch: 0.95
   maxPitch: 1.05
@@ -2781,7 +2784,9 @@ MonoBehaviour:
   resultText: {fileID: 1751058903}
   countdownAudioSource: {fileID: 1082906316}
   countdown321GoClip: {fileID: 8300000, guid: b9c76e9a28f2e994abe48f8dd557386a, type: 3}
-  countdownVolume: 0.5
+  countdownVolume: 0.2
+  countUpDuration: 0.8
+  totalCountUpDuration: 0.8
   targetZone: {fileID: 278137358}
   zoneOkay: {fileID: 1849355041}
   zoneGood: {fileID: 316055812}

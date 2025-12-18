@@ -16,6 +16,7 @@ public class PackFlyIn : MonoBehaviour
     [SerializeField] private AudioSource sfxAudioSource; // Referenz auf UIAudio (SFX Source)
     [SerializeField] private AudioClip whooshClip;
     [SerializeField, Range(0f, 1f)] private float whooshVolume = 0.8f;
+    [SerializeField] private float whooshLeadTime = 0.03f;                  // steuert den Anfang der Whoosh-Audio (fängt ms früher an)
 
     [SerializeField] private bool randomPitch = true;
     [SerializeField] private float minPitch = 0.95f;
@@ -84,11 +85,14 @@ public class PackFlyIn : MonoBehaviour
         {
             float oldPitch = sfxAudioSource.pitch;
             sfxAudioSource.pitch = randomPitch ? Random.Range(minPitch, maxPitch) : 1f;
-
             sfxAudioSource.PlayOneShot(whooshClip, whooshVolume);
-
             sfxAudioSource.pitch = oldPitch;
         }
+
+        // mini lead, damit Sound “vorne” sitzt
+        if (whooshLeadTime > 0f)
+            yield return new WaitForSecondsRealtime(whooshLeadTime);
+
 
         // NEU: Ab hier wird das Pack überhaupt sichtbar
         ShowVisual();
