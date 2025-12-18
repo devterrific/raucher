@@ -5,12 +5,12 @@ using UnityEngine.UI;
 public class TobaccoDragAndDrop : MonoBehaviour
 {
     [Header("Refs")]
-    [SerializeField] private Canvas canvas;              // dein UI Canvas
-    [SerializeField] private RectTransform paperRect;    // RectTransform vom platzierten Papier (spawnedPaper)
-    [SerializeField] private Image tobaccoPrefab;        // dein Tabak UI Prefab
+    [SerializeField] private Canvas canvas; 
+    [SerializeField] private RectTransform paperRect;
+    [SerializeField] private Image tobaccoPrefab;  
 
     [Header("Placement")]
-    [SerializeField] private Vector2 localOffsetOnPaper = new Vector2(0f, 0f); // optionales Feintuning
+    [SerializeField] private Vector2 localOffsetOnPaper = new Vector2(0f, 0f);
     [SerializeField] private bool clampInsidePaper = true;
 
     [Header("Placement Rules")]
@@ -23,7 +23,6 @@ public class TobaccoDragAndDrop : MonoBehaviour
 
     public bool IsDragging => isDragging;
 
-    // Callback wenn Tabak erfolgreich platziert wurde
     private Action onPlaced;
 
     public void BeginDrag(Canvas c, RectTransform paper, Image prefab, Action placedCallback)
@@ -38,8 +37,6 @@ public class TobaccoDragAndDrop : MonoBehaviour
             Debug.LogWarning("TobaccoDragAndDrop: Missing references (Canvas/Paper/Prefab).");
             return;
         }
-
-        // Spawn Tabak als eigenes UI Element im Canvas (nicht im Paper, damit es frei folgt)
         spawnedTobacco = Instantiate(tobaccoPrefab, canvas.transform);
         spawnedTobacco.raycastTarget = false; // darf Klicks nicht blockieren
         tobaccoRT = spawnedTobacco.rectTransform;
@@ -54,7 +51,6 @@ public class TobaccoDragAndDrop : MonoBehaviour
 
         FollowMouse();
 
-        // Linksklick -> platzieren
         if (Input.GetMouseButtonDown(0))
         {
             if (!requireMouseOverPaper || IsMouseOverPaper())
@@ -68,7 +64,6 @@ public class TobaccoDragAndDrop : MonoBehaviour
     {
         if (canvas == null || tobaccoRT == null) return;
 
-        // Screen -> Local Point in Canvas
         RectTransform canvasRect = canvas.transform as RectTransform;
 
         Vector2 localPoint;
@@ -86,7 +81,6 @@ public class TobaccoDragAndDrop : MonoBehaviour
     {
         if (paperRect == null || tobaccoRT == null) return;
 
-        // Wir platzieren Tabak als Child vom Paper, damit er “fest” drauf liegt
         tobaccoRT.SetParent(paperRect, worldPositionStays: false);
 
         // Mausposition -> Local Point im Paper
@@ -102,7 +96,6 @@ public class TobaccoDragAndDrop : MonoBehaviour
 
         if (clampInsidePaper)
         {
-            // clamp so, dass Tabak vollständig im Paper bleibt
             Rect pr = paperRect.rect;
             Rect tr = tobaccoRT.rect;
 
