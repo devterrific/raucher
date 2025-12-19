@@ -152,7 +152,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   interactRange: 1.5
   prompt: Press E
-  targetSceneName: Buro
+  targetSceneName: Flur
 --- !u!61 &957680769
 BoxCollider2D:
   m_ObjectHideFlags: 0
