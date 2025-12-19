@@ -2892,6 +2892,9 @@ MonoBehaviour:
   zoneGood: {fileID: 316055812}
   zonePerfect: {fileID: 955873081}
   zoneRevealDelay: 3.15
+  zoneFadeInDuration: 0.45
+  zoneFadeOutDuration: 0.2
+  filterFadeInDuration: 0.35
   paperPackBtn: {fileID: 1253166752}
   tobaccoPackBtn: {fileID: 1307622867}
   filterPackBtn: {fileID: 1684432426}

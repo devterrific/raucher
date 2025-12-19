@@ -50,6 +50,11 @@ public class MiniGameFlow : MonoBehaviour
     [Header("Filter Timing")]
     [SerializeField] private float zoneRevealDelay = 5f;
 
+    [Header("Fade Settings (NEU)")]
+    [SerializeField] private float zoneFadeInDuration = 0.35f;
+    [SerializeField] private float zoneFadeOutDuration = 0.2f;
+    [SerializeField] private float filterFadeInDuration = 0.25f;
+
     [Header("Packs & Anchors")]
     [SerializeField] private Button paperPackBtn;
     [SerializeField] private Button tobaccoPackBtn;
@@ -96,7 +101,6 @@ public class MiniGameFlow : MonoBehaviour
     private Image spawnedTobaccoPackOpen;
 
     private PlacementRating lastPlacement = PlacementRating.None;
-
     private bool isFilterClickLocked = false;
     private bool isTobaccoClickLocked = false;
 
@@ -123,7 +127,8 @@ public class MiniGameFlow : MonoBehaviour
         countdownPanel.alpha = 0f;
         countdownPanel.gameObject.SetActive(true);
 
-        SetZonesVisible(false);
+        // Zonen initial wirklich unsichtbar (ohne Pop)
+        ForceZonesHidden();
 
         paperPackOpened = false;
         tobaccoPackOpened = false;
@@ -148,14 +153,21 @@ public class MiniGameFlow : MonoBehaviour
         if (CurrentStateIsFilterAiming() && !filterEvaluated && Input.GetKeyDown(KeyCode.Space) && filterAimer != null)
         {
             filterEvaluated = true;
+
+            // 1) Drop
             filterAimer.Drop();
+
+            // 2) Scoring + evtl. FailSequence
             EvaluateFilter();
 
-            // Wenn FailSequence läuft, sind wir schon im Results-Flow
+            // Wenn FailSequence läuft → Results Flow
             if (earnedPointsThisRun <= 0)
                 return;
 
+            // 2b) Zonen aus (FadeOut)
             SetZonesVisible(false);
+
+            // 3) Weiter zum Tabak
             EnterState(State.WaitTobaccoClick);
         }
     }
@@ -230,12 +242,10 @@ public class MiniGameFlow : MonoBehaviour
 
     private void OnPaperClicked()
     {
-        // STAGE 1: öffnen
         if (!paperPackOpened)
         {
             paperPackOpened = true;
 
-            // Sound: Papierpackung öffnen
             if (uiSfxSource != null && paperOpenClip != null)
                 uiSfxSource.PlayOneShot(paperOpenClip, uiSfxVolume);
 
@@ -259,7 +269,6 @@ public class MiniGameFlow : MonoBehaviour
             return;
         }
 
-        // STAGE 2: Papier platzieren
         paperPackBtn.interactable = false;
 
         spawnedPaper = Instantiate(paperPrefab, paperAnchor);
@@ -276,14 +285,13 @@ public class MiniGameFlow : MonoBehaviour
         isFilterClickLocked = true;
         filterPackBtn.interactable = false;
 
-        // Zonen erstmal aus
+        // Zonen erstmal aus (FadeOut)
         SetZonesVisible(false);
 
-        // Zone-Reveal Countdown startet sofort (5s nach Klick),
-        // aber nur wenn wir bis dahin noch im Aiming-State sind
+        // Zone Reveal nach Delay (sanft)
         StartCoroutine(RevealZonesAfterDelay());
 
-        // Filter (Prefab + Bewegung) soll erst nach Sound kommen
+        // Filter erst nach Sound spawnen
         StartCoroutine(FilterSpawnAfterSound());
     }
 
@@ -300,9 +308,7 @@ public class MiniGameFlow : MonoBehaviour
         if (wait > 0f)
             yield return new WaitForSecondsRealtime(wait);
 
-        // Jetzt erst Filter-Aiming starten (spawnt den Filter)
         EnterState(State.FilterAiming);
-
         isFilterClickLocked = false;
     }
 
@@ -310,29 +316,32 @@ public class MiniGameFlow : MonoBehaviour
     {
         yield return new WaitForSecondsRealtime(zoneRevealDelay);
 
-        // Nur einblenden, wenn wir wirklich noch aimen und nicht schon ausgewertet haben
         if (currentState == State.FilterAiming && !filterEvaluated)
-            SetZonesVisible(true);
+            SetZonesVisible(true); // Fade-In
     }
 
     private void OnTobaccoClicked()
     {
         if (!filterEvaluated) return;
+        if (isTobaccoClickLocked) return;
 
-        // STAGE 1: öffnen (erst NACH Sound sichtbar)
         if (!tobaccoPackOpened)
         {
-            if (isTobaccoClickLocked) return;
+            tobaccoPackOpened = true;
+
             isTobaccoClickLocked = true;
 
-            // während Sound läuft blocken
-            tobaccoPackBtn.interactable = false;
+            float wait = 0f;
+            if (uiSfxSource != null && tobaccoOpenClip != null)
+            {
+                uiSfxSource.PlayOneShot(tobaccoOpenClip, uiSfxVolume);
+                wait = tobaccoOpenClip.length;
+            }
 
-            StartCoroutine(OpenTobaccoPackAfterSound());
+            StartCoroutine(OpenTobaccoAfterSound(wait));
             return;
         }
 
-        // STAGE 2: Tabak Drag&Drop starten (mit passender Tabak-Länge)
         tobaccoPackBtn.interactable = false;
 
         if (tobaccoDrag != null && spawnedPaper != null && mainCanvas != null)
@@ -359,21 +368,10 @@ public class MiniGameFlow : MonoBehaviour
         }
     }
 
-    private IEnumerator OpenTobaccoPackAfterSound()
+    private IEnumerator OpenTobaccoAfterSound(float wait)
     {
-        float wait = 0f;
-
-        if (uiSfxSource != null && tobaccoOpenClip != null)
-        {
-            uiSfxSource.PlayOneShot(tobaccoOpenClip, uiSfxVolume);
-            wait = tobaccoOpenClip.length;
-        }
-
         if (wait > 0f)
             yield return new WaitForSecondsRealtime(wait);
-
-        // Jetzt erst visuell öffnen
-        tobaccoPackOpened = true;
 
         var btnImg = tobaccoPackBtn.GetComponent<Image>();
         if (btnImg != null) btnImg.enabled = false;
@@ -392,9 +390,6 @@ public class MiniGameFlow : MonoBehaviour
         }
 
         SetHint("Klicke den geöffneten Tabakbeutel erneut, um den Tabak zu platzieren.");
-
-        // Stage 2 wieder erlauben
-        tobaccoPackBtn.interactable = true;
         isTobaccoClickLocked = false;
     }
 
@@ -411,7 +406,14 @@ public class MiniGameFlow : MonoBehaviour
     {
         var filterImg = Instantiate(filterPrefab, filterAnchor);
         var rt = filterImg.rectTransform;
+
         rt.anchoredPosition = Vector2.zero;
+
+        // ✅ Filter Fade-In (sanft auftauchen)
+        var filterCg = filterImg.GetComponent<CanvasGroup>();
+        if (filterCg == null) filterCg = filterImg.gameObject.AddComponent<CanvasGroup>();
+        filterCg.alpha = 0f;
+        StartCoroutine(FadeCanvasGroup(filterCg, 0f, 1f, filterFadeInDuration));
 
         filterAimer = filterImg.gameObject.AddComponent<FilterAimer>();
 
@@ -598,19 +600,77 @@ public class MiniGameFlow : MonoBehaviour
 
     private void SetHint(string msg) => topHintText.text = msg;
 
+    /// <summary>
+    /// ✅ Fade-In/Fade-Out für TargetZone + alle Zonen (kein „plopp“)
+    /// </summary>
     private void SetZonesVisible(bool visible)
     {
-        var tzImg = targetZone.GetComponent<Image>();
-        if (tzImg != null) tzImg.enabled = visible;
+        FadeZone(targetZone, visible);
+        FadeZone(zoneOkay, visible);
+        FadeZone(zoneGood, visible);
+        FadeZone(zonePerfect, visible);
+    }
 
-        var okImg = zoneOkay.GetComponent<Image>();
-        if (okImg != null) okImg.enabled = visible;
+    /// <summary>
+    /// Für Awake(): sofort unsichtbar ohne Coroutine
+    /// </summary>
+    private void ForceZonesHidden()
+    {
+        ForceZoneHidden(targetZone);
+        ForceZoneHidden(zoneOkay);
+        ForceZoneHidden(zoneGood);
+        ForceZoneHidden(zonePerfect);
+    }
 
-        var goodImg = zoneGood.GetComponent<Image>();
-        if (goodImg != null) goodImg.enabled = visible;
+    private void ForceZoneHidden(RectTransform zone)
+    {
+        if (zone == null) return;
 
-        var perfImg = zonePerfect.GetComponent<Image>();
-        if (perfImg != null) perfImg.enabled = visible;
+        var cg = zone.GetComponent<CanvasGroup>();
+        if (cg == null) cg = zone.gameObject.AddComponent<CanvasGroup>();
+        cg.alpha = 0f;
+        zone.gameObject.SetActive(false);
+    }
+
+    private void FadeZone(RectTransform zone, bool show)
+    {
+        if (zone == null) return;
+
+        var cg = zone.GetComponent<CanvasGroup>();
+        if (cg == null) cg = zone.gameObject.AddComponent<CanvasGroup>();
+
+        if (show)
+        {
+            zone.gameObject.SetActive(true);
+            StartCoroutine(FadeCanvasGroup(cg, cg.alpha, 1f, zoneFadeInDuration));
+        }
+        else
+        {
+            // Fade out → dann deaktivieren
+            StartCoroutine(FadeCanvasGroup(cg, cg.alpha, 0f, zoneFadeOutDuration, () =>
+            {
+                zone.gameObject.SetActive(false);
+            }));
+        }
+    }
+
+    private IEnumerator FadeCanvasGroup(CanvasGroup cg, float from, float to, float duration, System.Action onComplete = null)
+    {
+        if (cg == null) yield break;
+
+        float t = 0f;
+        cg.alpha = from;
+
+        while (t < duration)
+        {
+            t += Time.unscaledDeltaTime;
+            float k = Mathf.Clamp01(t / duration);
+            cg.alpha = Mathf.Lerp(from, to, k);
+            yield return null;
+        }
+
+        cg.alpha = to;
+        onComplete?.Invoke();
     }
 
     private Rect GetScreenRect(RectTransform rt)
@@ -638,7 +698,6 @@ public class MiniGameFlow : MonoBehaviour
 
         float interArea = w * h;
         float aArea = a.width * a.height;
-
         if (aArea <= 0f) return 0f;
 
         return Mathf.Clamp01(interArea / aArea);
