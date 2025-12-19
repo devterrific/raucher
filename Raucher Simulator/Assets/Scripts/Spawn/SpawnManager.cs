@@ -15,57 +15,86 @@ public class SpawnManager : MonoBehaviour
     public string smokingScene = "Smoking Mini Game";
 
     [Header("Spawn IDs")]
-    public string startBuro = "Start_Buro";      // nur beim start
-    public string doorBuro = "Door_Buro";       // wenn man aus flur kommt
+    public string startBuro = "Start_Buro";
+    public string doorBuro = "Door_Buro";
 
-    public string leftFlur = "Links_Flur";      // wenn man aus buro kommt
-    public string rightFlur = "Rechts_Flur";     // wenn man aus smoking kommt (oder später was anderes)
+    public string leftFlur = "Links_Flur";
+    public string rightFlur = "Rechts_Flur";
 
-    public string startSmoking = "Start_Smoking"; // wenn man aus flur kommt
+    public string startSmoking = "Start_Smoking";
 
-    private string fromScene = "";
     private bool firstSpawnDone = false;
+
+    // wird automatisch gesetzt (egal wer LoadScene macht)
+    private string prevSceneName = "";
 
     void Awake()
     {
+        Debug.Log("[SpawnManager] Awake on: " + name);
+
         if (Instance == null)
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
+            Debug.Log("[SpawnManager] Instance gesetzt + DontDestroyOnLoad");
         }
         else
         {
+            Debug.LogWarning("[SpawnManager] Duplicate -> Destroy: " + name);
             Destroy(gameObject);
         }
     }
 
     void OnEnable()
     {
+        Debug.Log("[SpawnManager] OnEnable subscribe");
         SceneManager.sceneLoaded += OnSceneLoaded;
+        SceneManager.activeSceneChanged += OnActiveSceneChanged;
     }
 
     void OnDisable()
     {
+        Debug.Log("[SpawnManager] OnDisable unsubscribe");
         SceneManager.sceneLoaded -= OnSceneLoaded;
+        SceneManager.activeSceneChanged -= OnActiveSceneChanged;
     }
 
-    // NUR diese methode benutzen für scene wechsel
+    // optional: kannst du weiter benutzen, muss aber nicht
     public void LoadScene(string targetScene)
     {
-        fromScene = SceneManager.GetActiveScene().name;
+        string current = SceneManager.GetActiveScene().name;
+        Debug.Log("[SpawnManager] LoadScene CALLED. current=" + current + " target=" + targetScene);
+
         SceneManager.LoadScene(targetScene);
+    }
+
+    void OnActiveSceneChanged(Scene oldScene, Scene newScene)
+    {
+        // oldScene ist die Scene, aus der wir kommen
+        prevSceneName = oldScene.name;
+        Debug.Log("[SpawnManager] activeSceneChanged old=" + oldScene.name + " new=" + newScene.name);
     }
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        MakeSurePlayerExists();
+        Debug.Log("[SpawnManager] OnSceneLoaded: " + scene.name +
+                  " | prevScene=" + (prevSceneName == "" ? "(leer/start)" : prevSceneName) +
+                  " | firstSpawnDone=" + firstSpawnDone);
 
-        string spawnId = PickSpawn(scene.name);
+        MakeSurePlayerExists();
+        if (player == null)
+        {
+            Debug.LogError("[SpawnManager] player ist NULL -> STOP");
+            return;
+        }
+
+        string spawnId = PickSpawn(scene.name, prevSceneName);
+        Debug.Log("[SpawnManager] spawnId=" + spawnId);
 
         SpawnPoint sp = FindSpawn(spawnId);
         if (sp == null)
         {
-            Debug.LogError("SpawnPoint nicht gefunden: " + spawnId);
+            Debug.LogError("[SpawnManager] SpawnPoint NICHT gefunden: " + spawnId);
             PrintSpawns();
             return;
         }
@@ -73,8 +102,10 @@ public class SpawnManager : MonoBehaviour
         player.transform.position = sp.transform.position;
         player.transform.rotation = sp.transform.rotation;
 
+        Debug.Log("[SpawnManager] Player moved to: " + sp.id);
+
         firstSpawnDone = true;
-        fromScene = "";
+        prevSceneName = ""; // reset
     }
 
     void MakeSurePlayerExists()
@@ -86,22 +117,24 @@ public class SpawnManager : MonoBehaviour
         {
             player = found;
             DontDestroyOnLoad(player);
+            Debug.Log("[SpawnManager] Player gefunden per Tag");
             return;
         }
 
         if (playerPrefab == null)
         {
-            Debug.LogError("playerPrefab fehlt im Inspector");
+            Debug.LogError("[SpawnManager] playerPrefab fehlt im Inspector");
             return;
         }
 
         player = Instantiate(playerPrefab);
         DontDestroyOnLoad(player);
+        Debug.Log("[SpawnManager] Player instantiated");
     }
 
-    string PickSpawn(string currentScene)
+    string PickSpawn(string currentScene, string fromScene)
     {
-        // spielstart (nur 1x)
+        // echter spielstart nur 1x
         if (!firstSpawnDone)
         {
             if (currentScene == buroScene) return startBuro;
@@ -121,8 +154,8 @@ public class SpawnManager : MonoBehaviour
         // smoking -> flur
         if (currentScene == flurScene && fromScene == smokingScene) return rightFlur;
 
-        // fallback (Buro nie wieder start)
-        if (currentScene == buroScene) return doorBuro;
+        // fallback
+        if (currentScene == buroScene) return doorBuro; // nie wieder start nach dem start
         if (currentScene == flurScene) return leftFlur;
         if (currentScene == smokingScene) return startSmoking;
 
@@ -131,7 +164,7 @@ public class SpawnManager : MonoBehaviour
 
     SpawnPoint FindSpawn(string id)
     {
-        SpawnPoint[] points = FindObjectsOfType<SpawnPoint>();
+        SpawnPoint[] points = FindObjectsOfType<SpawnPoint>(true);
         for (int i = 0; i < points.Length; i++)
         {
             if (points[i] != null && points[i].id == id)
@@ -142,10 +175,11 @@ public class SpawnManager : MonoBehaviour
 
     void PrintSpawns()
     {
-        SpawnPoint[] points = FindObjectsOfType<SpawnPoint>();
-        Debug.Log("SpawnPoints in scene:");
+        SpawnPoint[] points = FindObjectsOfType<SpawnPoint>(true);
+        Debug.Log("[SpawnManager] SpawnPoints:");
         for (int i = 0; i < points.Length; i++)
         {
+            if (points[i] == null) continue;
             Debug.Log(" - " + points[i].id + " (" + points[i].name + ")");
         }
     }

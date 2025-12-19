@@ -14,5 +14,8 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/TestSceneZusammen/Flur.unity
     guid: 3f89f9440654bfd4baa0d36c9b7ef5af
+  - enabled: 1
+    path: Assets/Scenes/SmokingMiniGame.unity
+    guid: 092b7aacc8945dc42981e645c2e69aef
   m_configObjects: {}
   m_UseUCBPForAssetBundles: 0
