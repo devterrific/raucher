@@ -427,7 +427,7 @@ public class MiniGameFlow : MonoBehaviour
         var rt = filterImg.rectTransform;
         rt.anchoredPosition = Vector2.zero;
 
-        // ✅ Filter Fade-In (sanft auftauchen)
+        //  Filter Fade-In
         var filterCg = filterImg.GetComponent<CanvasGroup>();
         if (filterCg == null) filterCg = filterImg.gameObject.AddComponent<CanvasGroup>();
         filterCg.alpha = 0f;
