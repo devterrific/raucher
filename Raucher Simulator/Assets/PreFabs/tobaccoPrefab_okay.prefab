@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8218467514944445844}
   - component: {fileID: 7183574483210983918}
   m_Layer: 5
-  m_Name: tobaccoPrefab
+  m_Name: tobaccoPrefab_okay
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -35,7 +35,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 520, y: 80}
+  m_SizeDelta: {x: 170, y: 70}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8218467514944445844
 CanvasRenderer:
@@ -65,7 +65,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 7165189728349261499, guid: 8f46ac3cb815d5f428d87a997db75cc7, type: 3}
+  m_Sprite: {fileID: 2263877315605759925, guid: 4b8082539c7537d41abca6f98f6f5401, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

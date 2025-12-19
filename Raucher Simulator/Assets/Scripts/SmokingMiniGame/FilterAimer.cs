@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using UnityEngine;
 
 public class FilterAimer : MonoBehaviour
@@ -13,13 +13,12 @@ public class FilterAimer : MonoBehaviour
     private bool loopMovement;
     private System.Action onMiss;
 
-    /// <summary>
-    /// parent:   der RectTransform, in dessen lokaler Fläche wir uns bewegen (z.B. FilterAnchor)
-    /// rangeWidth: Gesamtbreite, die der Filter horizontal abfahren darf
-    /// startRightToLeft: Startet rechts und geht nach links (true) oder umgekehrt (false)
-    /// loopMovement: true = Hin-und-Her-Bewegung, false = nur ein Durchlauf, danach onMiss
-    /// onMiss: Callback, wenn der Filter den Bereich verlässt, ohne gedroppt zu werden
-    /// </summary>
+    [Header("Fail Fall Settings")]
+    [SerializeField] private float failFallDistance = 1000f;
+    [SerializeField] private float failFallTime = 1.2f;
+
+    public RectTransform Rect => rt;
+
     public void Init(RectTransform parent, float speed, float rangeWidth,
                      bool startRightToLeft, bool loopMovement, System.Action onMiss)
     {
@@ -34,7 +33,6 @@ public class FilterAimer : MonoBehaviour
 
         dir = startRightToLeft ? -1 : 1;
 
-        // Startposition: ganz rechts oder ganz links
         rt.anchoredPosition = new Vector2(startRightToLeft ? rightX : leftX, 0f);
         isMoving = true;
         hasDropped = false;
@@ -52,7 +50,7 @@ public class FilterAimer : MonoBehaviour
             p.x = leftX;
             if (loopMovement)
             {
-                dir = 1; // Richtung umdrehen
+                dir = 1;
             }
             else
             {
@@ -65,7 +63,7 @@ public class FilterAimer : MonoBehaviour
             p.x = rightX;
             if (loopMovement)
             {
-                dir = -1; // Richtung umdrehen
+                dir = -1;
             }
             else
             {
@@ -77,9 +75,14 @@ public class FilterAimer : MonoBehaviour
         rt.anchoredPosition = p;
     }
 
+    // NEU: Stoppt nur die horizontale Bewegung (fÃ¼r die Bewertung)
+    public void StopMove()
+    {
+        isMoving = false;
+    }
+
     /// <summary>
-    /// Wird beim Drücken der Leertaste aufgerufen: Stoppt horizontale Bewegung
-    /// und lässt den Filter leicht nach unten „einrasten“.
+    /// Normaler Drop (Erfolg): stoppt Bewegung & droppt leicht nach unten.
     /// </summary>
     public void Drop(float dropDistance = 195f, float dropTime = 0.25f)
     {
@@ -87,6 +90,43 @@ public class FilterAimer : MonoBehaviour
         hasDropped = true;
         isMoving = false;
         StartCoroutine(DropRoutine(dropDistance, dropTime));
+    }
+
+    /// <summary>
+    /// Fail-Fall: fÃ¤llt langsam nach unten und verschwindet.
+    /// Ãœberschreibt IMMER evtl. laufende Coroutines.
+    /// </summary>
+    public void FailFall()
+    {
+        // IMMER Ã¼berschreiben, egal ob vorher Drop lief
+        StopAllCoroutines();
+
+        hasDropped = true;
+        isMoving = false;
+
+        StartCoroutine(FailFallRoutine());
+    }
+
+    private IEnumerator FailFallRoutine()
+    {
+        Vector2 start = rt.anchoredPosition;
+        Vector2 end = start + Vector2.down * failFallDistance;
+
+        float t = 0f;
+        while (t < failFallTime)
+        {
+            t += Time.deltaTime;
+            float k = Mathf.Clamp01(t / failFallTime);
+
+            // bewusst linear: ruhig & klarer Fail-Moment
+            rt.anchoredPosition = Vector2.Lerp(start, end, k);
+            yield return null;
+        }
+
+        rt.anchoredPosition = end;
+
+        // verschwinden
+        gameObject.SetActive(false);
     }
 
     private IEnumerator DropRoutine(float dropDistance, float dropTime)
@@ -106,9 +146,6 @@ public class FilterAimer : MonoBehaviour
         rt.anchoredPosition = end;
     }
 
-    /// <summary>
-    /// Weltposition der Mitte (fürs Scoring)
-    /// </summary>
     public Vector2 CenterWorld()
     {
         return rt.TransformPoint(rt.rect.center);

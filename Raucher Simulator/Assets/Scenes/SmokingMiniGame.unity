@@ -485,6 +485,81 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: 'Score: 0'
+--- !u!1 &570197868
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 570197869}
+  - component: {fileID: 570197871}
+  - component: {fileID: 570197870}
+  m_Layer: 5
+  m_Name: PlacementBanner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &570197869
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 570197868}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 8, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1860267683}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 150}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &570197870
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 570197868}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.5647059, g: 0.5882353, b: 0.64705884, a: 1}
+  m_RaycastTarget: 0
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &570197871
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 570197868}
+  m_CullTransparentMesh: 1
 --- !u!1 &650031781
 GameObject:
   m_ObjectHideFlags: 0
@@ -717,6 +792,56 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 955873080}
   m_CullTransparentMesh: 1
+--- !u!1 &1047466951
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1047466953}
+  - component: {fileID: 1047466952}
+  m_Layer: 0
+  m_Name: TobaccoDragSystem
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1047466952
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1047466951}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 724c1a64995d1074f904b7d489dda49b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  canvas: {fileID: 1860267682}
+  paperRect: {fileID: 1155433551}
+  tobaccoPrefab: {fileID: 7183574483210983918, guid: 421b01eb81c31b845be5b879a2466396, type: 3}
+  localOffsetOnPaper: {x: 0, y: 0}
+  clampInsidePaper: 1
+  requireMouseOverPaper: 1
+--- !u!4 &1047466953
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1047466951}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 3.6679993, y: 210.82237, z: 2.3402257}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2003218054}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1081775728
 GameObject:
   m_ObjectHideFlags: 0
@@ -839,7 +964,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -924,41 +1049,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!1 &1126150687
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1126150688}
-  m_Layer: 5
-  m_Name: System
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!224 &1126150688
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1126150687}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1860267683}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
-  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1155433550
 GameObject:
   m_ObjectHideFlags: 0
@@ -1293,6 +1383,7 @@ MonoBehaviour:
   sfxAudioSource: {fileID: 1496609422}
   whooshClip: {fileID: 8300000, guid: a06e65518de65ef4797a2889c0dc76a5, type: 3}
   whooshVolume: 0.8
+  whooshLeadTime: 0.5
   randomPitch: 1
   minPitch: 0.95
   maxPitch: 1.05
@@ -1480,7 +1571,7 @@ GameObject:
   - component: {fileID: 1307622867}
   - component: {fileID: 1307622870}
   m_Layer: 5
-  m_Name: TabaccoPack
+  m_Name: TobaccoPack
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1631,6 +1722,7 @@ MonoBehaviour:
   sfxAudioSource: {fileID: 1496609422}
   whooshClip: {fileID: 8300000, guid: a06e65518de65ef4797a2889c0dc76a5, type: 3}
   whooshVolume: 0.8
+  whooshLeadTime: 0.5
   randomPitch: 1
   minPitch: 0.95
   maxPitch: 1.05
@@ -1930,7 +2022,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -2271,6 +2363,7 @@ MonoBehaviour:
   sfxAudioSource: {fileID: 1496609422}
   whooshClip: {fileID: 8300000, guid: a06e65518de65ef4797a2889c0dc76a5, type: 3}
   whooshVolume: 0.8
+  whooshLeadTime: 0.5
   randomPitch: 1
   minPitch: 0.95
   maxPitch: 1.05
@@ -2734,8 +2827,7 @@ RectTransform:
   m_Children:
   - {fileID: 2052935861}
   - {fileID: 1682838294}
-  - {fileID: 1126150688}
-  - {fileID: 2056616602}
+  - {fileID: 570197869}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -2779,13 +2871,30 @@ MonoBehaviour:
   scoreText: {fileID: 379056976}
   resultPanel: {fileID: 650031781}
   resultText: {fileID: 1751058903}
+  placementBanner: {fileID: 570197870}
+  bannerPerfect: {fileID: 4799618668543402395, guid: a8ce34a9a1a923e43a8b5211d3dc1b81, type: 3}
+  bannerGood: {fileID: 6256978819795432554, guid: 8df8d60918a4fce45b2e7938e8a2c2fa, type: 3}
+  bannerOkay: {fileID: -5154847428942402932, guid: 648ada240f205294f84dceb9460b0bf3, type: 3}
+  bannerFail: {fileID: -6405752098009995145, guid: 4b1e2c9d26054834f992b94422c4e6d1, type: 3}
+  bannerShowTime: 0.8
   countdownAudioSource: {fileID: 1082906316}
   countdown321GoClip: {fileID: 8300000, guid: b9c76e9a28f2e994abe48f8dd557386a, type: 3}
-  countdownVolume: 0.5
+  countdownVolume: 0.2
+  uiSfxSource: {fileID: 1496609422}
+  paperOpenClip: {fileID: 8300000, guid: 237f6a46785960647a4aaa90d9226ba1, type: 3}
+  filterPickClip: {fileID: 8300000, guid: b8161e6674b34a944adcecc48a5c6e8c, type: 3}
+  tobaccoOpenClip: {fileID: 8300000, guid: 5b73c6aeb5973834dae3ed42d89956de, type: 3}
+  uiSfxVolume: 0.9
+  countUpDuration: 0.5
+  totalCountUpDuration: 0.5
   targetZone: {fileID: 278137358}
   zoneOkay: {fileID: 1849355041}
   zoneGood: {fileID: 316055812}
   zonePerfect: {fileID: 955873081}
+  zoneRevealDelay: 3.15
+  zoneFadeInDuration: 0.45
+  zoneFadeOutDuration: 0.2
+  filterFadeInDuration: 0.35
   paperPackBtn: {fileID: 1253166752}
   tobaccoPackBtn: {fileID: 1307622867}
   filterPackBtn: {fileID: 1684432426}
@@ -2793,7 +2902,10 @@ MonoBehaviour:
   filterAnchor: {fileID: 1663561617}
   paperPrefab: {fileID: 4968351494442460684, guid: 259227a54752cd0469bd7176d94f02d5, type: 3}
   filterPrefab: {fileID: 666867296833487198, guid: f2da1ce85f68b5b45b083fc9d732148d, type: 3}
-  tobaccoPrefab: {fileID: 7183574483210983918, guid: 421b01eb81c31b845be5b879a2466396, type: 3}
+  tobaccoPrefab: {fileID: 7183574483210983918, guid: 6735289dceda4c04c91ade4dfc740279, type: 3}
+  tobaccoPrefabOkay: {fileID: 7183574483210983918, guid: 421b01eb81c31b845be5b879a2466396, type: 3}
+  tobaccoPrefabGood: {fileID: 7183574483210983918, guid: 6735289dceda4c04c91ade4dfc740279, type: 3}
+  tobaccoPrefabPerfect: {fileID: 7183574483210983918, guid: c71d02c348f866048871e7f6ad451abc, type: 3}
   paperPackOpenPrefab: {fileID: 3469212422405452109, guid: 5870729925f7cae4ca154073dfd8695d, type: 3}
   tobaccoPackOpenPrefab: {fileID: 5112690371429572149, guid: 076405ef45bd3ee449aa62f08e043842, type: 3}
   settings: {fileID: 11400000, guid: b1be14c5d061ecc4a97ae28958885569, type: 2}
@@ -2801,6 +2913,8 @@ MonoBehaviour:
   paperPackIntro: {fileID: 1253166755}
   filterPackIntro: {fileID: 1684432429}
   tobaccoPackIntro: {fileID: 1307622870}
+  tobaccoDrag: {fileID: 1047466952}
+  mainCanvas: {fileID: 1860267682}
 --- !u!4 &2003218054
 Transform:
   m_ObjectHideFlags: 0
@@ -2815,6 +2929,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1274165363}
+  - {fileID: 1047466953}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2003218055
@@ -2929,41 +3044,6 @@ RectTransform:
   - {fileID: 945648028}
   - {fileID: 379056974}
   - {fileID: 650031782}
-  m_Father: {fileID: 1860267683}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!1 &2056616601
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2056616602}
-  m_Layer: 5
-  m_Name: FX
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!224 &2056616602
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2056616601}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
   m_Father: {fileID: 1860267683}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
