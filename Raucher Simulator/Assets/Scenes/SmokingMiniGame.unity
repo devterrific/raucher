@@ -2865,6 +2865,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2c330d3c05aab64983579386ca29799, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  fades:
+    zoneFadeIn: 0.35
+    zoneFadeOut: 0.2
+    filterFadeIn: 0.25
+    paperFadeIn: 0.35
   countdownPanel: {fileID: 1847533787}
   countdownText: {fileID: 1081775730}
   topHintText: {fileID: 945648030}
@@ -2885,16 +2890,13 @@ MonoBehaviour:
   filterPickClip: {fileID: 8300000, guid: b8161e6674b34a944adcecc48a5c6e8c, type: 3}
   tobaccoOpenClip: {fileID: 8300000, guid: 5b73c6aeb5973834dae3ed42d89956de, type: 3}
   uiSfxVolume: 0.9
-  countUpDuration: 0.5
-  totalCountUpDuration: 0.5
+  countUpDuration: 1.5
+  totalCountUpDuration: 1.5
   targetZone: {fileID: 278137358}
   zoneOkay: {fileID: 1849355041}
   zoneGood: {fileID: 316055812}
   zonePerfect: {fileID: 955873081}
   zoneRevealDelay: 3.15
-  zoneFadeInDuration: 0.45
-  zoneFadeOutDuration: 0.2
-  filterFadeInDuration: 0.35
   paperPackBtn: {fileID: 1253166752}
   tobaccoPackBtn: {fileID: 1307622867}
   filterPackBtn: {fileID: 1684432426}

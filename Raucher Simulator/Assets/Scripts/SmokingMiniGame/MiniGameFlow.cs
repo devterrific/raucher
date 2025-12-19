@@ -9,6 +9,33 @@ public class MiniGameFlow : MonoBehaviour
 
     private enum PlacementRating { None, Okay, Good, Perfect, Fail }
 
+    // -----------------------------
+    // Fade Settings
+    // -----------------------------
+    [System.Serializable]
+    private struct FadeSettings
+    {
+        [Header("Zones")]
+        public float zoneFadeIn;
+        public float zoneFadeOut;
+
+        [Header("Filter")]
+        public float filterFadeIn;
+
+        [Header("Paper")]
+        public float paperFadeIn;
+    }
+
+    [Header("Fade Settings")]
+    [SerializeField]
+    private FadeSettings fades = new FadeSettings
+    {
+        zoneFadeIn = 0.35f,
+        zoneFadeOut = 0.2f,
+        filterFadeIn = 0.25f,
+        paperFadeIn = 0.25f
+    };
+
     [Header("UI")]
     [SerializeField] private CanvasGroup countdownPanel;
     [SerializeField] private Text countdownText;
@@ -49,11 +76,6 @@ public class MiniGameFlow : MonoBehaviour
 
     [Header("Filter Timing")]
     [SerializeField] private float zoneRevealDelay = 5f;
-
-    [Header("Fade Settings (NEU)")]
-    [SerializeField] private float zoneFadeInDuration = 0.35f;
-    [SerializeField] private float zoneFadeOutDuration = 0.2f;
-    [SerializeField] private float filterFadeInDuration = 0.25f;
 
     [Header("Packs & Anchors")]
     [SerializeField] private Button paperPackBtn;
@@ -242,12 +264,10 @@ public class MiniGameFlow : MonoBehaviour
 
     private void OnPaperClicked()
     {
+        // STAGE 1: Packung öffnen (OHNE Sound)
         if (!paperPackOpened)
         {
             paperPackOpened = true;
-
-            if (uiSfxSource != null && paperOpenClip != null)
-                uiSfxSource.PlayOneShot(paperOpenClip, uiSfxVolume);
 
             var btnImg = paperPackBtn.GetComponent<Image>();
             if (btnImg != null) btnImg.enabled = false;
@@ -269,12 +289,11 @@ public class MiniGameFlow : MonoBehaviour
             return;
         }
 
+        // STAGE 2: Paper nehmen (Sound → dann Paper)
         paperPackBtn.interactable = false;
+        SetHint("Papier wird vorbereitet…");
 
-        spawnedPaper = Instantiate(paperPrefab, paperAnchor);
-        spawnedPaper.rectTransform.anchoredPosition = Vector2.zero;
-
-        EnterState(State.WaitFilterClick);
+        StartCoroutine(SpawnPaperAfterSound());
     }
 
     private void OnFilterPackClicked()
@@ -406,14 +425,13 @@ public class MiniGameFlow : MonoBehaviour
     {
         var filterImg = Instantiate(filterPrefab, filterAnchor);
         var rt = filterImg.rectTransform;
-
         rt.anchoredPosition = Vector2.zero;
 
         // ✅ Filter Fade-In (sanft auftauchen)
         var filterCg = filterImg.GetComponent<CanvasGroup>();
         if (filterCg == null) filterCg = filterImg.gameObject.AddComponent<CanvasGroup>();
         filterCg.alpha = 0f;
-        StartCoroutine(FadeCanvasGroup(filterCg, 0f, 1f, filterFadeInDuration));
+        StartCoroutine(FadeCanvasGroup(filterCg, 0f, 1f, fades.filterFadeIn));
 
         filterAimer = filterImg.gameObject.AddComponent<FilterAimer>();
 
@@ -601,7 +619,7 @@ public class MiniGameFlow : MonoBehaviour
     private void SetHint(string msg) => topHintText.text = msg;
 
     /// <summary>
-    /// ✅ Fade-In/Fade-Out für TargetZone + alle Zonen (kein „plopp“)
+    /// Fade-In/Fade-Out für TargetZone + alle Zonen
     /// </summary>
     private void SetZonesVisible(bool visible)
     {
@@ -642,12 +660,11 @@ public class MiniGameFlow : MonoBehaviour
         if (show)
         {
             zone.gameObject.SetActive(true);
-            StartCoroutine(FadeCanvasGroup(cg, cg.alpha, 1f, zoneFadeInDuration));
+            StartCoroutine(FadeCanvasGroup(cg, cg.alpha, 1f, fades.zoneFadeIn));
         }
         else
         {
-            // Fade out → dann deaktivieren
-            StartCoroutine(FadeCanvasGroup(cg, cg.alpha, 0f, zoneFadeOutDuration, () =>
+            StartCoroutine(FadeCanvasGroup(cg, cg.alpha, 0f, fades.zoneFadeOut, () =>
             {
                 zone.gameObject.SetActive(false);
             }));
@@ -730,6 +747,34 @@ public class MiniGameFlow : MonoBehaviour
 
         while (AnyPlaying())
             yield return null;
+    }
+
+    private IEnumerator SpawnPaperAfterSound()
+    {
+        float waitTime = 0f;
+
+        if (uiSfxSource != null && paperOpenClip != null)
+        {
+            uiSfxSource.PlayOneShot(paperOpenClip, uiSfxVolume);
+            waitTime = paperOpenClip.length;
+        }
+
+        if (waitTime > 0f)
+            yield return new WaitForSecondsRealtime(waitTime);
+
+        // Paper spawnen
+        spawnedPaper = Instantiate(paperPrefab, paperAnchor);
+        spawnedPaper.rectTransform.anchoredPosition = Vector2.zero;
+
+        // Paper Fade-In (aus Fade-Settings)
+        var cg = spawnedPaper.GetComponent<CanvasGroup>();
+        if (cg == null)
+            cg = spawnedPaper.gameObject.AddComponent<CanvasGroup>();
+
+        cg.alpha = 0f;
+        yield return StartCoroutine(FadeCanvasGroup(cg, 0f, 1f, fades.paperFadeIn));
+
+        EnterState(State.WaitFilterClick);
     }
 
     public void OnBtnRetry() => SceneManager.LoadScene("SmokingMinigame");
