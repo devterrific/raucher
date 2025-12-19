@@ -30,6 +30,13 @@ public class MiniGameFlow : MonoBehaviour
     [SerializeField] private AudioClip countdown321GoClip;
     [SerializeField, Range(0f, 1f)] private float countdownVolume = 1f;
 
+    [Header("UI Interaction Sounds")]
+    [SerializeField] private AudioSource uiSfxSource;
+    [SerializeField] private AudioClip paperOpenClip;
+    [SerializeField] private AudioClip filterPickClip;
+    [SerializeField] private AudioClip tobaccoOpenClip;
+    [SerializeField, Range(0f, 1f)] private float uiSfxVolume = 0.9f;
+
     [Header("Results Count-Up")]
     [SerializeField] private float countUpDuration = 0.8f;
     [SerializeField] private float totalCountUpDuration = 0.8f;
@@ -39,6 +46,9 @@ public class MiniGameFlow : MonoBehaviour
     [SerializeField] private RectTransform zoneOkay;
     [SerializeField] private RectTransform zoneGood;
     [SerializeField] private RectTransform zonePerfect;
+
+    [Header("Filter Timing")]
+    [SerializeField] private float zoneRevealDelay = 5f;
 
     [Header("Packs & Anchors")]
     [SerializeField] private Button paperPackBtn;
@@ -51,11 +61,10 @@ public class MiniGameFlow : MonoBehaviour
     [SerializeField] private Image paperPrefab;
     [SerializeField] private Image filterPrefab;
 
-    //  NEU: 3 Tabak-Längen
     [Header("Tobacco Prefabs (Length by Rating)")]
     [SerializeField] private Image tobaccoPrefab;
     [SerializeField] private Image tobaccoPrefabOkay;
-    [SerializeField] private Image tobaccoPrefabGood; 
+    [SerializeField] private Image tobaccoPrefabGood;
     [SerializeField] private Image tobaccoPrefabPerfect;
 
     [Header("Prefabs geöffnet")]
@@ -86,8 +95,10 @@ public class MiniGameFlow : MonoBehaviour
     private Image spawnedPaperPackOpen;
     private Image spawnedTobaccoPackOpen;
 
-    // NEU: merkt sich, welche Zone (bzw. Bewertung) gewonnen hat
     private PlacementRating lastPlacement = PlacementRating.None;
+
+    private bool isFilterClickLocked = false;
+    private bool isTobaccoClickLocked = false;
 
     // -----------------------------
     // Unity Callbacks
@@ -140,6 +151,7 @@ public class MiniGameFlow : MonoBehaviour
             filterAimer.Drop();
             EvaluateFilter();
 
+            // Wenn FailSequence läuft, sind wir schon im Results-Flow
             if (earnedPointsThisRun <= 0)
                 return;
 
@@ -223,6 +235,10 @@ public class MiniGameFlow : MonoBehaviour
         {
             paperPackOpened = true;
 
+            // Sound: Papierpackung öffnen
+            if (uiSfxSource != null && paperOpenClip != null)
+                uiSfxSource.PlayOneShot(paperOpenClip, uiSfxVolume);
+
             var btnImg = paperPackBtn.GetComponent<Image>();
             if (btnImg != null) btnImg.enabled = false;
 
@@ -255,38 +271,64 @@ public class MiniGameFlow : MonoBehaviour
     private void OnFilterPackClicked()
     {
         if (filterEvaluated) return;
+        if (isFilterClickLocked) return;
 
+        isFilterClickLocked = true;
         filterPackBtn.interactable = false;
-        SetZonesVisible(true);
+
+        // Zonen erstmal aus
+        SetZonesVisible(false);
+
+        // Zone-Reveal Countdown startet sofort (5s nach Klick),
+        // aber nur wenn wir bis dahin noch im Aiming-State sind
+        StartCoroutine(RevealZonesAfterDelay());
+
+        // Filter (Prefab + Bewegung) soll erst nach Sound kommen
+        StartCoroutine(FilterSpawnAfterSound());
+    }
+
+    private IEnumerator FilterSpawnAfterSound()
+    {
+        float wait = 0f;
+
+        if (uiSfxSource != null && filterPickClip != null)
+        {
+            uiSfxSource.PlayOneShot(filterPickClip, uiSfxVolume);
+            wait = filterPickClip.length;
+        }
+
+        if (wait > 0f)
+            yield return new WaitForSecondsRealtime(wait);
+
+        // Jetzt erst Filter-Aiming starten (spawnt den Filter)
         EnterState(State.FilterAiming);
+
+        isFilterClickLocked = false;
+    }
+
+    private IEnumerator RevealZonesAfterDelay()
+    {
+        yield return new WaitForSecondsRealtime(zoneRevealDelay);
+
+        // Nur einblenden, wenn wir wirklich noch aimen und nicht schon ausgewertet haben
+        if (currentState == State.FilterAiming && !filterEvaluated)
+            SetZonesVisible(true);
     }
 
     private void OnTobaccoClicked()
     {
         if (!filterEvaluated) return;
 
-        // STAGE 1: öffnen
+        // STAGE 1: öffnen (erst NACH Sound sichtbar)
         if (!tobaccoPackOpened)
         {
-            tobaccoPackOpened = true;
+            if (isTobaccoClickLocked) return;
+            isTobaccoClickLocked = true;
 
-            var btnImg = tobaccoPackBtn.GetComponent<Image>();
-            if (btnImg != null) btnImg.enabled = false;
+            // während Sound läuft blocken
+            tobaccoPackBtn.interactable = false;
 
-            if (spawnedTobaccoPackOpen == null && tobaccoPackOpenPrefab != null)
-            {
-                spawnedTobaccoPackOpen = Instantiate(tobaccoPackOpenPrefab, tobaccoPackBtn.transform);
-
-                var rt = spawnedTobaccoPackOpen.rectTransform;
-                rt.anchorMin = new Vector2(0.5f, 0.5f);
-                rt.anchorMax = new Vector2(0.5f, 0.5f);
-                rt.anchoredPosition = Vector2.zero;
-
-                spawnedTobaccoPackOpen.raycastTarget = false;
-                tobaccoPackBtn.targetGraphic = spawnedTobaccoPackOpen;
-            }
-
-            SetHint("Klicke den geöffneten Tabakbeutel erneut, um den Tabak zu platzieren.");
+            StartCoroutine(OpenTobaccoPackAfterSound());
             return;
         }
 
@@ -315,6 +357,45 @@ public class MiniGameFlow : MonoBehaviour
             Debug.LogWarning("TobaccoDrag/MainCanvas/spawnedPaper fehlt – fallback zu Assemble.");
             EnterState(State.Assemble);
         }
+    }
+
+    private IEnumerator OpenTobaccoPackAfterSound()
+    {
+        float wait = 0f;
+
+        if (uiSfxSource != null && tobaccoOpenClip != null)
+        {
+            uiSfxSource.PlayOneShot(tobaccoOpenClip, uiSfxVolume);
+            wait = tobaccoOpenClip.length;
+        }
+
+        if (wait > 0f)
+            yield return new WaitForSecondsRealtime(wait);
+
+        // Jetzt erst visuell öffnen
+        tobaccoPackOpened = true;
+
+        var btnImg = tobaccoPackBtn.GetComponent<Image>();
+        if (btnImg != null) btnImg.enabled = false;
+
+        if (spawnedTobaccoPackOpen == null && tobaccoPackOpenPrefab != null)
+        {
+            spawnedTobaccoPackOpen = Instantiate(tobaccoPackOpenPrefab, tobaccoPackBtn.transform);
+
+            var rt = spawnedTobaccoPackOpen.rectTransform;
+            rt.anchorMin = new Vector2(0.5f, 0.5f);
+            rt.anchorMax = new Vector2(0.5f, 0.5f);
+            rt.anchoredPosition = Vector2.zero;
+
+            spawnedTobaccoPackOpen.raycastTarget = false;
+            tobaccoPackBtn.targetGraphic = spawnedTobaccoPackOpen;
+        }
+
+        SetHint("Klicke den geöffneten Tabakbeutel erneut, um den Tabak zu platzieren.");
+
+        // Stage 2 wieder erlauben
+        tobaccoPackBtn.interactable = true;
+        isTobaccoClickLocked = false;
     }
 
     private bool CurrentStateIsFilterAiming()
@@ -430,7 +511,6 @@ public class MiniGameFlow : MonoBehaviour
         EnterState(State.Results);
     }
 
-    // NEU: Tabak-Prefab anhand Rating auswählen
     private Image GetTobaccoPrefabByRating()
     {
         switch (lastPlacement)
