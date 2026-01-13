@@ -1454,7 +1454,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   audioSource: {fileID: 1840494408}
-  hoverSound: {fileID: 8300000, guid: a06e65518de65ef4797a2889c0dc76a5, type: 3}
+  hoverSound: {fileID: 0}
   clickSound: {fileID: 0}
 --- !u!1 &912007389
 GameObject:
@@ -1667,7 +1667,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   audioSource: {fileID: 1840494408}
-  hoverSound: {fileID: 8300000, guid: a06e65518de65ef4797a2889c0dc76a5, type: 3}
+  hoverSound: {fileID: 0}
   clickSound: {fileID: 0}
 --- !u!1 &1122629899
 GameObject:
@@ -2614,7 +2614,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   audioSource: {fileID: 1840494408}
-  hoverSound: {fileID: 8300000, guid: a06e65518de65ef4797a2889c0dc76a5, type: 3}
+  hoverSound: {fileID: 0}
   clickSound: {fileID: 0}
 --- !u!1 &1572890987
 GameObject:
@@ -3312,7 +3312,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   audioSource: {fileID: 1840494408}
-  hoverSound: {fileID: 8300000, guid: a06e65518de65ef4797a2889c0dc76a5, type: 3}
+  hoverSound: {fileID: 0}
   clickSound: {fileID: 0}
 --- !u!1 &1903489938
 GameObject:
