@@ -5,7 +5,7 @@ public class DifficultySettings : ScriptableObject
 {
     [Header("Filter Movement")]
     [Min(1f)] public float filterSpeed = 500f;      // px/sec
-    public bool loopMovement = true;                // falls du später Ping-Pong willst
+    public bool loopMovement = true;                // falls man später Ping-Pong willst
     public bool rightToLeft = true;                 // gemäß Design: rechts → links
 
     [Min(1f)] public float movementRange = 800F;    // Range für die Filterbewegung
