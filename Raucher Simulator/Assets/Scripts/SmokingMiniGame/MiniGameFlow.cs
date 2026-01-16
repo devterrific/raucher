@@ -69,7 +69,6 @@ public class MiniGameFlow : MonoBehaviour
 
     [Header("Results Count-Up")]
     [SerializeField] private float countUpDuration = 0.8f;
-    [SerializeField] private float totalCountUpDuration = 0.8f;
 
     [Header("Zone Refs")]
     [SerializeField] private RectTransform targetZone;
@@ -128,8 +127,31 @@ public class MiniGameFlow : MonoBehaviour
     private bool isFilterClickLocked = false;
     private bool isTobaccoClickLocked = false;
 
-    // Verhindert doppelte Punktevergabe (falls ShowResults mehrfach getriggert wird)
-    private bool hasGivenScoreThisRun = false;
+    // GameOver Schutz
+    private bool hasGlobalGameOverHappened = false;
+
+    private void HandleGlobalGameOver()
+    {
+        hasGlobalGameOverHappened = true;
+
+        StopAllCoroutines();
+
+        if (resultPanel != null) resultPanel.SetActive(false);
+        if (placementBanner != null) placementBanner.gameObject.SetActive(false);
+
+        if (paperPackBtn != null) paperPackBtn.gameObject.SetActive(false);
+        if (filterPackBtn != null) filterPackBtn.gameObject.SetActive(false);
+        if (tobaccoPackBtn != null) tobaccoPackBtn.gameObject.SetActive(false);
+
+        SetZonesVisible(false);
+        ForceZonesHidden();
+
+        if (spawnedPaper != null) spawnedPaper.gameObject.SetActive(false);
+        if (filterAimer != null) filterAimer.gameObject.SetActive(false);
+
+        if (topHintText != null) topHintText.gameObject.SetActive(false);
+        if (countdownPanel != null) countdownPanel.gameObject.SetActive(false);
+    }
 
     private void Awake()
     {
@@ -146,14 +168,12 @@ public class MiniGameFlow : MonoBehaviour
         if (filterPackBtn != null) filterPackBtn.onClick.AddListener(OnFilterPackClicked);
         if (tobaccoPackBtn != null) tobaccoPackBtn.onClick.AddListener(OnTobaccoClicked);
 
-        // Weiter-Button Listener per Code (Inspector-OnClick bitte leer lassen!)
         if (continueButton != null)
         {
             continueButton.onClick.AddListener(ContinueAfterMiniGame);
         }
 
         earnedPointsThisRun = 0;
-        hasGivenScoreThisRun = false;
 
         if (countdownPanel != null)
         {
@@ -161,7 +181,6 @@ public class MiniGameFlow : MonoBehaviour
             countdownPanel.gameObject.SetActive(true);
         }
 
-        // WICHTIG: Zonen initial wirklich unsichtbar
         ForceZonesHidden();
 
         paperPackOpened = false;
@@ -187,35 +206,30 @@ public class MiniGameFlow : MonoBehaviour
     private IEnumerator Start()
     {
         yield return StartCoroutine(RunCountdown());
-
-        // WICHTIG: Packs sind über PackFlyIn zunächst unsichtbar -> PlayPackIntros macht sie sichtbar.
         yield return StartCoroutine(PlayPackIntros());
-
         EnterState(State.WaitPaperClick);
     }
 
     private void Update()
     {
+        if (hasGlobalGameOverHappened == true)
+        {
+            return;
+        }
+
         if (CurrentStateIsFilterAiming() && !filterEvaluated && Input.GetKeyDown(KeyCode.Space) && filterAimer != null)
         {
             filterEvaluated = true;
 
-            // Drop Animation
             filterAimer.Drop();
-
-            // Punkte berechnen (oder Fail)
             EvaluateFilter();
 
-            // Bei Fail geht es direkt in Results
             if (earnedPointsThisRun <= 0)
             {
                 return;
             }
 
-            // Zonen ausblenden
             SetZonesVisible(false);
-
-            // Weiter zum Tabak
             EnterState(State.WaitTobaccoClick);
         }
     }
@@ -266,6 +280,11 @@ public class MiniGameFlow : MonoBehaviour
 
     private void EnterState(State s)
     {
+        if (hasGlobalGameOverHappened == true)
+        {
+            return;
+        }
+
         currentState = s;
 
         switch (s)
@@ -303,7 +322,11 @@ public class MiniGameFlow : MonoBehaviour
 
     private void OnPaperClicked()
     {
-        // STAGE 1: Packung öffnen
+        if (hasGlobalGameOverHappened == true)
+        {
+            return;
+        }
+
         if (!paperPackOpened)
         {
             paperPackOpened = true;
@@ -328,7 +351,6 @@ public class MiniGameFlow : MonoBehaviour
             return;
         }
 
-        // STAGE 2: Paper nehmen (Sound → dann Paper)
         paperPackBtn.interactable = false;
         SetHint("Papier wird vorbereitet…");
 
@@ -337,6 +359,11 @@ public class MiniGameFlow : MonoBehaviour
 
     private void OnFilterPackClicked()
     {
+        if (hasGlobalGameOverHappened == true)
+        {
+            return;
+        }
+
         if (filterEvaluated) return;
         if (isFilterClickLocked) return;
 
@@ -347,13 +374,8 @@ public class MiniGameFlow : MonoBehaviour
             filterPackBtn.interactable = false;
         }
 
-        // Zonen erstmal aus
         SetZonesVisible(false);
-
-        // Zone Reveal nach Delay
         StartCoroutine(RevealZonesAfterDelay());
-
-        // Filter erst nach Sound spawnen
         StartCoroutine(FilterSpawnAfterSound());
     }
 
@@ -380,7 +402,7 @@ public class MiniGameFlow : MonoBehaviour
     {
         yield return new WaitForSecondsRealtime(zoneRevealDelay);
 
-        if (currentState == State.FilterAiming && !filterEvaluated)
+        if (currentState == State.FilterAiming && !filterEvaluated && hasGlobalGameOverHappened == false)
         {
             SetZonesVisible(true);
         }
@@ -388,6 +410,11 @@ public class MiniGameFlow : MonoBehaviour
 
     private void OnTobaccoClicked()
     {
+        if (hasGlobalGameOverHappened == true)
+        {
+            return;
+        }
+
         if (!filterEvaluated) return;
         if (isTobaccoClickLocked) return;
 
@@ -472,7 +499,6 @@ public class MiniGameFlow : MonoBehaviour
         var rt = filterImg.rectTransform;
         rt.anchoredPosition = Vector2.zero;
 
-        // Filter Fade-In
         var filterCg = filterImg.GetComponent<CanvasGroup>();
         if (filterCg == null) filterCg = filterImg.gameObject.AddComponent<CanvasGroup>();
         filterCg.alpha = 0f;
@@ -602,6 +628,11 @@ public class MiniGameFlow : MonoBehaviour
 
     private void ShowResults()
     {
+        if (hasGlobalGameOverHappened == true)
+        {
+            return;
+        }
+
         if (resultPanel != null)
         {
             resultPanel.SetActive(true);
@@ -611,26 +642,21 @@ public class MiniGameFlow : MonoBehaviour
         StartCoroutine(ShowResultsRoutine());
     }
 
+    // ==== HIER: NUR MINIGAME-ERGEBNIS, KEIN GLOBAL SCORE ====
     private IEnumerator ShowResultsRoutine()
     {
         int runPoints = earnedPointsThisRun;
 
-        int totalBefore = ScoreService.GetCurrentScore();
-
-        if (runPoints > 0 && hasGivenScoreThisRun == false)
-        {
-            ScoreService.AddPoints(runPoints, "SmokingMiniGame Ergebnis");
-            hasGivenScoreThisRun = true;
-        }
-
-        int totalAfter = ScoreService.GetCurrentScore();
-
-        // Run Count-Up
         int displayedRun = 0;
         float t = 0f;
 
         while (t < countUpDuration)
         {
+            if (hasGlobalGameOverHappened == true)
+            {
+                yield break;
+            }
+
             t += Time.deltaTime;
             float k = Mathf.Clamp01(t / countUpDuration);
             displayedRun = Mathf.RoundToInt(Mathf.Lerp(0, runPoints, k));
@@ -638,8 +664,8 @@ public class MiniGameFlow : MonoBehaviour
             if (resultText != null)
             {
                 resultText.text = runPoints > 0
-                    ? "Ergebnis: " + displayedRun + " Punkte\nGesamt-Score: " + totalBefore
-                    : "Mission Fail!\nGesamt-Score: " + totalBefore;
+                    ? "Ergebnis: " + displayedRun + " Punkte"
+                    : "Mission Fail!";
             }
 
             yield return null;
@@ -648,36 +674,8 @@ public class MiniGameFlow : MonoBehaviour
         if (resultText != null)
         {
             resultText.text = runPoints > 0
-                ? "Ergebnis: " + runPoints + " Punkte\nGesamt-Score: " + totalBefore
-                : "Mission Fail!\nGesamt-Score: " + totalBefore;
-        }
-
-        if (runPoints <= 0)
-        {
-            yield break;
-        }
-
-        // Total Count-Up
-        int displayedTotal = totalBefore;
-        t = 0f;
-
-        while (t < totalCountUpDuration)
-        {
-            t += Time.deltaTime;
-            float k = Mathf.Clamp01(t / totalCountUpDuration);
-            displayedTotal = Mathf.RoundToInt(Mathf.Lerp(totalBefore, totalAfter, k));
-
-            if (resultText != null)
-            {
-                resultText.text = "Ergebnis: " + runPoints + " Punkte\nGesamt-Score: " + displayedTotal;
-            }
-
-            yield return null;
-        }
-
-        if (resultText != null)
-        {
-            resultText.text = "Ergebnis: " + runPoints + " Punkte\nGesamt-Score: " + totalAfter;
+                ? "Ergebnis: " + runPoints + " Punkte"
+                : "Mission Fail!";
         }
     }
 
@@ -756,6 +754,11 @@ public class MiniGameFlow : MonoBehaviour
 
         while (t < duration)
         {
+            if (hasGlobalGameOverHappened == true)
+            {
+                yield break;
+            }
+
             t += Time.unscaledDeltaTime;
             float k = Mathf.Clamp01(t / duration);
             cg.alpha = Mathf.Lerp(from, to, k);
@@ -823,6 +826,11 @@ public class MiniGameFlow : MonoBehaviour
 
         while (AnyPlaying())
         {
+            if (hasGlobalGameOverHappened == true)
+            {
+                yield break;
+            }
+
             yield return null;
         }
     }
