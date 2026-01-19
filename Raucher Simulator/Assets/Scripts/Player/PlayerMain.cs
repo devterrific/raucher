@@ -6,6 +6,7 @@ public class PlayerMain : MonoBehaviour
     [Header("Movement")]
     [Min(0f)] public float walkSpeed = 3.5f;
     [Min(0f)] public float sprintSpeed = 5.5f;
+    [Min(0f)] public float sneakSpeed = 1.8f;
     [Min(0f)] public float accel = 30f;
     [Min(0f)] public float decel = 40f;
 
@@ -25,27 +26,22 @@ public class PlayerMain : MonoBehaviour
 
     [Header("Input")]
     [SerializeField] private KeyCode sprintKey = KeyCode.LeftShift;
+    [SerializeField] private KeyCode sneakKey = KeyCode.LeftControl;
     [SerializeField] private string horizontalAxis = "Horizontal";
 
-    [Header("Flip")]
-    public bool flipByScale = true;
-
     private Rigidbody2D rb;
+
     private float xInput;
     private float stamina;
     private float regenCooldown;
     private float targetSpeed;
-    private bool canMove = true;
-    public bool CanMove => canMove;
 
+    private bool isSneaking;
+    private bool detectable = true;
 
-    private bool detectable;
-    public bool Detectable
-    {
-        get { return detectable; }
-        set { detectable = value; }
-    }
+    private Vector3 baseScale;
 
+    public bool Detectable => detectable;
 
     void Awake()
     {
@@ -53,28 +49,23 @@ public class PlayerMain : MonoBehaviour
         rb.gravityScale = 0f;
         rb.freezeRotation = true;
 
+        baseScale = transform.localScale;
+
         stamina = maxStamina;
         targetSpeed = walkSpeed;
-        Detectable = true;
+
+        SetDetectable(true);
     }
 
     void Update()
     {
         HandleInteract();
 
-        if (!Detectable)
-        {
-            xInput = 0f;
-            regenCooldown = regenDelay;
-            return;
-        }
-
         ReadInput();
+        HandleSneak();
         HandleSprintAndStamina();
         HandleFlip();
     }
-
-
 
     void FixedUpdate()
     {
@@ -86,8 +77,30 @@ public class PlayerMain : MonoBehaviour
         xInput = Input.GetAxisRaw(horizontalAxis);
     }
 
+    void HandleSneak()
+    {
+        isSneaking = Input.GetKey(sneakKey);
+
+        if (isSneaking)
+        {
+            // Sneak = unsichtbar für Snitch (Layer Switch)
+            SetDetectable(false);
+            targetSpeed = sneakSpeed;
+        }
+        else
+        {
+            // außerhalb Sneak wieder normal sichtbar (HideZone kann das trotzdem überschreiben)
+            // -> Hier NICHT stumpf true setzen, sonst killst du HideZone.
+            // Darum: nur dann auf true, wenn du aktuell "nicht versteckt" bist.
+            // (HideZone regelt "versteckt" über SetDetectableExternal)
+        }
+    }
+
     void HandleSprintAndStamina()
     {
+        if (isSneaking)
+            return;
+
         bool wantsSprint = Input.GetKey(sprintKey) && Mathf.Abs(xInput) > 0.01f;
         bool canSprint = stamina > minSprintThreshold;
 
@@ -108,32 +121,10 @@ public class PlayerMain : MonoBehaviour
         }
     }
 
-    void HandleFlip()
-    {
-        if (!flipByScale) return;
-
-        if (xInput > 0.01f)
-        {
-            var s = transform.localScale;
-            s.x = Mathf.Abs(s.x);
-            transform.localScale = s;
-        }
-        else if (xInput < -0.01f)
-        {
-            var s = transform.localScale;
-            s.x = -Mathf.Abs(s.x);
-            transform.localScale = s;
-        }
-    }
-
     void MovePlayer()
     {
-        if (!Detectable)
-        {
-            rb.velocity = Vector2.zero;
-            return;
-        }
-
+        // Wenn Sneak aktiv: targetSpeed wurde schon auf sneakSpeed gesetzt.
+        // Wenn nicht: targetSpeed kommt aus Sprint/Walk.
         float targetVelX = xInput * targetSpeed;
         float velX = rb.velocity.x;
 
@@ -143,28 +134,61 @@ public class PlayerMain : MonoBehaviour
         rb.velocity = new Vector2(newVelX, 0f);
     }
 
+    void HandleFlip()
+    {
+        // NICHT scale auf (1,1,1) setzen -> sonst Riesen-Player
+        if (xInput > 0.01f)
+        {
+            var s = baseScale;
+            s.x = Mathf.Abs(s.x);
+            transform.localScale = s;
+        }
+        else if (xInput < -0.01f)
+        {
+            var s = baseScale;
+            s.x = -Mathf.Abs(s.x);
+            transform.localScale = s;
+        }
+    }
 
     void HandleInteract()
     {
-        if (Input.GetKeyDown(interactKey))
+        if (!Input.GetKeyDown(interactKey))
+            return;
+
+        Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, interactRange, interactLayer);
+
+        for (int i = 0; i < hits.Length; i++)
         {
-            Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, interactRange, interactLayer);
-            Debug.Log("Hits: " + hits.Length);
-
-            foreach (var hit in hits)
+            Interactable interactable = hits[i].GetComponent<Interactable>();
+            if (interactable != null)
             {
-                Debug.Log("Hit: " + hit.name + " Layer: " + LayerMask.LayerToName(hit.gameObject.layer));
-
-                Interactable interactable = hit.GetComponent<Interactable>();
-                if (interactable != null)
-                {
-                    interactable.Interact(this);
-                    break;
-                }
+                interactable.Interact(this);
+                break;
             }
         }
     }
 
+    // ========= Detectable API =========
 
+    void SetDetectable(bool value)
+    {
+        if (detectable == value) return;
 
+        detectable = value;
+
+        gameObject.layer = value
+            ? LayerMask.NameToLayer("Player")
+            : LayerMask.NameToLayer("PlayerHidden");
+    }
+
+    // Für HideZone & andere Interactables
+    public void SetDetectableExternal(bool value)
+    {
+        SetDetectable(value);
+    }
+
+    // Optional: wenn du willst, dass Sneak beim Loslassen wieder sichtbar macht,
+    // ABER HideZone nicht kaputt geht, brauchst du einen "hiddenByZone"-State.
+    // Den machen wir, wenn du’s verlangst. (Aktuell regelt HideZone den Zustand.)
 }

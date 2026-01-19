@@ -3,14 +3,15 @@ using UnityEngine;
 public class Hidezone : Interactable
 {
     [Header("Side Interact")]
-    [SerializeField] private float sideRange = 0.5f;   // wie weit links/rechts
-    [SerializeField] private float sideHeight = 1.2f;  // Höhe vom Bereich
+    [SerializeField] private float sideRange = 0.5f;
+    [SerializeField] private float sideHeight = 1.2f;
 
     [Header("Sprite")]
     [SerializeField] private Sprite crouchedSprite;
 
     private BoxCollider2D box;
     private Sprite normalSprite;
+    private bool isHidden = false;
 
     void Awake()
     {
@@ -19,6 +20,9 @@ public class Hidezone : Interactable
 
     public override void Interact(PlayerMain player)
     {
+        if (player == null) return;
+        if (!box) return;
+
         if (!IsNextToObject(player.transform.position))
             return;
 
@@ -28,8 +32,13 @@ public class Hidezone : Interactable
         if (normalSprite == null)
             normalSprite = sr.sprite;
 
-        player.Detectable = !player.Detectable;
-        sr.sprite = player.Detectable ? normalSprite : crouchedSprite;
+        isHidden = !isHidden;
+
+        // versteckt = nicht detectable
+        player.SetDetectableExternal(!isHidden);
+
+        // Sprite swap
+        sr.sprite = isHidden ? crouchedSprite : normalSprite;
     }
 
     bool IsNextToObject(Vector2 playerPos)
@@ -51,22 +60,19 @@ public class Hidezone : Interactable
 
     void OnDrawGizmosSelected()
     {
-        BoxCollider2D box = GetComponent<BoxCollider2D>();
-        if (!box) return;
+        BoxCollider2D b = GetComponent<BoxCollider2D>();
+        if (!b) return;
 
         Gizmos.color = Color.green;
+        Vector2 center = b.bounds.center;
 
-        Vector2 center = box.bounds.center;
-
-        // links
         Gizmos.DrawWireCube(
-            new Vector2(box.bounds.min.x - sideRange / 2f, center.y),
+            new Vector2(b.bounds.min.x - sideRange / 2f, center.y),
             new Vector2(sideRange, sideHeight)
         );
 
-        // rechts
         Gizmos.DrawWireCube(
-            new Vector2(box.bounds.max.x + sideRange / 2f, center.y),
+            new Vector2(b.bounds.max.x + sideRange / 2f, center.y),
             new Vector2(sideRange, sideHeight)
         );
     }

@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class SnitchVision : MonoBehaviour
@@ -11,46 +8,54 @@ public class SnitchVision : MonoBehaviour
 
     [Header("Raycast Settings")]
     [SerializeField] private float viewDistance = 5f;
-    [SerializeField] private LayerMask playerLayer;
+    [SerializeField] private LayerMask playerLayer; // NUR Player (nicht PlayerHidden)
 
     [Header("Suspicion Settings")]
     [SerializeField] private float timeToCatch = 3f;
 
-    // private vars...
     private float suspicionTimer = 0f;
     private SnitchPatrolling snitchPatrolling;
 
-    private void Start()
+    void Awake()
     {
         snitchPatrolling = GetComponent<SnitchPatrolling>();
     }
 
-    private void Update()
+    void Update()
     {
         bool instantHit = InstantRaycast();
         bool suspicionHit = TimedRaycast();
 
-        snitchPatrolling.canMove = !(instantHit || suspicionHit);
+        if (snitchPatrolling != null)
+            snitchPatrolling.canMove = !(instantHit || suspicionHit);
     }
 
-    private bool InstantRaycast()
+    bool InstantRaycast()
     {
-        RaycastHit2D hit = Physics2D.Raycast(eyePoint.position,
-                                            transform.right,
-                                            viewDistance,
-                                            playerLayer);
+        if (eyePoint == null) return false;
 
-        if (hit.collider != null)
-        {
-            Debug.Log("Player got caught!");
-            return true;
-        } 
+        RaycastHit2D hit = Physics2D.Raycast(
+            eyePoint.position,
+            transform.right,
+            viewDistance,
+            playerLayer
+        );
 
-        return false;
+        if (hit.collider == null) return false;
+
+        // extra safety: falls Layer mal falsch ist
+        PlayerMain player = hit.collider.GetComponent<PlayerMain>();
+        if (player != null && !player.Detectable)
+            return false;
+
+        Debug.Log("Player got caught!");
+        return true;
     }
 
-    private bool TimedRaycast()
+    bool TimedRaycast()
     {
+        if (suspicionPoint == null) return false;
+
         RaycastHit2D hit = Physics2D.Raycast(
             suspicionPoint.position,
             transform.right,
@@ -58,41 +63,39 @@ public class SnitchVision : MonoBehaviour
             playerLayer
         );
 
-        if (hit.collider != null)
-        {
-            suspicionTimer += Time.deltaTime;
-
-            if (suspicionTimer >= timeToCatch)
-            {
-                Debug.Log("Player got caught after 3 seconds!");
-                return true;
-            }
-
-            return true;
-        }
-        else
+        if (hit.collider == null)
         {
             suspicionTimer = 0f;
             return false;
         }
+
+        // extra safety: falls Layer mal falsch ist
+        PlayerMain player = hit.collider.GetComponent<PlayerMain>();
+        if (player != null && !player.Detectable)
+        {
+            suspicionTimer = 0f;
+            return false;
+        }
+
+        suspicionTimer += Time.deltaTime;
+
+        if (suspicionTimer >= timeToCatch)
+        {
+            Debug.Log("Player got caught after timed suspicion!");
+            return true;
+        }
+
+        return true; // Snitch bleibt stehen während Verdacht läuft
     }
 
-    private void OnDrawGizmosSelected()
+    void OnDrawGizmosSelected()
     {
-        if (eyePoint == null || suspicionPoint == null)
-            return;
+        if (eyePoint == null || suspicionPoint == null) return;
 
         Gizmos.color = Color.red;
-        Gizmos.DrawLine(
-            eyePoint.position,
-            eyePoint.position + transform.right * viewDistance
-        );
+        Gizmos.DrawLine(eyePoint.position, eyePoint.position + transform.right * viewDistance);
 
         Gizmos.color = Color.yellow;
-        Gizmos.DrawLine(
-            suspicionPoint.position,
-            suspicionPoint.position + transform.right * viewDistance
-        );
+        Gizmos.DrawLine(suspicionPoint.position, suspicionPoint.position + transform.right * viewDistance);
     }
-
 }
