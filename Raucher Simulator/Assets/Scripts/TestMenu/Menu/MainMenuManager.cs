@@ -384,7 +384,6 @@ public class MainMenuManager : MonoBehaviour
         creditsText.text = "SMOKING SIMULATOR\n\n" +
                           "Game Artist: Julia, Josephine, Marie, Nico & Julia\n\n" +
                           "Programming: Nour, Alim & Dennis\n\n" +
-
                           "Unity Community\n" +
                           "© 2025 Nicotine Studios";
     }
