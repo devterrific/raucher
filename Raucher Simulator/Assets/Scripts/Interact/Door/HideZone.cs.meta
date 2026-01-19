@@ -3,7 +3,8 @@ guid: 64114a68c8bc4fc439785d05cfe8b9d1
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - crouchedSprite: {fileID: -2126135258883424569, guid: 7af0da5d70720884896dde787d70f062, type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
