@@ -38,11 +38,13 @@ public class PlayerHUDManager : MonoBehaviour
             instance = this;
             DontDestroyOnLoad(gameObject);
 
+            /*
             // HUD initial komplett deaktivieren
             if (hudCanvas != null)
             {
                 hudCanvas.SetActive(false);
             }
+            */
         }
         else
         {
