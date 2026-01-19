@@ -382,13 +382,11 @@ public class MainMenuManager : MonoBehaviour
         if (creditsText == null) return;
 
         creditsText.text = "SMOKING SIMULATOR\n\n" +
-                          "Game Design: Your Name\n" +
-                          "Programming: Your Name\n" +
-                          "Artwork: Your Name\n\n" +
-                          "Special Thanks:\n" +
-                          "All Playtesters\n" +
-                          "Unity Community\n\n" +
-                          "© 2024 Your Studio Name";
+                          "Game Artist: Julia, Josephine, Marie, Nico & Julia\n\n" +
+                          "Programming: Nour, Alim & Dennis\n\n" +
+
+                          "Unity Community\n" +
+                          "© 2025 Nicotine Studios";
     }
 
     private void ActivatePanel(GameObject panel)
