@@ -197,8 +197,4 @@ public class PlayerMain : MonoBehaviour
     {
         SetDetectable(value);
     }
-
-    // Optional: wenn du willst, dass Sneak beim Loslassen wieder sichtbar macht,
-    // ABER HideZone nicht kaputt geht, brauchst du einen "hiddenByZone"-State.
-    // Den machen wir, wenn du’s verlangst. (Aktuell regelt HideZone den Zustand.)
 }
