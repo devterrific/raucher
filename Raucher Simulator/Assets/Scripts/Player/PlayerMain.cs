@@ -177,10 +177,20 @@ public class PlayerMain : MonoBehaviour
 
         detectable = value;
 
-        gameObject.layer = value
+        int layer = value
             ? LayerMask.NameToLayer("Player")
-            : LayerMask.NameToLayer("PlayerHidden");
+            : LayerMask.NameToLayer("Hidden");
+
+        if (layer < 0)
+        {
+            Debug.LogError("Layer fehlt! Player/Hidden in Project Settings prüfen.");
+            return;
+        }
+
+        gameObject.layer = layer;
     }
+
+
 
     // Für HideZone & andere Interactables
     public void SetDetectableExternal(bool value)
