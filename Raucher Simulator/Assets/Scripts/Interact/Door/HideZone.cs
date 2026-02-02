@@ -10,12 +10,18 @@ public class Hidezone : Interactable
     [SerializeField] private Sprite crouchedSprite;
 
     private BoxCollider2D box;
-    private Sprite normalSprite;
-    private bool isHidden = false;
 
     void Awake()
     {
         box = GetComponent<BoxCollider2D>();
+    }
+
+    public override bool CanInteract(PlayerMain player)
+    {
+        if (player == null) return false;
+        if (!box) return false;
+
+        return IsNextToObject(player.transform.position);
     }
 
     public override void Interact(PlayerMain player)
@@ -26,19 +32,17 @@ public class Hidezone : Interactable
         if (!IsNextToObject(player.transform.position))
             return;
 
-        SpriteRenderer sr = player.GetComponent<SpriteRenderer>();
-        if (!sr) return;
+        // Toggle: wenn diese Hidezone bereits Hidden-Grund ist -> raus, sonst rein
+        bool isHiddenHere = player.IsHiddenBy(this);
 
-        if (normalSprite == null)
-            normalSprite = sr.sprite;
-
-        isHidden = !isHidden;
-
-        // versteckt = nicht detectable
-        player.SetDetectableExternal(!isHidden);
-
-        // Sprite swap
-        sr.sprite = isHidden ? crouchedSprite : normalSprite;
+        if (!isHiddenHere)
+        {
+            player.EnterHidezone(this, crouchedSprite);
+        }
+        else
+        {
+            player.ExitHidezone(this);
+        }
     }
 
     bool IsNextToObject(Vector2 playerPos)
@@ -47,33 +51,14 @@ public class Hidezone : Interactable
 
         bool leftSide =
             playerPos.x < center.x &&
-            Mathf.Abs(playerPos.x - box.bounds.min.x) < sideRange &&
-            Mathf.Abs(playerPos.y - center.y) < sideHeight / 2f;
+            Mathf.Abs(playerPos.x - (center.x - box.bounds.extents.x)) <= sideRange &&
+            Mathf.Abs(playerPos.y - center.y) <= sideHeight * 0.5f;
 
         bool rightSide =
             playerPos.x > center.x &&
-            Mathf.Abs(playerPos.x - box.bounds.max.x) < sideRange &&
-            Mathf.Abs(playerPos.y - center.y) < sideHeight / 2f;
+            Mathf.Abs(playerPos.x - (center.x + box.bounds.extents.x)) <= sideRange &&
+            Mathf.Abs(playerPos.y - center.y) <= sideHeight * 0.5f;
 
         return leftSide || rightSide;
-    }
-
-    void OnDrawGizmosSelected()
-    {
-        BoxCollider2D b = GetComponent<BoxCollider2D>();
-        if (!b) return;
-
-        Gizmos.color = Color.green;
-        Vector2 center = b.bounds.center;
-
-        Gizmos.DrawWireCube(
-            new Vector2(b.bounds.min.x - sideRange / 2f, center.y),
-            new Vector2(sideRange, sideHeight)
-        );
-
-        Gizmos.DrawWireCube(
-            new Vector2(b.bounds.max.x + sideRange / 2f, center.y),
-            new Vector2(sideRange, sideHeight)
-        );
     }
 }

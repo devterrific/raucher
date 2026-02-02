@@ -1,6 +1,8 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
+[DisallowMultipleComponent]
 public class PlayerMain : MonoBehaviour
 {
     [Header("Movement")]
@@ -30,6 +32,7 @@ public class PlayerMain : MonoBehaviour
     [SerializeField] private string horizontalAxis = "Horizontal";
 
     private Rigidbody2D rb;
+    private SpriteRenderer sr;
 
     private float xInput;
     private float stamina;
@@ -37,15 +40,25 @@ public class PlayerMain : MonoBehaviour
     private float targetSpeed;
 
     private bool isSneaking;
-    private bool detectable = true;
 
     private Vector3 baseScale;
 
-    public bool Detectable => detectable;
+    // ====== Reason-based Locks / Hidden ======
+    private readonly HashSet<object> movementLocks = new HashSet<object>();
+    private readonly HashSet<object> hiddenReasons = new HashSet<object>();
+
+    private readonly object sneakToken = new object();  // interner Grund fürs Sneaken
+
+    private Sprite standSpriteBeforeHide;
+
+    public bool CanMove => movementLocks.Count == 0;
+    public bool Detectable => hiddenReasons.Count == 0;
 
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        sr = GetComponent<SpriteRenderer>();
+
         rb.gravityScale = 0f;
         rb.freezeRotation = true;
 
@@ -54,7 +67,8 @@ public class PlayerMain : MonoBehaviour
         stamina = maxStamina;
         targetSpeed = walkSpeed;
 
-        SetDetectable(true);
+        // Initialer Layer korrekt setzen
+        ApplyDetectableLayer();
     }
 
     void Update()
@@ -62,13 +76,34 @@ public class PlayerMain : MonoBehaviour
         HandleInteract();
 
         ReadInput();
-        HandleSneak();
-        HandleSprintAndStamina();
+
+        // Sneak/ Sprint nur wenn Bewegung nicht gelockt ist
+        if (CanMove)
+        {
+            HandleSneak();
+            HandleSprintAndStamina();
+        }
+        else
+        {
+            // Input & Movement neutralisieren
+            isSneaking = false;
+            xInput = 0f;
+
+            // Stamina nicht kaputt-ticken während Lock
+            targetSpeed = walkSpeed;
+        }
+
         HandleFlip();
     }
 
     void FixedUpdate()
     {
+        if (!CanMove)
+        {
+            rb.velocity = Vector2.zero;
+            return;
+        }
+
         MovePlayer();
     }
 
@@ -79,21 +114,21 @@ public class PlayerMain : MonoBehaviour
 
     void HandleSneak()
     {
-        isSneaking = Input.GetKey(sneakKey);
+        bool wantsSneak = Input.GetKey(sneakKey);
+
+        if (wantsSneak && !isSneaking)
+        {
+            isSneaking = true;
+            SetHidden(sneakToken, true);
+        }
+        else if (!wantsSneak && isSneaking)
+        {
+            isSneaking = false;
+            SetHidden(sneakToken, false);
+        }
 
         if (isSneaking)
-        {
-            // Sneak = unsichtbar für Snitch (Layer Switch)
-            SetDetectable(false);
             targetSpeed = sneakSpeed;
-        }
-        else
-        {
-            // außerhalb Sneak wieder normal sichtbar (HideZone kann das trotzdem überschreiben)
-            // -> Hier NICHT stumpf true setzen, sonst killst du HideZone.
-            // Darum: nur dann auf true, wenn du aktuell "nicht versteckt" bist.
-            // (HideZone regelt "versteckt" über SetDetectableExternal)
-        }
     }
 
     void HandleSprintAndStamina()
@@ -123,8 +158,6 @@ public class PlayerMain : MonoBehaviour
 
     void MovePlayer()
     {
-        // Wenn Sneak aktiv: targetSpeed wurde schon auf sneakSpeed gesetzt.
-        // Wenn nicht: targetSpeed kommt aus Sprint/Walk.
         float targetVelX = xInput * targetSpeed;
         float velX = rb.velocity.x;
 
@@ -136,7 +169,7 @@ public class PlayerMain : MonoBehaviour
 
     void HandleFlip()
     {
-        // NICHT scale auf (1,1,1) setzen -> sonst Riesen-Player
+        // NICHT scale hard resetten, sonst Riesen-Player
         if (xInput > 0.01f)
         {
             var s = baseScale;
@@ -161,7 +194,7 @@ public class PlayerMain : MonoBehaviour
         for (int i = 0; i < hits.Length; i++)
         {
             Interactable interactable = hits[i].GetComponent<Interactable>();
-            if (interactable != null)
+            if (interactable != null && interactable.CanInteract(this))
             {
                 interactable.Interact(this);
                 break;
@@ -169,32 +202,93 @@ public class PlayerMain : MonoBehaviour
         }
     }
 
-    // ========= Detectable API =========
+    // =========================
+    // PUBLIC API (Facade)
+    // =========================
 
-    void SetDetectable(bool value)
+    /// <summary>Lockt Bewegung (Reason-based). Quelle kann z.B. Hidezone, Cutscene, UI usw. sein.</summary>
+    public void AddMovementLock(object source)
     {
-        if (detectable == value) return;
+        if (source == null) return;
 
-        detectable = value;
+        if (movementLocks.Add(source))
+        {
+            rb.velocity = Vector2.zero;
+        }
+    }
 
-        int layer = value
+    public void RemoveMovementLock(object source)
+    {
+        if (source == null) return;
+        movementLocks.Remove(source);
+    }
+
+    /// <summary>Setzt Hidden-Reason an/aus. Detectable wird daraus abgeleitet.</summary>
+    public void SetHidden(object source, bool hidden)
+    {
+        if (source == null) return;
+
+        bool changed = false;
+
+        if (hidden)
+            changed = hiddenReasons.Add(source);
+        else
+            changed = hiddenReasons.Remove(source);
+
+        if (changed)
+            ApplyDetectableLayer();
+    }
+
+    public bool IsHiddenBy(object source)
+    {
+        if (source == null) return false;
+        return hiddenReasons.Contains(source);
+    }
+
+    /// <summary>Hidezone-Entry: Hidden + Movement-Lock + Sprite setzen.</summary>
+    public void EnterHidezone(object source, Sprite hideSprite)
+    {
+        if (source == null) return;
+
+        // Merke das aktuelle "Stand"-Sprite genau in dem Moment, bevor wir verstecken
+        if (sr != null)
+            standSpriteBeforeHide = sr.sprite;
+
+        AddMovementLock(source);
+        SetHidden(source, true);
+
+        if (sr != null && hideSprite != null)
+            sr.sprite = hideSprite;
+    }
+
+    /// <summary>Hidezone-Exit: Hidden aus + Movement-Lock weg + Sprite zurück.</summary>
+    public void ExitHidezone(object source)
+    {
+        if (source == null) return;
+
+        RemoveMovementLock(source);
+        SetHidden(source, false);
+
+        if (sr != null && standSpriteBeforeHide != null)
+            sr.sprite = standSpriteBeforeHide;
+    }
+
+    // =========================
+    // INTERNALS
+    // =========================
+
+    void ApplyDetectableLayer()
+    {
+        int layer = Detectable
             ? LayerMask.NameToLayer("Player")
             : LayerMask.NameToLayer("Hidden");
 
         if (layer < 0)
         {
-            Debug.LogError("Layer fehlt! Player/Hidden in Project Settings prüfen.");
+            Debug.LogError("Layer fehlt! 'Player' und 'Hidden' in Project Settings > Tags and Layers anlegen.");
             return;
         }
 
         gameObject.layer = layer;
-    }
-
-
-
-    // Für HideZone & andere Interactables
-    public void SetDetectableExternal(bool value)
-    {
-        SetDetectable(value);
     }
 }
