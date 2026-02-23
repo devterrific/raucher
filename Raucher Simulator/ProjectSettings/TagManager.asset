@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - PlayerHidden
+  - Snitch
   layers:
   - Default
   - TransparentFX

@@ -77,7 +77,7 @@ public class PlayerMain : MonoBehaviour
 
         ReadInput();
 
-        // Sneak/ Sprint nur wenn Bewegung nicht gelockt ist
+
         if (CanMove)
         {
             HandleSneak();
@@ -85,11 +85,11 @@ public class PlayerMain : MonoBehaviour
         }
         else
         {
-            // Input & Movement neutralisieren
+            
             isSneaking = false;
             xInput = 0f;
 
-            // Stamina nicht kaputt-ticken während Lock
+            
             targetSpeed = walkSpeed;
         }
 
@@ -156,6 +156,11 @@ public class PlayerMain : MonoBehaviour
         }
     }
 
+    public void Respawn(Vector3 spawnPosition)
+    {
+        rb.velocity = Vector2.zero;
+        transform.position = spawnPosition;
+    }
     void MovePlayer()
     {
         float targetVelX = xInput * targetSpeed;
@@ -202,11 +207,7 @@ public class PlayerMain : MonoBehaviour
         }
     }
 
-    // =========================
-    // PUBLIC API (Facade)
-    // =========================
 
-    /// <summary>Lockt Bewegung (Reason-based). Quelle kann z.B. Hidezone, Cutscene, UI usw. sein.</summary>
     public void AddMovementLock(object source)
     {
         if (source == null) return;
@@ -223,7 +224,6 @@ public class PlayerMain : MonoBehaviour
         movementLocks.Remove(source);
     }
 
-    /// <summary>Setzt Hidden-Reason an/aus. Detectable wird daraus abgeleitet.</summary>
     public void SetHidden(object source, bool hidden)
     {
         if (source == null) return;
@@ -245,7 +245,6 @@ public class PlayerMain : MonoBehaviour
         return hiddenReasons.Contains(source);
     }
 
-    /// <summary>Hidezone-Entry: Hidden + Movement-Lock + Sprite setzen.</summary>
     public void EnterHidezone(object source, Sprite hideSprite)
     {
         if (source == null) return;
@@ -261,7 +260,6 @@ public class PlayerMain : MonoBehaviour
             sr.sprite = hideSprite;
     }
 
-    /// <summary>Hidezone-Exit: Hidden aus + Movement-Lock weg + Sprite zurück.</summary>
     public void ExitHidezone(object source)
     {
         if (source == null) return;
@@ -273,9 +271,6 @@ public class PlayerMain : MonoBehaviour
             sr.sprite = standSpriteBeforeHide;
     }
 
-    // =========================
-    // INTERNALS
-    // =========================
 
     void ApplyDetectableLayer()
     {
