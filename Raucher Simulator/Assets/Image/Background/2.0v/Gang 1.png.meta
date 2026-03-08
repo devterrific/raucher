@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 609456c19b3954f43a657417f53a2af8
+guid: 955cf133674fae74fbe45464b719b989
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -5832594552098423817
-    second: Gang 2_0
+      213: 5836188293662414274
+    second: Gang 1_0
   externalObjects: {}
   serializedVersion: 12
   mipmaps:
@@ -98,12 +98,12 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Gang 2_0
+      name: Gang 1_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 1920
+        width: 5760
         height: 1080
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -112,8 +112,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 7fb7b4348267e0fa0800000000000000
-      internalID: -5832594552098423817
+      spriteID: 2c59a06e45e4ef050800000000000000
+      internalID: 5836188293662414274
       vertices: []
       indices: 
       edges: []
@@ -128,8 +128,7 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable:
-      Gang 2_0: -5832594552098423817
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

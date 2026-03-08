@@ -6,6 +6,7 @@ TagManager:
   tags:
   - PlayerHidden
   - Snitch
+  - CameraBounds
   layers:
   - Default
   - TransparentFX
