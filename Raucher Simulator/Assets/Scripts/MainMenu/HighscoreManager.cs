@@ -18,6 +18,20 @@ public class HighscoreManager : MonoBehaviour
     {
         AddHighscore("TestPlayer", Random.Range(10, 5000));
     }
+
+    [ContextMenu("Clear Highscores")]
+    public void ClearHighscores()
+    {
+        if (File.Exists(FilePath))
+        {
+            File.Delete(FilePath);
+        }
+
+        highscores.Clear();
+        RefreshHighscoreDisplay();
+
+        Debug.Log("Highscores cleared.");
+    }
     //  --------------------------------------------------------
 
     private string FilePath => Path.Combine(Application.persistentDataPath, fileName);
