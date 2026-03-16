@@ -38,6 +38,10 @@ public class MiniGameFlow : MonoBehaviour
     [SerializeField] private Text countdownText;
     [SerializeField] private Text topHintText;
 
+    [Header("Background")]
+    [SerializeField] private Image gameplayBackground;
+    [SerializeField] private float backgroundFadeIn = 0.05f;
+
     [SerializeField] private GameObject resultPanel;
     [SerializeField] private Text resultText;
 
@@ -192,6 +196,13 @@ public class MiniGameFlow : MonoBehaviour
         {
             placementBanner.gameObject.SetActive(false);
         }
+
+        if (gameplayBackground != null)
+        {
+            var cg = gameplayBackground.GetComponent<CanvasGroup>();
+            if (cg == null) cg = gameplayBackground.gameObject.AddComponent<CanvasGroup>();
+            cg.alpha = 0f;
+        }
     }
 
     private void OnDestroy()
@@ -275,6 +286,13 @@ public class MiniGameFlow : MonoBehaviour
         {
             countdownPanel.alpha = 0f;
             countdownPanel.gameObject.SetActive(false);
+        }
+
+        //  Background einblenden
+        if (gameplayBackground != null)
+        {
+            var cg = gameplayBackground.GetComponent<CanvasGroup>();
+            StartCoroutine(FadeCanvasGroup(cg, 0f, 1f, backgroundFadeIn));
         }
     }
 

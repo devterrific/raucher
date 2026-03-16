@@ -1,0 +1,512 @@
+fileFormatVersion: 2
+guid: f635f85e30b32454dab4ca3b67878799
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 1930611516914284991
+    second: Raucher_Simulator_Thema_0
+  - first:
+      213: -3405508754952585869
+    second: Raucher_Simulator_Thema_1
+  - first:
+      213: 2498824153035643180
+    second: Raucher_Simulator_Thema_2
+  - first:
+      213: -3107923942650072520
+    second: Raucher_Simulator_Thema_3
+  - first:
+      213: -8176507051127817915
+    second: Raucher_Simulator_Thema_4
+  - first:
+      213: -671883613451987402
+    second: Raucher_Simulator_Thema_5
+  - first:
+      213: -8543947015333476441
+    second: Raucher_Simulator_Thema_6
+  - first:
+      213: 1035578907374944881
+    second: Raucher_Simulator_Thema_7
+  - first:
+      213: 2728720992277223560
+    second: Raucher_Simulator_Thema_8
+  - first:
+      213: 9103943567917580696
+    second: Raucher_Simulator_Thema_9
+  - first:
+      213: -1530970553832908218
+    second: Raucher_Simulator_Thema_10
+  - first:
+      213: 1188412861571652065
+    second: Raucher_Simulator_Thema_11
+  - first:
+      213: 2120830615785314874
+    second: Raucher_Simulator_Thema_12
+  - first:
+      213: -5163221694143432713
+    second: Raucher_Simulator_Thema_13
+  - first:
+      213: 3028167817545517464
+    second: Raucher_Simulator_Thema_14
+  - first:
+      213: 7633630271230425186
+    second: Raucher_Simulator_Thema_15
+  externalObjects: {}
+  serializedVersion: 12
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Raucher_Simulator_Thema_0
+      rect:
+        serializedVersion: 2
+        x: 458
+        y: 604
+        width: 120
+        height: 204
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fb934f022f8eaca10800000000000000
+      internalID: 1930611516914284991
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Raucher_Simulator_Thema_1
+      rect:
+        serializedVersion: 2
+        x: 594
+        y: 604
+        width: 121
+        height: 204
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 37d719d94d33db0d0800000000000000
+      internalID: -3405508754952585869
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Raucher_Simulator_Thema_2
+      rect:
+        serializedVersion: 2
+        x: 731
+        y: 604
+        width: 120
+        height: 204
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c291bdde35b9da220800000000000000
+      internalID: 2498824153035643180
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Raucher_Simulator_Thema_3
+      rect:
+        serializedVersion: 2
+        x: 867
+        y: 604
+        width: 121
+        height: 204
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 832396104af6ed4d0800000000000000
+      internalID: -3107923942650072520
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Raucher_Simulator_Thema_4
+      rect:
+        serializedVersion: 2
+        x: 1004
+        y: 604
+        width: 120
+        height: 204
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 549bc027826378e80800000000000000
+      internalID: -8176507051127817915
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Raucher_Simulator_Thema_5
+      rect:
+        serializedVersion: 2
+        x: 1140
+        y: 604
+        width: 120
+        height: 204
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 636d9c1d96dfca6f0800000000000000
+      internalID: -671883613451987402
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Raucher_Simulator_Thema_6
+      rect:
+        serializedVersion: 2
+        x: 1277
+        y: 604
+        width: 120
+        height: 204
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7a70a43157dcd6980800000000000000
+      internalID: -8543947015333476441
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Raucher_Simulator_Thema_7
+      rect:
+        serializedVersion: 2
+        x: 371
+        y: 384
+        width: 98
+        height: 204
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 17288fe878d1f5e00800000000000000
+      internalID: 1035578907374944881
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Raucher_Simulator_Thema_8
+      rect:
+        serializedVersion: 2
+        x: 485
+        y: 384
+        width: 36
+        height: 204
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 888d5dbf84d5ed520800000000000000
+      internalID: 2728720992277223560
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Raucher_Simulator_Thema_9
+      rect:
+        serializedVersion: 2
+        x: 537
+        y: 384
+        width: 162
+        height: 204
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8910ee4b074b75e70800000000000000
+      internalID: 9103943567917580696
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Raucher_Simulator_Thema_10
+      rect:
+        serializedVersion: 2
+        x: 716
+        y: 384
+        width: 120
+        height: 204
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 64ad4398466e0cae0800000000000000
+      internalID: -1530970553832908218
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Raucher_Simulator_Thema_11
+      rect:
+        serializedVersion: 2
+        x: 852
+        y: 384
+        width: 99
+        height: 204
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1e9db7c73371e7010800000000000000
+      internalID: 1188412861571652065
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Raucher_Simulator_Thema_12
+      rect:
+        serializedVersion: 2
+        x: 967
+        y: 384
+        width: 121
+        height: 204
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a3a18aa5534be6d10800000000000000
+      internalID: 2120830615785314874
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Raucher_Simulator_Thema_13
+      rect:
+        serializedVersion: 2
+        x: 1104
+        y: 384
+        width: 120
+        height: 204
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7f77dff993d8858b0800000000000000
+      internalID: -5163221694143432713
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Raucher_Simulator_Thema_14
+      rect:
+        serializedVersion: 2
+        x: 1240
+        y: 384
+        width: 120
+        height: 204
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 899021d0696360a20800000000000000
+      internalID: 3028167817545517464
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Raucher_Simulator_Thema_15
+      rect:
+        serializedVersion: 2
+        x: 1377
+        y: 384
+        width: 118
+        height: 204
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 268bb57794a10f960800000000000000
+      internalID: 7633630271230425186
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      Raucher_Simulator_Thema_0: 1930611516914284991
+      Raucher_Simulator_Thema_1: -3405508754952585869
+      Raucher_Simulator_Thema_10: -1530970553832908218
+      Raucher_Simulator_Thema_11: 1188412861571652065
+      Raucher_Simulator_Thema_12: 2120830615785314874
+      Raucher_Simulator_Thema_13: -5163221694143432713
+      Raucher_Simulator_Thema_14: 3028167817545517464
+      Raucher_Simulator_Thema_15: 7633630271230425186
+      Raucher_Simulator_Thema_2: 2498824153035643180
+      Raucher_Simulator_Thema_3: -3107923942650072520
+      Raucher_Simulator_Thema_4: -8176507051127817915
+      Raucher_Simulator_Thema_5: -671883613451987402
+      Raucher_Simulator_Thema_6: -8543947015333476441
+      Raucher_Simulator_Thema_7: 1035578907374944881
+      Raucher_Simulator_Thema_8: 2728720992277223560
+      Raucher_Simulator_Thema_9: 9103943567917580696
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

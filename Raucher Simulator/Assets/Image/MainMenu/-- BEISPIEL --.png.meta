@@ -1,0 +1,587 @@
+fileFormatVersion: 2
+guid: 2ac7baa03a075934bb4a8e3f7536ea1a
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 245423106477960611
+    second: Schriftzug_GameName_Beispiel_0
+  - first:
+      213: -7021943006562865759
+    second: Schriftzug_GameName_Beispiel_1
+  - first:
+      213: 876997777098355837
+    second: Schriftzug_GameName_Beispiel_2
+  - first:
+      213: 506664316389734011
+    second: Schriftzug_GameName_Beispiel_3
+  - first:
+      213: 4806273141201120264
+    second: Schriftzug_GameName_Beispiel_4
+  - first:
+      213: 7994596093637956518
+    second: Schriftzug_GameName_Beispiel_5
+  - first:
+      213: -6783741334625398333
+    second: Schriftzug_GameName_Beispiel_6
+  - first:
+      213: 3074670585822349342
+    second: Schriftzug_GameName_Beispiel_7
+  - first:
+      213: 8180534394829459300
+    second: Schriftzug_GameName_Beispiel_8
+  - first:
+      213: 2969368823228605110
+    second: Schriftzug_GameName_Beispiel_9
+  - first:
+      213: 8729667624147328995
+    second: Schriftzug_GameName_Beispiel_10
+  - first:
+      213: -3563421242932318684
+    second: Schriftzug_GameName_Beispiel_11
+  - first:
+      213: 2613832111325811655
+    second: Schriftzug_GameName_Beispiel_12
+  - first:
+      213: 3439319009967577987
+    second: Schriftzug_GameName_Beispiel_13
+  - first:
+      213: 5195958371095566073
+    second: Schriftzug_GameName_Beispiel_14
+  - first:
+      213: 7494145843005873948
+    second: Schriftzug_GameName_Beispiel_15
+  - first:
+      213: -2122656079927955152
+    second: Schriftzug_GameName_Beispiel_16
+  - first:
+      213: -1679798929352329355
+    second: Schriftzug_GameName_Beispiel_17
+  - first:
+      213: -1599473945480427661
+    second: Schriftzug_GameName_Beispiel_18
+  externalObjects: {}
+  serializedVersion: 12
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Schriftzug_GameName_Beispiel_0
+      rect:
+        serializedVersion: 2
+        x: 647
+        y: 806
+        width: 78
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3adaa49d30be76300800000000000000
+      internalID: 245423106477960611
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Schriftzug_GameName_Beispiel_1
+      rect:
+        serializedVersion: 2
+        x: 737
+        y: 806
+        width: 78
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1ad28c41a0c0d8e90800000000000000
+      internalID: -7021943006562865759
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Schriftzug_GameName_Beispiel_2
+      rect:
+        serializedVersion: 2
+        x: 827
+        y: 806
+        width: 78
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d7431cce4d8bb2c00800000000000000
+      internalID: 876997777098355837
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Schriftzug_GameName_Beispiel_3
+      rect:
+        serializedVersion: 2
+        x: 917
+        y: 806
+        width: 78
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b76b6c6e288080700800000000000000
+      internalID: 506664316389734011
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Schriftzug_GameName_Beispiel_4
+      rect:
+        serializedVersion: 2
+        x: 1007
+        y: 806
+        width: 78
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 80c2bca05ff43b240800000000000000
+      internalID: 4806273141201120264
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Schriftzug_GameName_Beispiel_5
+      rect:
+        serializedVersion: 2
+        x: 1097
+        y: 806
+        width: 78
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6a3140c3ac282fe60800000000000000
+      internalID: 7994596093637956518
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Schriftzug_GameName_Beispiel_6
+      rect:
+        serializedVersion: 2
+        x: 1187
+        y: 806
+        width: 78
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3c1d48da23f4bd1a0800000000000000
+      internalID: -6783741334625398333
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Schriftzug_GameName_Beispiel_7
+      rect:
+        serializedVersion: 2
+        x: 589
+        y: 660
+        width: 64
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e1888458b9c6baa20800000000000000
+      internalID: 3074670585822349342
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Schriftzug_GameName_Beispiel_8
+      rect:
+        serializedVersion: 2
+        x: 665
+        y: 660
+        width: 22
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 46fcca490b8178170800000000000000
+      internalID: 8180534394829459300
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Schriftzug_GameName_Beispiel_9
+      rect:
+        serializedVersion: 2
+        x: 699
+        y: 660
+        width: 106
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6b229ab5631553920800000000000000
+      internalID: 2969368823228605110
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Schriftzug_GameName_Beispiel_10
+      rect:
+        serializedVersion: 2
+        x: 817
+        y: 660
+        width: 78
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3ef9780d372062970800000000000000
+      internalID: 8729667624147328995
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Schriftzug_GameName_Beispiel_11
+      rect:
+        serializedVersion: 2
+        x: 907
+        y: 660
+        width: 64
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 42e20f5624f2c8ec0800000000000000
+      internalID: -3563421242932318684
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Schriftzug_GameName_Beispiel_12
+      rect:
+        serializedVersion: 2
+        x: 983
+        y: 660
+        width: 78
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7c39512e472364420800000000000000
+      internalID: 2613832111325811655
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Schriftzug_GameName_Beispiel_13
+      rect:
+        serializedVersion: 2
+        x: 1073
+        y: 660
+        width: 78
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 38b9d52da6aeabf20800000000000000
+      internalID: 3439319009967577987
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Schriftzug_GameName_Beispiel_14
+      rect:
+        serializedVersion: 2
+        x: 1163
+        y: 660
+        width: 78
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9f65ed0fb90cb1840800000000000000
+      internalID: 5195958371095566073
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Schriftzug_GameName_Beispiel_15
+      rect:
+        serializedVersion: 2
+        x: 1253
+        y: 660
+        width: 78
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c1fd55340fd800860800000000000000
+      internalID: 7494145843005873948
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Schriftzug_GameName_Beispiel_16
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 431
+        width: 376
+        height: 138
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0313297aa8fca82e0800000000000000
+      internalID: -2122656079927955152
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Schriftzug_GameName_Beispiel_17
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 252
+        width: 379
+        height: 139
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5777fd116c720b8e0800000000000000
+      internalID: -1679798929352329355
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Schriftzug_GameName_Beispiel_18
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 75
+        width: 374
+        height: 138
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3778524cbe68dc9e0800000000000000
+      internalID: -1599473945480427661
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      Schriftzug_GameName_Beispiel_0: 245423106477960611
+      Schriftzug_GameName_Beispiel_1: -7021943006562865759
+      Schriftzug_GameName_Beispiel_10: 8729667624147328995
+      Schriftzug_GameName_Beispiel_11: -3563421242932318684
+      Schriftzug_GameName_Beispiel_12: 2613832111325811655
+      Schriftzug_GameName_Beispiel_13: 3439319009967577987
+      Schriftzug_GameName_Beispiel_14: 5195958371095566073
+      Schriftzug_GameName_Beispiel_15: 7494145843005873948
+      Schriftzug_GameName_Beispiel_16: -2122656079927955152
+      Schriftzug_GameName_Beispiel_17: -1679798929352329355
+      Schriftzug_GameName_Beispiel_18: -1599473945480427661
+      Schriftzug_GameName_Beispiel_2: 876997777098355837
+      Schriftzug_GameName_Beispiel_3: 506664316389734011
+      Schriftzug_GameName_Beispiel_4: 4806273141201120264
+      Schriftzug_GameName_Beispiel_5: 7994596093637956518
+      Schriftzug_GameName_Beispiel_6: -6783741334625398333
+      Schriftzug_GameName_Beispiel_7: 3074670585822349342
+      Schriftzug_GameName_Beispiel_8: 8180534394829459300
+      Schriftzug_GameName_Beispiel_9: 2969368823228605110
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
