@@ -5,18 +5,16 @@ using UnityEngine.SceneManagement;
 public class SnitchVision : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] private Transform spritesRoot;          // zieh hier dein Child "Sprites" rein
-    [SerializeField] private SpriteRenderer spriteRenderer;  // optional (falls du nur flipX nutzt)
     [SerializeField] private Transform eyePoint;
     [SerializeField] private Transform suspicionPoint;
 
     [Header("Raycast Settings")]
-    [SerializeField] private float instantDistance = 1.5f;
-    [SerializeField] private float suspicionDistance = 5f;
+    [SerializeField, Min(0f)] private float instantDistance = 1.5f;
+    [SerializeField, Min(0f)] private float suspicionDistance = 5f;
     [SerializeField] private LayerMask playerLayer;
 
     [Header("Suspicion Settings")]
-    [SerializeField] private float timeToCatch = 3f;
+    [SerializeField, Min(0f)] private float timeToCatch = 3f;
 
     [Header("Respawn (Scene)")]
     [SerializeField] private string respawnSceneName = "Buro";
@@ -35,19 +33,7 @@ public class SnitchVision : MonoBehaviour
     private void Awake()
     {
         snitchPatrolling = GetComponent<SnitchPatrolling>();
-
-        // Wenn nicht gesetzt, versuch automatisch zu finden
-        if (spritesRoot == null)
-        {
-            Transform t = transform.Find("Sprites");
-            if (t != null) spritesRoot = t;
-        }
-
-        if (spriteRenderer == null && spritesRoot != null)
-            spriteRenderer = spritesRoot.GetComponentInChildren<SpriteRenderer>();
-
-        if (eyePoint == null) Debug.LogError("[SnitchVision] eyePoint not assigned!");
-        if (suspicionPoint == null) Debug.LogError("[SnitchVision] suspicionPoint not assigned!");
+        ValidateRequiredReferences();
     }
 
     private void OnEnable() => SceneManager.sceneLoaded += OnSceneLoaded;
@@ -55,173 +41,189 @@ public class SnitchVision : MonoBehaviour
 
     private void Update()
     {
-        if (isRespawning) return;
-
-        // 1) Suspicion läuft zuerst. Solange sie läuft, kein Instant-Catch checken.
-        bool suspicionActiveOrCaught = DoSuspicionRay();
-
-        bool instantCaught = false;
-        if (!suspicionActiveOrCaught)
-            instantCaught = DoInstantRay();
-
-        if (snitchPatrolling != null)
-            snitchPatrolling.canMove = !(instantCaught || suspicionActiveOrCaught);
-    }
-
-    /// <summary>
-    /// Stabile Blickrichtung für 2D:
-    /// - bevorzugt: spritesRoot scale.x (funktioniert bei scale.x = -1)
-    /// - fallback: SpriteRenderer.flipX (funktioniert bei flipX-only)
-    /// </summary>
-    private Vector2 FacingDir()
-    {
-        if (spritesRoot != null)
+        if (isRespawning)
         {
-            // lossyScale berücksichtigt Parent-Scale usw.
-            if (spritesRoot.lossyScale.x < 0f) return Vector2.left;
-            if (spritesRoot.lossyScale.x > 0f) return Vector2.right;
+            ApplyMovementStop(true);
+            return;
         }
 
-        if (spriteRenderer != null)
-            return spriteRenderer.flipX ? Vector2.left : Vector2.right;
+        bool isSuspicious = CheckSuspicion();
+        if (isRespawning)
+        {
+            ApplyMovementStop(true);
+            return;
+        }
 
-        // last resort
-        return Vector2.right;
+        bool instantCaught = !isSuspicious && CheckInstantCatch();
+        ApplyMovementStop(isSuspicious || instantCaught);
     }
 
-    private bool DoInstantRay()
+    private void ValidateRequiredReferences()
     {
-        if (eyePoint == null) return false;
+        if (eyePoint == null)
+        {
+            Debug.LogWarning("[SnitchVision] eyePoint is missing. Instant catch is disabled.", this);
+        }
 
-        Vector2 dir = FacingDir();
-        if (drawDebug) Debug.DrawRay(eyePoint.position, dir * instantDistance, Color.red);
+        if (suspicionPoint == null)
+        {
+            Debug.LogWarning("[SnitchVision] suspicionPoint is missing. Suspicion is disabled.", this);
+        }
+    }
 
-        RaycastHit2D hit = Physics2D.Raycast(eyePoint.position, dir, instantDistance, playerLayer);
-        if (hit.collider == null) return false;
+    private Vector2 FacingDirection => snitchPatrolling != null ? snitchPatrolling.FacingDirection : Vector2.right;
 
-        PlayerMain player = hit.collider.GetComponent<PlayerMain>();
-        if (player == null) return false;
-        if (!player.Detectable) return false;
+    private bool CheckInstantCatch()
+    {
+        if (eyePoint == null)
+        {
+            return false;
+        }
 
-        Debug.Log("[SnitchVision] Player got caught (instant)!");
+        Vector2 facing = FacingDirection;
+        if (drawDebug)
+        {
+            Debug.DrawRay(eyePoint.position, facing * instantDistance, Color.red);
+        }
+
+        if (!TryGetDetectablePlayer(eyePoint.position, facing, instantDistance, out PlayerMain player))
+        {
+            return false;
+        }
+
         StartRespawn(player);
         return true;
     }
 
-    private bool DoSuspicionRay()
+    private bool CheckSuspicion()
     {
-        if (suspicionPoint == null) return false;
-
-        Vector2 dir = FacingDir();
-        if (drawDebug) Debug.DrawRay(suspicionPoint.position, dir * suspicionDistance, Color.yellow);
-
-        RaycastHit2D hit = Physics2D.Raycast(suspicionPoint.position, dir, suspicionDistance, playerLayer);
-
-        if (hit.collider == null)
+        if (suspicionPoint == null)
         {
             suspicionTimer = 0f;
             return false;
         }
 
-        PlayerMain player = hit.collider.GetComponent<PlayerMain>();
-        if (player == null)
+        Vector2 facing = FacingDirection;
+        if (drawDebug)
         {
-            suspicionTimer = 0f;
-            return false;
+            Debug.DrawRay(suspicionPoint.position, facing * suspicionDistance, Color.yellow);
         }
 
-        if (!player.Detectable)
+        bool seesPlayer = TryGetDetectablePlayer(suspicionPoint.position, facing, suspicionDistance, out PlayerMain player);
+        if (!seesPlayer)
         {
             suspicionTimer = 0f;
             return false;
         }
 
         suspicionTimer += Time.deltaTime;
-
-        if (suspicionTimer >= timeToCatch)
+        if (suspicionTimer < timeToCatch)
         {
-            Debug.Log("[SnitchVision] Player got caught after timed suspicion!");
-            suspicionTimer = 0f;
-
-            StartRespawn(player);
             return true;
         }
 
-        // Verdacht läuft -> Snitch bleibt stehen
+        suspicionTimer = 0f;
+        StartRespawn(player);
         return true;
+    }
+
+    private bool TryGetDetectablePlayer(Vector2 origin, Vector2 direction, float distance, out PlayerMain player)
+    {
+        player = null;
+
+        RaycastHit2D hit = Physics2D.Raycast(origin, direction, distance, playerLayer);
+        if (hit.collider == null)
+        {
+            return false;
+        }
+
+        if (!hit.collider.TryGetComponent(out PlayerMain foundPlayer) || !foundPlayer.Detectable)
+        {
+            return false;
+        }
+
+        player = foundPlayer;
+        return true;
+    }
+
+    private void ApplyMovementStop(bool shouldStop)
+    {
+        if (snitchPatrolling != null)
+        {
+            snitchPatrolling.canMove = !shouldStop;
+        }
     }
 
     private void StartRespawn(PlayerMain player)
     {
-        if (isRespawning) return;
+        if (isRespawning || player == null)
+        {
+            return;
+        }
 
         isRespawning = true;
         playerToRespawn = player;
 
-        // Player überlebt Scene-Load, damit wir ihn nach dem Laden repositionieren können
-        DontDestroyOnLoad(player.gameObject);
-
+        DontDestroyOnLoad(playerToRespawn.gameObject);
         SceneManager.LoadScene(respawnSceneName, LoadSceneMode.Single);
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        if (!isRespawning) return;
-        if (scene.name != respawnSceneName) return;
-
-        Transform spawn = GameObject.Find(respawnPointName)?.transform;
-        if (spawn == null)
+        if (!isRespawning || scene.name != respawnSceneName)
         {
-            Debug.LogError($"[SnitchVision] RespawnPoint '{respawnPointName}' not found in scene '{respawnSceneName}'!");
-            isRespawning = false;
+            return;
+        }
+
+        GameObject spawnObject = GameObject.Find(respawnPointName);
+        if (spawnObject == null)
+        {
+            Debug.LogError($"[SnitchVision] Respawn point '{respawnPointName}' not found in scene '{respawnSceneName}'.", this);
+            CleanupRespawnState();
             return;
         }
 
         if (playerToRespawn != null)
         {
-            if (resetVelocityOnRespawn)
+            if (resetVelocityOnRespawn && playerToRespawn.TryGetComponent(out Rigidbody2D rb))
             {
-                Rigidbody2D rb = playerToRespawn.GetComponent<Rigidbody2D>();
-                if (rb != null) rb.velocity = Vector2.zero;
+                rb.velocity = Vector2.zero;
+                rb.angularVelocity = 0f;
             }
 
-            playerToRespawn.transform.position = spawn.position;
-
-            // zurück in die geladene Scene schieben (sauberer als dauerhaft DontDestroy)
+            playerToRespawn.transform.position = spawnObject.transform.position;
             SceneManager.MoveGameObjectToScene(playerToRespawn.gameObject, scene);
         }
 
+        CleanupRespawnState();
+    }
+
+    private void CleanupRespawnState()
+    {
+        suspicionTimer = 0f;
         playerToRespawn = null;
         isRespawning = false;
     }
 
     private void OnDrawGizmosSelected()
     {
-        if (!drawDebug) return;
-
-        Vector2 dir = Vector2.right;
-
-        // OnDrawGizmosSelected läuft auch im Editor ohne Awake -> hier defensiv
-        Transform sr = spritesRoot != null ? spritesRoot : transform.Find("Sprites");
-        if (sr != null)
+        if (!drawDebug)
         {
-            dir = sr.lossyScale.x < 0f ? Vector2.left : Vector2.right;
+            return;
         }
-        else if (spriteRenderer != null)
-        {
-            dir = spriteRenderer.flipX ? Vector2.left : Vector2.right;
-        }
+
+        Vector2 facing = Application.isPlaying && snitchPatrolling != null ? snitchPatrolling.FacingDirection : Vector2.right;
 
         if (eyePoint != null)
         {
             Gizmos.color = Color.red;
-            Gizmos.DrawLine(eyePoint.position, eyePoint.position + (Vector3)dir * instantDistance);
+            Gizmos.DrawLine(eyePoint.position, eyePoint.position + (Vector3)(facing * instantDistance));
         }
 
         if (suspicionPoint != null)
         {
             Gizmos.color = Color.yellow;
-            Gizmos.DrawLine(suspicionPoint.position, suspicionPoint.position + (Vector3)dir * suspicionDistance);
+            Gizmos.DrawLine(suspicionPoint.position, suspicionPoint.position + (Vector3)(facing * suspicionDistance));
         }
     }
 }

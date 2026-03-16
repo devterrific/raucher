@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 8924151770065765427}
   - component: {fileID: 3205404536408905619}
   m_Layer: 7
-  m_Name: Hide
+  m_Name: NeuSchrank
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

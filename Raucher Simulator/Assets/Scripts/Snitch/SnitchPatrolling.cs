@@ -1,66 +1,138 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class SnitchPatrolling : MonoBehaviour
 {
+    [Header("Patrol")]
     [SerializeField] private Transform[] patrolPoints;
-    [SerializeField] private int targetPoint;
-    [SerializeField] private float speed;
-    [SerializeField] private float waitTime = 2.2f;
+    [SerializeField, Min(0f)] private float moveSpeed = 2f;
+    [SerializeField, Min(0f)] private float waitTimeAtPoint = 2.2f;
+    [SerializeField, Min(0.001f)] private float arrivalThreshold = 0.05f;
 
-    //public vars...
+    [Header("Runtime")]
+    [SerializeField] private int currentPointIndex;
+
     [HideInInspector] public bool canMove = true;
+    public Vector2 FacingDirection => isFacingRight ? Vector2.right : Vector2.left;
 
-    // private vars...
-    private bool isWaiting = false;
+    private float waitTimer;
+    private bool isWaiting;
+    private bool isFacingRight = true;
 
-    private void Start()
+    private void Awake()
     {
-        targetPoint = 0;
+        currentPointIndex = Mathf.Clamp(currentPointIndex, 0, Mathf.Max(0, patrolPoints.Length - 1));
+        isFacingRight = transform.rotation.eulerAngles.y < 90f || transform.rotation.eulerAngles.y > 270f;
     }
 
     private void Update()
     {
-        if (!isWaiting && canMove)
-            MoveSnitch(speed);
+        if (!HasValidPatrolPath() || !canMove)
+        {
+            return;
+        }
+
+        if (isWaiting)
+        {
+            UpdateWaitTimer();
+            return;
+        }
+
+        MoveTowardsCurrentPoint();
     }
 
-    private void MoveSnitch(float speed)
+    private bool HasValidPatrolPath()
     {
-        FaceDirection();
+        if (patrolPoints == null || patrolPoints.Length == 0)
+        {
+            return false;
+        }
 
-        if (Vector2.Distance(transform.position, patrolPoints[targetPoint].position) < .05f)
-            StartCoroutine(WaitAtPoint(waitTime));
+        if (patrolPoints[currentPointIndex] == null)
+        {
+            AdvanceToNextValidPoint();
+        }
 
-        transform.position = Vector2.MoveTowards(transform.position,
-                                                patrolPoints[targetPoint].position,
-                                                speed * Time.deltaTime);
+        return patrolPoints[currentPointIndex] != null;
     }
 
-    private void FaceDirection()
+    private void UpdateWaitTimer()
     {
-        float direction = patrolPoints[targetPoint].position.x - transform.position.x;
+        waitTimer -= Time.deltaTime;
+        if (waitTimer > 0f)
+        {
+            return;
+        }
 
-        if (direction > 0)
-            transform.rotation = Quaternion.Euler(0f, 0f, 0f);
-        else if (direction < 0)
-            transform.rotation = Quaternion.Euler(0f, 180f, 0f);
-    }
-
-    private IEnumerator WaitAtPoint(float time)
-    {
-        isWaiting = true;
-        yield return new WaitForSeconds(time);
-        IncreaseTargetInt();
         isWaiting = false;
+        AdvanceToNextValidPoint();
     }
 
-    private void IncreaseTargetInt()
+    private void MoveTowardsCurrentPoint()
     {
-        targetPoint++;
-        if (targetPoint >= patrolPoints.Length)
-            targetPoint = 0;
+        Transform target = patrolPoints[currentPointIndex];
+        Vector3 currentPosition = transform.position;
+        Vector3 targetPosition = target.position;
+
+        float horizontalDelta = targetPosition.x - currentPosition.x;
+        UpdateFacing(horizontalDelta);
+
+        Vector3 newPosition = Vector2.MoveTowards(currentPosition, targetPosition, moveSpeed * Time.deltaTime);
+        transform.position = newPosition;
+
+        float remainingDistanceSqr = (targetPosition - newPosition).sqrMagnitude;
+        if (remainingDistanceSqr <= arrivalThreshold * arrivalThreshold)
+        {
+            StartWaiting();
+        }
+    }
+
+    private void StartWaiting()
+    {
+        if (isWaiting)
+        {
+            return;
+        }
+
+        isWaiting = true;
+        waitTimer = waitTimeAtPoint;
+    }
+
+    private void AdvanceToNextValidPoint()
+    {
+        if (patrolPoints == null || patrolPoints.Length == 0)
+        {
+            return;
+        }
+
+        int startIndex = currentPointIndex;
+
+        do
+        {
+            currentPointIndex = (currentPointIndex + 1) % patrolPoints.Length;
+
+            if (patrolPoints[currentPointIndex] != null)
+            {
+                return;
+            }
+        }
+        while (currentPointIndex != startIndex);
+    }
+
+    private void UpdateFacing(float horizontalDelta)
+    {
+        const float deadZone = 0.001f;
+        if (Mathf.Abs(horizontalDelta) <= deadZone)
+        {
+            return;
+        }
+
+        bool shouldFaceRight = horizontalDelta > 0f;
+        if (shouldFaceRight == isFacingRight)
+        {
+            return;
+        }
+
+        isFacingRight = shouldFaceRight;
+        transform.rotation = isFacingRight ? Quaternion.identity : Quaternion.Euler(0f, 180f, 0f);
     }
 }
