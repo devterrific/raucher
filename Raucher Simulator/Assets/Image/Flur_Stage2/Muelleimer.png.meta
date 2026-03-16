@@ -128,7 +128,8 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Muelleimer_0: -560352960926650865
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

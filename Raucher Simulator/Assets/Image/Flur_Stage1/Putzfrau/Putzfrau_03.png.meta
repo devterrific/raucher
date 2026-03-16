@@ -128,7 +128,8 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Putzfrau_03_0: 8255015910015383699
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

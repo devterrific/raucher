@@ -176,7 +176,10 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      "Kn\xF6pfe-gedr\xFCckt-Kopie_0000s_0004_Settings_0": 8509867037266715937
+      "Kn\xF6pfe-gedr\xFCckt-Kopie_0000s_0004_Settings_1": 6648831849392938720
+      "Kn\xF6pfe-gedr\xFCckt-Kopie_0000s_0004_Settings_2": 6933106727295595223
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

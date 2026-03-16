@@ -200,7 +200,11 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Schreibtisch_03_0: 5067333766794354659
+      Schreibtisch_03_1: 6646579263128306189
+      Schreibtisch_03_2: -6519923825213502732
+      Schreibtisch_03_3: -1673638344623988359
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

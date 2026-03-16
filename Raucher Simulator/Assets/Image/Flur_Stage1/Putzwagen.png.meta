@@ -128,7 +128,8 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Putzwagen_0: -8065471655795356911
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

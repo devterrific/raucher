@@ -128,7 +128,8 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Fliege2_0: 257380406541281412
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

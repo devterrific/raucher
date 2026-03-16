@@ -35,8 +35,14 @@ public class MiniGameFlow : MonoBehaviour
 
     [Header("UI")]
     [SerializeField] private CanvasGroup countdownPanel;
-    [SerializeField] private Text countdownText;
+    [SerializeField] private Image countdownImage;
     [SerializeField] private Text topHintText;
+
+    [Header("Countdown Sprites")]
+    [SerializeField] private Sprite countdown3Sprite;
+    [SerializeField] private Sprite countdown2Sprite;
+    [SerializeField] private Sprite countdown1Sprite;
+    [SerializeField] private Sprite countdownGoSprite;
 
     [Header("Background")]
     [SerializeField] private Image gameplayBackground;
@@ -131,8 +137,11 @@ public class MiniGameFlow : MonoBehaviour
     private bool isFilterClickLocked = false;
     private bool isTobaccoClickLocked = false;
 
-    // GameOver Schutz
+    //  GameOver Schutz
     private bool hasGlobalGameOverHappened = false;
+
+    //  Schutz gegen mehrfaches AddScore
+    private bool pointsAlreadyAddedToSession = false;
 
     private void HandleGlobalGameOver()
     {
@@ -178,6 +187,7 @@ public class MiniGameFlow : MonoBehaviour
         }
 
         earnedPointsThisRun = 0;
+        pointsAlreadyAddedToSession = false;
 
         if (countdownPanel != null)
         {
@@ -202,6 +212,11 @@ public class MiniGameFlow : MonoBehaviour
             var cg = gameplayBackground.GetComponent<CanvasGroup>();
             if (cg == null) cg = gameplayBackground.gameObject.AddComponent<CanvasGroup>();
             cg.alpha = 0f;
+        }
+
+        if (countdownImage != null)
+        {
+            countdownImage.gameObject.SetActive(true);
         }
     }
 
@@ -254,6 +269,11 @@ public class MiniGameFlow : MonoBehaviour
             countdownPanel.alpha = 1f;
         }
 
+        if (countdownImage != null)
+        {
+            countdownImage.gameObject.SetActive(true);
+        }
+
         if (countdownAudioSource != null && countdown321GoClip != null)
         {
             countdownAudioSource.Stop();
@@ -262,25 +282,10 @@ public class MiniGameFlow : MonoBehaviour
             countdownAudioSource.Play();
         }
 
-        float t = settings != null ? settings.countdownSeconds : 3f;
-
-        while (t > 0f)
-        {
-            if (countdownText != null)
-            {
-                countdownText.text = Mathf.CeilToInt(t).ToString();
-            }
-
-            t -= Time.unscaledDeltaTime;
-            yield return null;
-        }
-
-        if (countdownText != null)
-        {
-            countdownText.text = "GO!";
-        }
-
-        yield return new WaitForSecondsRealtime(0.5f);
+        yield return StartCoroutine(ShowCountdownSprite(countdown3Sprite, 1f));
+        yield return StartCoroutine(ShowCountdownSprite(countdown2Sprite, 1f));
+        yield return StartCoroutine(ShowCountdownSprite(countdown1Sprite, 1f));
+        yield return StartCoroutine(ShowCountdownSprite(countdownGoSprite, 0.5f));
 
         if (countdownPanel != null)
         {
@@ -288,12 +293,22 @@ public class MiniGameFlow : MonoBehaviour
             countdownPanel.gameObject.SetActive(false);
         }
 
-        //  Background einblenden
+        // Background einblenden
         if (gameplayBackground != null)
         {
             var cg = gameplayBackground.GetComponent<CanvasGroup>();
             StartCoroutine(FadeCanvasGroup(cg, 0f, 1f, backgroundFadeIn));
         }
+    }
+    private IEnumerator ShowCountdownSprite(Sprite sprite, float duration)
+    {
+        if (countdownImage != null)
+        {
+            countdownImage.sprite = sprite;
+            countdownImage.SetNativeSize();
+        }
+
+        yield return new WaitForSecondsRealtime(duration);
     }
 
     private void EnterState(State s)
@@ -333,6 +348,15 @@ public class MiniGameFlow : MonoBehaviour
                 break;
 
             case State.Results:
+                if (!pointsAlreadyAddedToSession)
+                {
+                    if (GameSessionManager.Instance != null && earnedPointsThisRun > 0)
+                    {
+                        GameSessionManager.Instance.AddScore(earnedPointsThisRun);
+                    }
+
+                    pointsAlreadyAddedToSession = true;
+                }
                 ShowResults();
                 break;
         }

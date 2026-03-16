@@ -128,7 +128,8 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Spinnennetz_0: 108303903351817152
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

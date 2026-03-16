@@ -128,7 +128,8 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Stinky_03_0: 8663441586070533613
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
