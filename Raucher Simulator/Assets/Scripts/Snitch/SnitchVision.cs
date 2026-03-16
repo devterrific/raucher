@@ -16,6 +16,11 @@ public class SnitchVision : MonoBehaviour
     [Header("Suspicion Settings")]
     [SerializeField, Min(0f)] private float timeToCatch = 3f;
 
+    [Header("Close Turn Reaction")]
+    [SerializeField, Min(0f)] private float closeTurnDistance = 1.25f;
+    [SerializeField, Min(0f)] private float closeTurnDuration = 1f;
+    [SerializeField, Min(0f)] private float closeTurnCooldown = 1f;
+
     [Header("Respawn (Scene)")]
     [SerializeField] private string respawnSceneName = "Buro";
     [SerializeField] private string respawnPointName = "startBuro";
@@ -33,7 +38,8 @@ public class SnitchVision : MonoBehaviour
     private void Awake()
     {
         snitchPatrolling = GetComponent<SnitchPatrolling>();
-        ValidateRequiredReferences();
+        if (eyePoint == null) Debug.LogWarning("[SnitchVision] eyePoint is missing. Instant catch is disabled.", this);
+        if (suspicionPoint == null) Debug.LogWarning("[SnitchVision] suspicionPoint is missing. Suspicion is disabled.", this);
     }
 
     private void OnEnable() => SceneManager.sceneLoaded += OnSceneLoaded;
@@ -47,6 +53,8 @@ public class SnitchVision : MonoBehaviour
             return;
         }
 
+        TryTriggerCloseTurnReaction();
+
         bool isSuspicious = CheckSuspicion();
         if (isRespawning)
         {
@@ -58,20 +66,23 @@ public class SnitchVision : MonoBehaviour
         ApplyMovementStop(isSuspicious || instantCaught);
     }
 
-    private void ValidateRequiredReferences()
-    {
-        if (eyePoint == null)
-        {
-            Debug.LogWarning("[SnitchVision] eyePoint is missing. Instant catch is disabled.", this);
-        }
-
-        if (suspicionPoint == null)
-        {
-            Debug.LogWarning("[SnitchVision] suspicionPoint is missing. Suspicion is disabled.", this);
-        }
-    }
-
     private Vector2 FacingDirection => snitchPatrolling != null ? snitchPatrolling.FacingDirection : Vector2.right;
+
+    private void TryTriggerCloseTurnReaction()
+    {
+        if (snitchPatrolling == null || closeTurnDistance <= 0f)
+        {
+            return;
+        }
+
+        Collider2D hit = Physics2D.OverlapCircle(transform.position, closeTurnDistance, playerLayer);
+        if (hit == null || !hit.TryGetComponent(out PlayerMain player) || !player.Detectable)
+        {
+            return;
+        }
+
+        snitchPatrolling.TryStartCloseTurnTowards(player.transform.position, closeTurnDuration, closeTurnCooldown);
+    }
 
     private bool CheckInstantCatch()
     {
@@ -81,10 +92,7 @@ public class SnitchVision : MonoBehaviour
         }
 
         Vector2 facing = FacingDirection;
-        if (drawDebug)
-        {
-            Debug.DrawRay(eyePoint.position, facing * instantDistance, Color.red);
-        }
+        if (drawDebug) Debug.DrawRay(eyePoint.position, facing * instantDistance, Color.red);
 
         if (!TryGetDetectablePlayer(eyePoint.position, facing, instantDistance, out PlayerMain player))
         {
@@ -104,10 +112,7 @@ public class SnitchVision : MonoBehaviour
         }
 
         Vector2 facing = FacingDirection;
-        if (drawDebug)
-        {
-            Debug.DrawRay(suspicionPoint.position, facing * suspicionDistance, Color.yellow);
-        }
+        if (drawDebug) Debug.DrawRay(suspicionPoint.position, facing * suspicionDistance, Color.yellow);
 
         bool seesPlayer = TryGetDetectablePlayer(suspicionPoint.position, facing, suspicionDistance, out PlayerMain player);
         if (!seesPlayer)
@@ -225,5 +230,8 @@ public class SnitchVision : MonoBehaviour
             Gizmos.color = Color.yellow;
             Gizmos.DrawLine(suspicionPoint.position, suspicionPoint.position + (Vector3)(facing * suspicionDistance));
         }
+
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawWireSphere(transform.position, closeTurnDistance);
     }
 }

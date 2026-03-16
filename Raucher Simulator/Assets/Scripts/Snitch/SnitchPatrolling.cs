@@ -18,14 +18,20 @@ public class SnitchPatrolling : MonoBehaviour
     private bool isWaiting;
     private bool isFacingRight = true;
 
+    private float forcedFacingTimer;
+    private float closeTurnCooldownTimer;
+
     private void Awake()
     {
         currentPointIndex = Mathf.Clamp(currentPointIndex, 0, Mathf.Max(0, patrolPoints.Length - 1));
         isFacingRight = transform.rotation.eulerAngles.y < 90f || transform.rotation.eulerAngles.y > 270f;
+        ApplyFacingRotation();
     }
 
     private void Update()
     {
+        UpdateFacingOverrideTimers();
+
         if (!HasValidPatrolPath() || !canMove)
         {
             return;
@@ -33,11 +39,38 @@ public class SnitchPatrolling : MonoBehaviour
 
         if (isWaiting)
         {
-            UpdateWaitTimer();
+            waitTimer -= Time.deltaTime;
+            if (waitTimer <= 0f)
+            {
+                isWaiting = false;
+                AdvanceToNextValidPoint();
+            }
             return;
         }
 
         MoveTowardsCurrentPoint();
+    }
+
+    public bool TryStartCloseTurnTowards(Vector3 targetPosition, float duration, float cooldown)
+    {
+        if (forcedFacingTimer > 0f || closeTurnCooldownTimer > 0f)
+        {
+            return false;
+        }
+
+        float deltaX = targetPosition.x - transform.position.x;
+        const float deadZone = 0.001f;
+        if (Mathf.Abs(deltaX) <= deadZone)
+        {
+            return false;
+        }
+
+        isFacingRight = deltaX > 0f;
+        ApplyFacingRotation();
+
+        forcedFacingTimer = Mathf.Max(0f, duration);
+        closeTurnCooldownTimer = forcedFacingTimer + Mathf.Max(0f, cooldown);
+        return true;
     }
 
     private bool HasValidPatrolPath()
@@ -55,46 +88,27 @@ public class SnitchPatrolling : MonoBehaviour
         return patrolPoints[currentPointIndex] != null;
     }
 
-    private void UpdateWaitTimer()
-    {
-        waitTimer -= Time.deltaTime;
-        if (waitTimer > 0f)
-        {
-            return;
-        }
-
-        isWaiting = false;
-        AdvanceToNextValidPoint();
-    }
-
     private void MoveTowardsCurrentPoint()
     {
         Transform target = patrolPoints[currentPointIndex];
         Vector3 currentPosition = transform.position;
         Vector3 targetPosition = target.position;
 
-        float horizontalDelta = targetPosition.x - currentPosition.x;
-        UpdateFacing(horizontalDelta);
+        if (forcedFacingTimer <= 0f)
+        {
+            float horizontalDelta = targetPosition.x - currentPosition.x;
+            UpdateFacing(horizontalDelta);
+        }
 
         Vector3 newPosition = Vector2.MoveTowards(currentPosition, targetPosition, moveSpeed * Time.deltaTime);
-        transform.position = newPosition;
+        transform.position = new Vector3(newPosition.x, newPosition.y, -9f);
 
         float remainingDistanceSqr = (targetPosition - newPosition).sqrMagnitude;
         if (remainingDistanceSqr <= arrivalThreshold * arrivalThreshold)
         {
-            StartWaiting();
+            isWaiting = true;
+            waitTimer = waitTimeAtPoint;
         }
-    }
-
-    private void StartWaiting()
-    {
-        if (isWaiting)
-        {
-            return;
-        }
-
-        isWaiting = true;
-        waitTimer = waitTimeAtPoint;
     }
 
     private void AdvanceToNextValidPoint()
@@ -105,11 +119,9 @@ public class SnitchPatrolling : MonoBehaviour
         }
 
         int startIndex = currentPointIndex;
-
         do
         {
             currentPointIndex = (currentPointIndex + 1) % patrolPoints.Length;
-
             if (patrolPoints[currentPointIndex] != null)
             {
                 return;
@@ -133,6 +145,24 @@ public class SnitchPatrolling : MonoBehaviour
         }
 
         isFacingRight = shouldFaceRight;
+        ApplyFacingRotation();
+    }
+
+    private void ApplyFacingRotation()
+    {
         transform.rotation = isFacingRight ? Quaternion.identity : Quaternion.Euler(0f, 180f, 0f);
+    }
+
+    private void UpdateFacingOverrideTimers()
+    {
+        if (forcedFacingTimer > 0f)
+        {
+            forcedFacingTimer -= Time.deltaTime;
+        }
+
+        if (closeTurnCooldownTimer > 0f)
+        {
+            closeTurnCooldownTimer -= Time.deltaTime;
+        }
     }
 }
