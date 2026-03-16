@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: edc8418aa8aa46d42b82f933dfc992e6
+guid: 255122255800a994c8e7a752209ce84c
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -8739461425648211052
-    second: Putzfrau_01_0
+      213: 8255015910015383699
+    second: Putzfrau_03_0
   externalObjects: {}
   serializedVersion: 12
   mipmaps:
@@ -98,7 +98,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Putzfrau_01_0
+      name: Putzfrau_03_0
       rect:
         serializedVersion: 2
         x: 0
@@ -112,8 +112,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 49b6204132237b680800000000000000
-      internalID: -8739461425648211052
+      spriteID: 3983aa3bb35bf8270800000000000000
+      internalID: 8255015910015383699
       vertices: []
       indices: 
       edges: []
