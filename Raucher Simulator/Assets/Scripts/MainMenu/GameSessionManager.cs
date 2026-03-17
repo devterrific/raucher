@@ -4,6 +4,8 @@ public class GameSessionManager : MonoBehaviour
 {
     public static GameSessionManager Instance { get; private set; }
 
+    private const string PlayerNameKey = "PlayerName";
+
     public string PlayerName { get; private set; }
     public int CurrentScore { get; private set; }
     public bool IsSessionActive => sessionActive;
@@ -25,7 +27,7 @@ public class GameSessionManager : MonoBehaviour
 
     public void StartSession()
     {
-        PlayerName = PlayerPrefs.GetString("PlayerName", "Unknown Player");
+        PlayerName = PlayerPrefs.GetString(PlayerNameKey, string.Empty);
         CurrentScore = 0;
 
         sessionActive = true;
@@ -56,6 +58,8 @@ public class GameSessionManager : MonoBehaviour
             SaveHighscore();
             scoreSaved = true;
         }
+
+        ResetSessionData();
     }
 
     private void SaveHighscore()
@@ -65,6 +69,20 @@ public class GameSessionManager : MonoBehaviour
             return;
         }
 
+        if (string.IsNullOrWhiteSpace(PlayerName))
+        {
+            return;
+        }
+
         HighscoreFileUtility.AddHighscore(PlayerName, CurrentScore);
+    }
+
+    private void ResetSessionData()
+    {
+        PlayerName = string.Empty;
+        CurrentScore = 0;
+
+        PlayerPrefs.DeleteKey(PlayerNameKey);
+        PlayerPrefs.Save();
     }
 }

@@ -137,10 +137,7 @@ public class MiniGameFlow : MonoBehaviour
     private bool isFilterClickLocked = false;
     private bool isTobaccoClickLocked = false;
 
-    //  GameOver Schutz
     private bool hasGlobalGameOverHappened = false;
-
-    //  Schutz gegen mehrfaches AddScore
     private bool pointsAlreadyAddedToSession = false;
 
     private void HandleGlobalGameOver()
@@ -164,6 +161,8 @@ public class MiniGameFlow : MonoBehaviour
 
         if (topHintText != null) topHintText.gameObject.SetActive(false);
         if (countdownPanel != null) countdownPanel.gameObject.SetActive(false);
+
+        ShowPlayerHud();
     }
 
     private void Awake()
@@ -227,6 +226,8 @@ public class MiniGameFlow : MonoBehaviour
         if (tobaccoPackBtn != null) tobaccoPackBtn.onClick.RemoveListener(OnTobaccoClicked);
 
         if (continueButton != null) continueButton.onClick.RemoveListener(ContinueAfterMiniGame);
+
+        ShowPlayerHud();
     }
 
     private IEnumerator Start()
@@ -262,6 +263,8 @@ public class MiniGameFlow : MonoBehaviour
 
     private IEnumerator RunCountdown()
     {
+        HidePlayerHud();
+
         SetHint("");
 
         if (countdownPanel != null)
@@ -293,13 +296,31 @@ public class MiniGameFlow : MonoBehaviour
             countdownPanel.gameObject.SetActive(false);
         }
 
-        // Background einblenden
         if (gameplayBackground != null)
         {
             var cg = gameplayBackground.GetComponent<CanvasGroup>();
             StartCoroutine(FadeCanvasGroup(cg, 0f, 1f, backgroundFadeIn));
         }
+
+        ShowPlayerHud();
     }
+
+    private void HidePlayerHud()
+    {
+        if (PlayerHUDManager.Instance != null)
+        {
+            PlayerHUDManager.Instance.HideHud();
+        }
+    }
+
+    private void ShowPlayerHud()
+    {
+        if (PlayerHUDManager.Instance != null)
+        {
+            PlayerHUDManager.Instance.ShowHud();
+        }
+    }
+
     private IEnumerator ShowCountdownSprite(Sprite sprite, float duration)
     {
         if (countdownImage != null)
@@ -684,7 +705,6 @@ public class MiniGameFlow : MonoBehaviour
         StartCoroutine(ShowResultsRoutine());
     }
 
-    // ==== HIER: NUR MINIGAME-ERGEBNIS, KEIN GLOBAL SCORE ====
     private IEnumerator ShowResultsRoutine()
     {
         int runPoints = earnedPointsThisRun;
