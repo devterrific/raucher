@@ -6,6 +6,7 @@ public class GameSessionManager : MonoBehaviour
 
     public string PlayerName { get; private set; }
     public int CurrentScore { get; private set; }
+    public bool IsSessionActive => sessionActive;
 
     private bool sessionActive = false;
     private bool scoreSaved = false;

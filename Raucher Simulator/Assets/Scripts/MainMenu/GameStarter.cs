@@ -4,9 +4,16 @@ public class GameStarter : MonoBehaviour
 {
     private void Start()
     {
-        if (GameSessionManager.Instance != null)
+        if (GameSessionManager.Instance == null)
         {
-            GameSessionManager.Instance.StartSession();
+            return;
         }
+
+        if (GameSessionManager.Instance.IsSessionActive)
+        {
+            return;
+        }
+
+        GameSessionManager.Instance.StartSession();
     }
 }
