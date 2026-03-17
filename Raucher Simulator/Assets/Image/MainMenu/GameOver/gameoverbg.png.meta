@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 1dd247a25ce152a43a3833e60c9f4e4c
+guid: bc6d995af9b26de4e9c2fbb9bd6bee9c
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 1562941054385929682
-    second: Snitch Shock_0
+      213: 1774861841219759116
+    second: gameoverbg_0
   externalObjects: {}
   serializedVersion: 12
   mipmaps:
@@ -98,13 +98,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Snitch Shock_0
+      name: gameoverbg_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 125
-        height: 375
+        width: 1920
+        height: 1080
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -112,8 +112,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 2dd3c8fab9ea0b510800000000000000
-      internalID: 1562941054385929682
+      spriteID: c0cac43e07391a810800000000000000
+      internalID: 1774861841219759116
       vertices: []
       indices: 
       edges: []
@@ -121,7 +121,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 5e97eb03825dee720800000000000000
     internalID: 0
     vertices: []
     indices: 
@@ -129,7 +129,7 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Snitch Shock_0: 1562941054385929682
+      gameoverbg_0: 1774861841219759116
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
