@@ -2687,6 +2687,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Stinky
       objectReference: {fileID: 0}
+    - target: {fileID: 3943602182226497185, guid: 662a98eae0c0afc45a9363db410ef660, type: 3}
+      propertyPath: m_SortingOrder
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8135392989199208616, guid: 662a98eae0c0afc45a9363db410ef660, type: 3}
       propertyPath: m_LocalPosition.x
       value: 1.920002

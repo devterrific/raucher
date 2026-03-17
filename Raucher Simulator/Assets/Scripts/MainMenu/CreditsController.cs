@@ -15,7 +15,7 @@ public class CreditsController : MonoBehaviour
 @"GAME TITLE
 
 Developed by:
-[Your Name]
+
 
 Programming:
 [Your Name]

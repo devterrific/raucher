@@ -15,5 +15,10 @@ public class GameStarter : MonoBehaviour
         }
 
         GameSessionManager.Instance.StartSession();
+
+        if (PlayerHUDManager.Instance != null)
+        {
+            PlayerHUDManager.Instance.StartRound();
+        }
     }
 }
