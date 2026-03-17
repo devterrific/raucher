@@ -99,7 +99,7 @@ public class MainMenuController : MonoBehaviour
     {
         string playerName = GetTrimmedPlayerName();
 
-        if (string.IsNullOrEmpty(playerName))
+        if (string.IsNullOrEmpty(playerName) || !IsValidPlayerName(playerName))
         {
             ShowNameError();
             return;
@@ -165,6 +165,23 @@ public class MainMenuController : MonoBehaviour
         }
 
         return nameInputField.text.Trim();
+    }
+
+    private bool IsValidPlayerName(string playerName)
+    {
+        for (int i = 0; i < playerName.Length; i++)
+        {
+            char currentCharacter = playerName[i];
+
+            if (char.IsLetterOrDigit(currentCharacter) || currentCharacter == ' ')
+            {
+                continue;
+            }
+
+            return false;
+        }
+
+        return true;
     }
 
     private void ShowNameError()
