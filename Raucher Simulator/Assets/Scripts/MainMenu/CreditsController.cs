@@ -11,29 +11,7 @@ public class CreditsController : MonoBehaviour
     [Header("Content")]
     [TextArea(10, 30)]
     [SerializeField]
-    private string creditsContent =
-@"GAME TITLE
-
-Developed by:
-
-
-Programming:
-[Your Name]
-
-Game Design:
-[Your Name]
-
-Art & Assets:
-[Your Name / Sources]
-
-Sound & Music:
-[Your Name / Sources]
-
-Special Thanks:
-- Friends & Supporters
-- Unity Engine
-
-Thank you for playing!";
+    private string creditsContent = @"";
 
     [Header("Scroll")]
     [SerializeField] private float scrollSpeed = 40f;

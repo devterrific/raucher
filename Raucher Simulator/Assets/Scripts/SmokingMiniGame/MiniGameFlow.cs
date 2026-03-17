@@ -36,7 +36,12 @@ public class MiniGameFlow : MonoBehaviour
     [Header("UI")]
     [SerializeField] private CanvasGroup countdownPanel;
     [SerializeField] private Image countdownImage;
-    [SerializeField] private Text topHintText;
+
+    [Header("Character Speech Bubble")]
+    [SerializeField] private CharacterSpeechBubbleUI speechBubbleUI;
+
+    [Header("Character UI")]
+    [SerializeField] private SmokingMiniGameCharacterUI characterUI;
 
     [Header("Countdown Sprites")]
     [SerializeField] private Sprite countdown3Sprite;
@@ -159,8 +164,13 @@ public class MiniGameFlow : MonoBehaviour
         if (spawnedPaper != null) spawnedPaper.gameObject.SetActive(false);
         if (filterAimer != null) filterAimer.gameObject.SetActive(false);
 
-        if (topHintText != null) topHintText.gameObject.SetActive(false);
+        if (speechBubbleUI != null) speechBubbleUI.Clear();
         if (countdownPanel != null) countdownPanel.gameObject.SetActive(false);
+
+        if (characterUI != null)
+        {
+            characterUI.HideAllCharacterUI();
+        }
 
         ShowPlayerHud();
     }
@@ -267,6 +277,11 @@ public class MiniGameFlow : MonoBehaviour
 
         SetHint("");
 
+        if (characterUI != null)
+        {
+            characterUI.PlayCountdownRun(3.5f);
+        }
+
         if (countdownPanel != null)
         {
             countdownPanel.alpha = 1f;
@@ -300,6 +315,11 @@ public class MiniGameFlow : MonoBehaviour
         {
             var cg = gameplayBackground.GetComponent<CanvasGroup>();
             StartCoroutine(FadeCanvasGroup(cg, 0f, 1f, backgroundFadeIn));
+        }
+
+        if (characterUI != null)
+        {
+            characterUI.ShowCornerIdle();
         }
 
         ShowPlayerHud();
@@ -344,31 +364,35 @@ public class MiniGameFlow : MonoBehaviour
         switch (s)
         {
             case State.WaitPaperClick:
-                SetHint("Klicke die Papierpackung (rechts), um ein Blatt zu entnehmen.");
+                ShowStateHint(s);
                 if (paperPackBtn != null) paperPackBtn.interactable = true;
                 break;
 
             case State.WaitFilterClick:
-                SetHint("Klicke die Filterpackung oben, um einen Filter zu nehmen.");
+                ShowStateHint(s);
                 if (filterPackBtn != null) filterPackBtn.interactable = true;
                 break;
 
             case State.FilterAiming:
-                SetHint("Platziere den Filter: Drücke LEERTASTE im richtigen Moment.");
+                ShowStateHint(s);
                 StartFilterAiming();
                 break;
 
             case State.WaitTobaccoClick:
-                SetHint("Klicke den Tabakbeutel (links), um Tabak hinzuzufügen.");
+                ShowStateHint(s);
                 if (tobaccoPackBtn != null) tobaccoPackBtn.interactable = true;
                 break;
 
             case State.Assemble:
-                SetHint("Zigarette wird fertiggestellt…");
+                ShowStateHint(s);
                 StartCoroutine(FinishAssemble());
                 break;
 
             case State.Results:
+                SetHint("");
+                
+                SetZonesVisible(false);     // Zone immer Ausblenden!
+
                 if (!pointsAlreadyAddedToSession)
                 {
                     if (GameSessionManager.Instance != null && earnedPointsThisRun > 0)
@@ -654,6 +678,8 @@ public class MiniGameFlow : MonoBehaviour
 
     private IEnumerator FailSequence()
     {
+        SetZonesVisible(false);
+
         if (filterAimer != null)
         {
             filterAimer.FailFall();
@@ -699,6 +725,18 @@ public class MiniGameFlow : MonoBehaviour
         if (resultPanel != null)
         {
             resultPanel.SetActive(true);
+        }
+
+        if (characterUI != null)
+        {
+            if (earnedPointsThisRun > 0)
+            {
+                characterUI.PlaySmoking();
+            }
+            else
+            {
+                characterUI.ShowCornerIdle();
+            }
         }
 
         StopAllCoroutines();
@@ -754,9 +792,9 @@ public class MiniGameFlow : MonoBehaviour
 
     private void SetHint(string msg)
     {
-        if (topHintText != null)
+        if (speechBubbleUI != null)
         {
-            topHintText.text = msg;
+            speechBubbleUI.ShowMessage(msg);
         }
     }
 
@@ -934,5 +972,37 @@ public class MiniGameFlow : MonoBehaviour
     private void OnDisable()
     {
         GameOverManager.OnGameOverTriggered -= HandleGlobalGameOver;
+    }
+
+    private string GetStateHint(State state)
+    {
+        switch (state)
+        {
+            case State.WaitPaperClick:
+                return "Klicke die Papierpackung (rechts), um ein Blatt zu entnehmen.";
+
+            case State.WaitFilterClick:
+                return "Klicke die Filterpackung oben, um einen Filter zu nehmen.";
+
+            case State.FilterAiming:
+                return "Platziere den Filter: Drücke LEERTASTE im richtigen Moment.";
+
+            case State.WaitTobaccoClick:
+                return "Klicke den Tabakbeutel (links), um Tabak hinzuzufügen.";
+
+            case State.Assemble:
+                return "Zigarette wird fertiggestellt…";
+
+            case State.Results:
+                return "";
+
+            default:
+                return "";
+        }
+    }
+
+    private void ShowStateHint(State state)
+    {
+        SetHint(GetStateHint(state));
     }
 }
