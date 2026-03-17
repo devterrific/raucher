@@ -1,0 +1,1053 @@
+fileFormatVersion: 2
+guid: f3aff74d7d6f56f418a040073cc2f240
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 8029098216859957546
+    second: Rauch_1_0
+  - first:
+      213: -8177562274176840282
+    second: Rauch_1_1
+  - first:
+      213: 8914192350842207
+    second: Rauch_1_2
+  - first:
+      213: 730804325310623067
+    second: Rauch_1_3
+  - first:
+      213: 5481474216763172902
+    second: Rauch_1_4
+  - first:
+      213: -6660408087126452771
+    second: Rauch_1_5
+  - first:
+      213: -5093831918132379270
+    second: Rauch_1_6
+  - first:
+      213: -2003415088006807956
+    second: Rauch_1_7
+  - first:
+      213: 8550254541545603969
+    second: Rauch_1_8
+  - first:
+      213: -6911923503167872086
+    second: Rauch_1_9
+  - first:
+      213: -6607068477058110673
+    second: Rauch_1_10
+  - first:
+      213: 1037457032768921778
+    second: Rauch_1_11
+  - first:
+      213: -3442911674507904642
+    second: Rauch_1_12
+  - first:
+      213: 2395207488997160101
+    second: Rauch_1_13
+  - first:
+      213: 5527960559969505083
+    second: Rauch_1_14
+  - first:
+      213: 9116436727277986741
+    second: Rauch_1_15
+  - first:
+      213: 7766557484338059670
+    second: Rauch_1_16
+  - first:
+      213: 3807465081672479338
+    second: Rauch_1_17
+  - first:
+      213: -6097743805952656996
+    second: Rauch_1_18
+  - first:
+      213: -5830718687575879030
+    second: Rauch_1_19
+  - first:
+      213: -5475586660526812787
+    second: Rauch_1_20
+  - first:
+      213: 2816828130305753603
+    second: Rauch_1_21
+  - first:
+      213: -5951762016918744187
+    second: Rauch_1_22
+  - first:
+      213: 310014508799520895
+    second: Rauch_1_23
+  - first:
+      213: -1849550336787280961
+    second: Rauch_1_24
+  - first:
+      213: -1873412632609604952
+    second: Rauch_1_25
+  - first:
+      213: 8951086451479701118
+    second: Rauch_1_26
+  - first:
+      213: -3093584426523376770
+    second: Rauch_1_27
+  - first:
+      213: -3324706678126890592
+    second: Rauch_1_28
+  - first:
+      213: 7247832696941913455
+    second: Rauch_1_29
+  - first:
+      213: 1225209215491479040
+    second: Rauch_1_30
+  - first:
+      213: 8603192980292513717
+    second: Rauch_1_31
+  - first:
+      213: -8031698230333481955
+    second: Rauch_1_32
+  - first:
+      213: 2043705360784084837
+    second: Rauch_1_33
+  - first:
+      213: -5263880154510107068
+    second: Rauch_1_34
+  - first:
+      213: 4390167665769088552
+    second: Rauch_1_35
+  externalObjects: {}
+  serializedVersion: 12
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 199, y: 725, z: 1370, w: 14}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: 0
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Rauch_1_0
+      rect:
+        serializedVersion: 2
+        x: 189
+        y: 737
+        width: 357
+        height: 328
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a29f8aac9461d6f60800000000000000
+      internalID: 8029098216859957546
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rauch_1_1
+      rect:
+        serializedVersion: 2
+        x: 542
+        y: 932
+        width: 27
+        height: 25
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6adcd0f2076738e80800000000000000
+      internalID: -8177562274176840282
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rauch_1_2
+      rect:
+        serializedVersion: 2
+        x: 825
+        y: 743
+        width: 357
+        height: 279
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f5d0884296baf1000800000000000000
+      internalID: 8914192350842207
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rauch_1_3
+      rect:
+        serializedVersion: 2
+        x: 1461
+        y: 808
+        width: 356
+        height: 200
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b5d657279a6542a00800000000000000
+      internalID: 730804325310623067
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rauch_1_4
+      rect:
+        serializedVersion: 2
+        x: 169
+        y: 879
+        width: 19
+        height: 21
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 628a1af02cb121c40800000000000000
+      internalID: 5481474216763172902
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rauch_1_5
+      rect:
+        serializedVersion: 2
+        x: 591
+        y: 883
+        width: 20
+        height: 20
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dd550b3122a7193a0800000000000000
+      internalID: -6660408087126452771
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rauch_1_6
+      rect:
+        serializedVersion: 2
+        x: 1178
+        y: 889
+        width: 27
+        height: 25
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a714c26dbd21f49b0800000000000000
+      internalID: -5093831918132379270
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rauch_1_7
+      rect:
+        serializedVersion: 2
+        x: 1227
+        y: 840
+        width: 20
+        height: 20
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c6e32bd87907234e0800000000000000
+      internalID: -2003415088006807956
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rauch_1_8
+      rect:
+        serializedVersion: 2
+        x: 158
+        y: 802
+        width: 29
+        height: 34
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1830fff443b98a670800000000000000
+      internalID: 8550254541545603969
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rauch_1_9
+      rect:
+        serializedVersion: 2
+        x: 527
+        y: 777
+        width: 20
+        height: 24
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aa3610fd13ae310a0800000000000000
+      internalID: -6911923503167872086
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rauch_1_10
+      rect:
+        serializedVersion: 2
+        x: 204
+        y: 720
+        width: 38
+        height: 42
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f2b2542d93afe44a0800000000000000
+      internalID: -6607068477058110673
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rauch_1_11
+      rect:
+        serializedVersion: 2
+        x: 1164
+        y: 739
+        width: 19
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2b02ce3bca9c56e00800000000000000
+      internalID: 1037457032768921778
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rauch_1_12
+      rect:
+        serializedVersion: 2
+        x: 1684
+        y: 747
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e7939e7c2125830d0800000000000000
+      internalID: -3442911674507904642
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rauch_1_13
+      rect:
+        serializedVersion: 2
+        x: 817
+        y: 677
+        width: 19
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5a4f709558c7d3120800000000000000
+      internalID: 2395207488997160101
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rauch_1_14
+      rect:
+        serializedVersion: 2
+        x: 850
+        y: 694
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b3f0a5547d247bc40800000000000000
+      internalID: 5527960559969505083
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rauch_1_15
+      rect:
+        serializedVersion: 2
+        x: 1358
+        y: 428
+        width: 358
+        height: 279
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5b3aaba07e6148e70800000000000000
+      internalID: 9116436727277986741
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rauch_1_16
+      rect:
+        serializedVersion: 2
+        x: 1359
+        y: 693
+        width: 19
+        height: 18
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6991f9d02ea58cb60800000000000000
+      internalID: 7766557484338059670
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rauch_1_17
+      rect:
+        serializedVersion: 2
+        x: 266
+        y: 374
+        width: 345
+        height: 271
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a62bac7a155d6d430800000000000000
+      internalID: 3807465081672479338
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rauch_1_18
+      rect:
+        serializedVersion: 2
+        x: 780
+        y: 605
+        width: 67
+        height: 54
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c997ad2d056706ba0800000000000000
+      internalID: -6097743805952656996
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rauch_1_19
+      rect:
+        serializedVersion: 2
+        x: 943
+        y: 561
+        width: 72
+        height: 73
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a82dec10f30251fa0800000000000000
+      internalID: -5830718687575879030
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rauch_1_20
+      rect:
+        serializedVersion: 2
+        x: 1087
+        y: 600
+        width: 18
+        height: 18
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d819e6271fec204b0800000000000000
+      internalID: -5475586660526812787
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rauch_1_21
+      rect:
+        serializedVersion: 2
+        x: 1293
+        y: 592
+        width: 20
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 302c334a242671720800000000000000
+      internalID: 2816828130305753603
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rauch_1_22
+      rect:
+        serializedVersion: 2
+        x: 783
+        y: 469
+        width: 192
+        height: 116
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 58355e9baf7176da0800000000000000
+      internalID: -5951762016918744187
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rauch_1_23
+      rect:
+        serializedVersion: 2
+        x: 1086
+        y: 540
+        width: 19
+        height: 18
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f707630ad846d4400800000000000000
+      internalID: 310014508799520895
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rauch_1_24
+      rect:
+        serializedVersion: 2
+        x: 1336
+        y: 537
+        width: 26
+        height: 24
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fbb079d94c31556e0800000000000000
+      internalID: -1849550336787280961
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rauch_1_25
+      rect:
+        serializedVersion: 2
+        x: 759
+        y: 477
+        width: 21
+        height: 23
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8aa339be22d4006e0800000000000000
+      internalID: -1873412632609604952
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rauch_1_26
+      rect:
+        serializedVersion: 2
+        x: 1020
+        y: 482
+        width: 45
+        height: 42
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e766246e3b5a83c70800000000000000
+      internalID: 8951086451479701118
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rauch_1_27
+      rect:
+        serializedVersion: 2
+        x: 1117
+        y: 486
+        width: 40
+        height: 37
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e73c466ca516115d0800000000000000
+      internalID: -3093584426523376770
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rauch_1_28
+      rect:
+        serializedVersion: 2
+        x: 927
+        y: 430
+        width: 41
+        height: 38
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0a1b0eb24e44cd1d0800000000000000
+      internalID: -3324706678126890592
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rauch_1_29
+      rect:
+        serializedVersion: 2
+        x: 1075
+        y: 426
+        width: 48
+        height: 38
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f652facef69759460800000000000000
+      internalID: 7247832696941913455
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rauch_1_30
+      rect:
+        serializedVersion: 2
+        x: 920
+        y: 25
+        width: 586
+        height: 350
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 00697e04a41d00110800000000000000
+      internalID: 1225209215491479040
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rauch_1_31
+      rect:
+        serializedVersion: 2
+        x: 1006
+        y: 367
+        width: 15
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5bf28741f6ea46770800000000000000
+      internalID: 8603192980292513717
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rauch_1_32
+      rect:
+        serializedVersion: 2
+        x: 133
+        y: 70
+        width: 177
+        height: 63
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d1cd6d5630da98090800000000000000
+      internalID: -8031698230333481955
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rauch_1_33
+      rect:
+        serializedVersion: 2
+        x: 458
+        y: 64
+        width: 319
+        height: 137
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 56fc8179233bc5c10800000000000000
+      internalID: 2043705360784084837
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rauch_1_34
+      rect:
+        serializedVersion: 2
+        x: 886
+        y: 129
+        width: 22
+        height: 52
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 44e523283e0f2f6b0800000000000000
+      internalID: -5263880154510107068
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rauch_1_35
+      rect:
+        serializedVersion: 2
+        x: 1593
+        y: 70
+        width: 265
+        height: 199
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 826829e5b320dec30800000000000000
+      internalID: 4390167665769088552
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline:
+    - - {x: -825, y: 204}
+      - {x: -608.3944, y: 204.00006}
+      - {x: -349, y: 204}
+      - {x: -349, y: 521}
+      - {x: -825, y: 521}
+    - - {x: -157, y: 177}
+      - {x: 298, y: 177}
+      - {x: 298, y: 536}
+      - {x: -157, y: 536}
+    - - {x: 425, y: 201}
+      - {x: 843, y: 201}
+      - {x: 843, y: 538}
+      - {x: 425, y: 538}
+    - - {x: 389, y: -142}
+      - {x: 758, y: -142}
+      - {x: 758, y: 175}
+      - {x: 389, y: 175}
+    - - {x: -219, y: -142}
+      - {x: 216, y: -142}
+      - {x: 216, y: 145}
+      - {x: -219, y: 145}
+    - - {x: -748, y: -174}
+      - {x: -301, y: -174}
+      - {x: -301, y: 155}
+      - {x: -748, y: 155}
+    - - {x: -896, y: -520}
+      - {x: -598, y: -520}
+      - {x: -598, y: -232}
+      - {x: -896, y: -232}
+    - - {x: -516, y: -517}
+      - {x: -125, y: -517}
+      - {x: -125, y: -259}
+      - {x: -516, y: -259}
+    - - {x: -67, y: -510}
+      - {x: 492, y: -510}
+      - {x: 492, y: -163}
+      - {x: -67, y: -163}
+    - - {x: 574, y: -504}
+      - {x: 937, y: -504}
+      - {x: 937, y: -193}
+      - {x: 574, y: -193}
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 1537655665
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      Rauch_1_0: 8029098216859957546
+      Rauch_1_1: -8177562274176840282
+      Rauch_1_10: -6607068477058110673
+      Rauch_1_11: 1037457032768921778
+      Rauch_1_12: -3442911674507904642
+      Rauch_1_13: 2395207488997160101
+      Rauch_1_14: 5527960559969505083
+      Rauch_1_15: 9116436727277986741
+      Rauch_1_16: 7766557484338059670
+      Rauch_1_17: 3807465081672479338
+      Rauch_1_18: -6097743805952656996
+      Rauch_1_19: -5830718687575879030
+      Rauch_1_2: 8914192350842207
+      Rauch_1_20: -5475586660526812787
+      Rauch_1_21: 2816828130305753603
+      Rauch_1_22: -5951762016918744187
+      Rauch_1_23: 310014508799520895
+      Rauch_1_24: -1849550336787280961
+      Rauch_1_25: -1873412632609604952
+      Rauch_1_26: 8951086451479701118
+      Rauch_1_27: -3093584426523376770
+      Rauch_1_28: -3324706678126890592
+      Rauch_1_29: 7247832696941913455
+      Rauch_1_3: 730804325310623067
+      Rauch_1_30: 1225209215491479040
+      Rauch_1_31: 8603192980292513717
+      Rauch_1_32: -8031698230333481955
+      Rauch_1_33: 2043705360784084837
+      Rauch_1_34: -5263880154510107068
+      Rauch_1_35: 4390167665769088552
+      Rauch_1_4: 5481474216763172902
+      Rauch_1_5: -6660408087126452771
+      Rauch_1_6: -5093831918132379270
+      Rauch_1_7: -2003415088006807956
+      Rauch_1_8: 8550254541545603969
+      Rauch_1_9: -6911923503167872086
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

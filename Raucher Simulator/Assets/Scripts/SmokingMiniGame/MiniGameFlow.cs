@@ -926,4 +926,13 @@ public class MiniGameFlow : MonoBehaviour
 
         EnterState(State.WaitFilterClick);
     }
+    private void OnEnable()
+    {
+        GameOverManager.OnGameOverTriggered += HandleGlobalGameOver;
+    }
+
+    private void OnDisable()
+    {
+        GameOverManager.OnGameOverTriggered -= HandleGlobalGameOver;
+    }
 }

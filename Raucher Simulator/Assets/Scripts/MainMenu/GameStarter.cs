@@ -19,6 +19,7 @@ public class GameStarter : MonoBehaviour
         if (PlayerHUDManager.Instance != null)
         {
             PlayerHUDManager.Instance.StartRound();
+            PlayerHUDManager.Instance.ShowHud();
         }
     }
 }

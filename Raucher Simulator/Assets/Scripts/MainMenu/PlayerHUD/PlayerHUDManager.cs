@@ -58,13 +58,27 @@ public class PlayerHUDManager : MonoBehaviour
             return;
         }
 
+        if (GameOverManager.Instance != null && GameOverManager.Instance.HasGameOverOccurred)
+        {
+            return;
+        }
+
         if (TimeRemaining > 0f)
         {
             TimeRemaining -= Time.deltaTime;
 
-            if (TimeRemaining < 0f)
+            if (TimeRemaining <= 0f)
             {
                 TimeRemaining = 0f;
+                RefreshTimerDisplay();
+                StopRound();
+
+                if (GameOverManager.Instance != null)
+                {
+                    GameOverManager.Instance.TriggerGameOver();
+                }
+
+                return;
             }
 
             RefreshTimerDisplay();
@@ -152,6 +166,12 @@ public class PlayerHUDManager : MonoBehaviour
         }
 
         bool shouldShowHud = hudAllowed && !hudManuallyHidden;
+
+        if (GameOverManager.Instance != null && GameOverManager.Instance.HasGameOverOccurred)
+        {
+            shouldShowHud = false;
+        }
+
         hudRoot.SetActive(shouldShowHud);
     }
 
