@@ -1,7 +1,10 @@
 using UnityEngine;
 
+[RequireComponent(typeof(Animator))]
 public class SnitchPatrolling : MonoBehaviour
 {
+    private static readonly int IsWalkingHash = Animator.StringToHash("IsWalking");
+
     [Header("Patrol")]
     [SerializeField] private Transform[] patrolPoints;
     [SerializeField, Min(0f)] private float moveSpeed = 2f;
@@ -14,6 +17,7 @@ public class SnitchPatrolling : MonoBehaviour
     [HideInInspector] public bool canMove = true;
     public Vector2 FacingDirection => isFacingRight ? Vector2.right : Vector2.left;
 
+    private Animator animator;
     private float waitTimer;
     private bool isWaiting;
     private bool isFacingRight = true;
@@ -23,9 +27,11 @@ public class SnitchPatrolling : MonoBehaviour
 
     private void Awake()
     {
+        animator = GetComponent<Animator>();
         currentPointIndex = Mathf.Clamp(currentPointIndex, 0, Mathf.Max(0, patrolPoints.Length - 1));
         isFacingRight = transform.rotation.eulerAngles.y < 90f || transform.rotation.eulerAngles.y > 270f;
         ApplyFacingRotation();
+        SetWalking(false);
     }
 
     private void Update()
@@ -34,17 +40,21 @@ public class SnitchPatrolling : MonoBehaviour
 
         if (!HasValidPatrolPath() || !canMove)
         {
+            SetWalking(false);
             return;
         }
 
         if (isWaiting)
         {
+            SetWalking(false);
+
             waitTimer -= Time.deltaTime;
             if (waitTimer <= 0f)
             {
                 isWaiting = false;
                 AdvanceToNextValidPoint();
             }
+
             return;
         }
 
@@ -54,16 +64,11 @@ public class SnitchPatrolling : MonoBehaviour
     public bool TryStartCloseTurnTowards(Vector3 targetPosition, float duration, float cooldown)
     {
         if (forcedFacingTimer > 0f || closeTurnCooldownTimer > 0f)
-        {
             return false;
-        }
 
         float deltaX = targetPosition.x - transform.position.x;
-        const float deadZone = 0.001f;
-        if (Mathf.Abs(deltaX) <= deadZone)
-        {
+        if (Mathf.Abs(deltaX) <= 0.001f)
             return false;
-        }
 
         isFacingRight = deltaX > 0f;
         ApplyFacingRotation();
@@ -76,14 +81,10 @@ public class SnitchPatrolling : MonoBehaviour
     private bool HasValidPatrolPath()
     {
         if (patrolPoints == null || patrolPoints.Length == 0)
-        {
             return false;
-        }
 
         if (patrolPoints[currentPointIndex] == null)
-        {
             AdvanceToNextValidPoint();
-        }
 
         return patrolPoints[currentPointIndex] != null;
     }
@@ -103,46 +104,41 @@ public class SnitchPatrolling : MonoBehaviour
         Vector3 newPosition = Vector2.MoveTowards(currentPosition, targetPosition, moveSpeed * Time.deltaTime);
         transform.position = new Vector3(newPosition.x, newPosition.y, -9f);
 
+        bool moved = (newPosition - currentPosition).sqrMagnitude > 0.000001f;
+        SetWalking(moved);
+
         float remainingDistanceSqr = (targetPosition - newPosition).sqrMagnitude;
         if (remainingDistanceSqr <= arrivalThreshold * arrivalThreshold)
         {
             isWaiting = true;
             waitTimer = waitTimeAtPoint;
+            SetWalking(false);
         }
     }
 
     private void AdvanceToNextValidPoint()
     {
         if (patrolPoints == null || patrolPoints.Length == 0)
-        {
             return;
-        }
 
         int startIndex = currentPointIndex;
         do
         {
             currentPointIndex = (currentPointIndex + 1) % patrolPoints.Length;
             if (patrolPoints[currentPointIndex] != null)
-            {
                 return;
-            }
         }
         while (currentPointIndex != startIndex);
     }
 
     private void UpdateFacing(float horizontalDelta)
     {
-        const float deadZone = 0.001f;
-        if (Mathf.Abs(horizontalDelta) <= deadZone)
-        {
+        if (Mathf.Abs(horizontalDelta) <= 0.001f)
             return;
-        }
 
         bool shouldFaceRight = horizontalDelta > 0f;
         if (shouldFaceRight == isFacingRight)
-        {
             return;
-        }
 
         isFacingRight = shouldFaceRight;
         ApplyFacingRotation();
@@ -150,19 +146,23 @@ public class SnitchPatrolling : MonoBehaviour
 
     private void ApplyFacingRotation()
     {
-        transform.rotation = isFacingRight ? Quaternion.identity : Quaternion.Euler(0f, 180f, 0f);
+        transform.rotation = isFacingRight
+            ? Quaternion.identity
+            : Quaternion.Euler(0f, 180f, 0f);
     }
 
     private void UpdateFacingOverrideTimers()
     {
         if (forcedFacingTimer > 0f)
-        {
             forcedFacingTimer -= Time.deltaTime;
-        }
 
         if (closeTurnCooldownTimer > 0f)
-        {
             closeTurnCooldownTimer -= Time.deltaTime;
-        }
+    }
+
+    private void SetWalking(bool value)
+    {
+        if (animator != null)
+            animator.SetBool(IsWalkingHash, value);
     }
 }

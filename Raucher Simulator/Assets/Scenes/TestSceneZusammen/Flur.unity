@@ -1144,10 +1144,6 @@ PrefabInstance:
       value: Snitch
       objectReference: {fileID: 0}
     - target: {fileID: 1722203419109014713, guid: 2532a4c2fa7144e4ca3f1f17c8415b04, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1722203419109014713, guid: 2532a4c2fa7144e4ca3f1f17c8415b04, type: 3}
       propertyPath: m_TagString
       value: Snitch
       objectReference: {fileID: 0}
@@ -1164,10 +1160,6 @@ PrefabInstance:
       value: 
       objectReference: {fileID: -3795572974757245915, guid: 03f58f04924b8c94db09942109487ff7, type: 3}
     - target: {fileID: 4557695033793619222, guid: 2532a4c2fa7144e4ca3f1f17c8415b04, type: 3}
-      propertyPath: m_Color.b
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4557695033793619222, guid: 2532a4c2fa7144e4ca3f1f17c8415b04, type: 3}
       propertyPath: m_Color.g
       value: 1
       objectReference: {fileID: 0}
@@ -1178,14 +1170,6 @@ PrefabInstance:
     - target: {fileID: 7301388192289036817, guid: 2532a4c2fa7144e4ca3f1f17c8415b04, type: 3}
       propertyPath: m_LocalPosition.x
       value: 2.07
-      objectReference: {fileID: 0}
-    - target: {fileID: 7301388192289036817, guid: 2532a4c2fa7144e4ca3f1f17c8415b04, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.373
-      objectReference: {fileID: 0}
-    - target: {fileID: 7506517943443450500, guid: 2532a4c2fa7144e4ca3f1f17c8415b04, type: 3}
-      propertyPath: m_Enabled
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7506517943443450500, guid: 2532a4c2fa7144e4ca3f1f17c8415b04, type: 3}
       propertyPath: m_IsTrigger
@@ -1232,18 +1216,6 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8218524526732302829, guid: 2532a4c2fa7144e4ca3f1f17c8415b04, type: 3}
-      propertyPath: speed
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 8218524526732302829, guid: 2532a4c2fa7144e4ca3f1f17c8415b04, type: 3}
-      propertyPath: waitTime
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 8218524526732302829, guid: 2532a4c2fa7144e4ca3f1f17c8415b04, type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8218524526732302829, guid: 2532a4c2fa7144e4ca3f1f17c8415b04, type: 3}
       propertyPath: 'patrolPoints.Array.data[0]'
       value: 
       objectReference: {fileID: 579862088}
@@ -1255,10 +1227,6 @@ PrefabInstance:
       propertyPath: 'patrolPoints.Array.data[2]'
       value: 
       objectReference: {fileID: 981246629}
-    - target: {fileID: 9044366550782611595, guid: 2532a4c2fa7144e4ca3f1f17c8415b04, type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 9044366550782611595, guid: 2532a4c2fa7144e4ca3f1f17c8415b04, type: 3}
       propertyPath: respawnPointName
       value: Start_Buro

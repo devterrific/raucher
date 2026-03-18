@@ -45,9 +45,10 @@ GameObject:
   - component: {fileID: 7506517943443450500}
   - component: {fileID: 8218524526732302829}
   - component: {fileID: 9044366550782611595}
+  - component: {fileID: 8090770012606753955}
   m_Layer: 0
   m_Name: Snitch
-  m_TagString: Untagged
+  m_TagString: Snitch
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -100,12 +101,12 @@ CapsuleCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0.000000029802322, y: -0.02059859}
-  m_Size: {x: 0.9119733, y: 1.9063412}
+  m_Offset: {x: -0.12, y: 0}
+  m_Size: {x: 1.18, y: 3.29}
   m_Direction: 0
 --- !u!114 &8218524526732302829
 MonoBehaviour:
@@ -123,9 +124,10 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  targetPoint: 0
-  speed: 4
-  waitTime: 2.2
+  moveSpeed: 2
+  waitTimeAtPoint: 2.2
+  arrivalThreshold: 0.05
+  currentPointIndex: 0
   canMove: 1
 --- !u!114 &9044366550782611595
 MonoBehaviour:
@@ -141,11 +143,41 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   eyePoint: {fileID: 7883182566718649128}
   suspicionPoint: {fileID: 7301388192289036817}
-  viewDistance: 3
+  instantDistance: 1.5
+  suspicionDistance: 5
   playerLayer:
     serializedVersion: 2
     m_Bits: 64
   timeToCatch: 3
+  closeTurnDistance: 1.25
+  closeTurnDuration: 1
+  closeTurnCooldown: 1
+  catchDelay: 1
+  respawnSceneName: Buro
+  respawnPointName: Start_Buro
+  resetVelocityOnRespawn: 1
+--- !u!95 &8090770012606753955
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1722203419109014713}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &3155125325049614850
 GameObject:
   m_ObjectHideFlags: 0
@@ -171,7 +203,7 @@ Transform:
   m_GameObject: {fileID: 3155125325049614850}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.85, y: 0.373, z: 0}
+  m_LocalPosition: {x: 2.07, y: 0.373, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -187,6 +219,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1600918564958438872}
   - component: {fileID: 4557695033793619222}
+  - component: {fileID: 6879320400161223799}
   m_Layer: 0
   m_Name: Capsule
   m_TagString: Untagged
@@ -203,8 +236,8 @@ Transform:
   m_GameObject: {fileID: 5639491340431197567}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: -0.1247, y: 0.1205, z: 0}
+  m_LocalScale: {x: 0.8856901, y: 0.8349098, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1937678451494243094}
@@ -250,8 +283,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -9095717837082945937, guid: 207ee8102dd4143d288186ef0be518ee, type: 3}
-  m_Color: {r: 0, g: 0.6075771, b: 1, a: 1}
+  m_Sprite: {fileID: -3795572974757245915, guid: 03f58f04924b8c94db09942109487ff7, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -261,6 +294,28 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!95 &6879320400161223799
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5639491340431197567}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: b2c900c58995dfd48a2b28c3f0fc07ef, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &7034146105887495347
 GameObject:
   m_ObjectHideFlags: 0
@@ -334,7 +389,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
+  m_Sprite: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -342,7 +397,7 @@ SpriteRenderer:
   m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &8600218026574666253

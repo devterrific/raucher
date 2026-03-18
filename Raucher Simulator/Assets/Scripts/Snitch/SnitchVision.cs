@@ -1,9 +1,14 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(SnitchPatrolling))]
+[RequireComponent(typeof(Animator))]
 public class SnitchVision : MonoBehaviour
 {
+    private static readonly int IsSuspiciousHash = Animator.StringToHash("IsSuspicious");
+    private static readonly int DoShockHash = Animator.StringToHash("DoShock");
+
     [Header("References")]
     [SerializeField] private Transform eyePoint;
     [SerializeField] private Transform suspicionPoint;
@@ -21,25 +26,26 @@ public class SnitchVision : MonoBehaviour
     [SerializeField, Min(0f)] private float closeTurnDuration = 1f;
     [SerializeField, Min(0f)] private float closeTurnCooldown = 1f;
 
+    [Header("Catch Timing")]
+    [SerializeField, Min(0f)] private float catchDelay = 1.0f;
+
     [Header("Respawn (Scene)")]
     [SerializeField] private string respawnSceneName = "Buro";
     [SerializeField] private string respawnPointName = "startBuro";
     [SerializeField] private bool resetVelocityOnRespawn = true;
 
-    [Header("Debug")]
-    [SerializeField] private bool drawDebug = true;
-
     private SnitchPatrolling snitchPatrolling;
-    private float suspicionTimer;
+    private Animator animator;
 
+    private float suspicionTimer;
+    private bool isCatching;
     private bool isRespawning;
     private PlayerMain playerToRespawn;
 
     private void Awake()
     {
         snitchPatrolling = GetComponent<SnitchPatrolling>();
-        if (eyePoint == null) Debug.LogWarning("[SnitchVision] eyePoint is missing. Instant catch is disabled.", this);
-        if (suspicionPoint == null) Debug.LogWarning("[SnitchVision] suspicionPoint is missing. Suspicion is disabled.", this);
+        animator = GetComponent<Animator>();
     }
 
     private void OnEnable() => SceneManager.sceneLoaded += OnSceneLoaded;
@@ -47,7 +53,7 @@ public class SnitchVision : MonoBehaviour
 
     private void Update()
     {
-        if (isRespawning)
+        if (isRespawning || isCatching)
         {
             ApplyMovementStop(true);
             return;
@@ -55,15 +61,30 @@ public class SnitchVision : MonoBehaviour
 
         TryTriggerCloseTurnReaction();
 
-        bool isSuspicious = CheckSuspicion();
-        if (isRespawning)
+        bool seesSuspicion = CheckSuspicionVision(out PlayerMain suspiciousPlayer);
+        bool seesInstant = CheckInstantVision(out PlayerMain instantPlayer);
+
+        if (seesInstant)
         {
-            ApplyMovementStop(true);
+            StartCatch(instantPlayer);
             return;
         }
 
-        bool instantCaught = !isSuspicious && CheckInstantCatch();
-        ApplyMovementStop(isSuspicious || instantCaught);
+        if (seesSuspicion)
+        {
+            ApplyMovementStop(true);
+            SetSuspicious(true);
+
+            suspicionTimer += Time.deltaTime;
+            if (suspicionTimer >= timeToCatch)
+                StartCatch(suspiciousPlayer);
+
+            return;
+        }
+
+        suspicionTimer = 0f;
+        SetSuspicious(false);
+        ApplyMovementStop(false);
     }
 
     private Vector2 FacingDirection => snitchPatrolling != null ? snitchPatrolling.FacingDirection : Vector2.right;
@@ -71,65 +92,31 @@ public class SnitchVision : MonoBehaviour
     private void TryTriggerCloseTurnReaction()
     {
         if (snitchPatrolling == null || closeTurnDistance <= 0f)
-        {
             return;
-        }
 
         Collider2D hit = Physics2D.OverlapCircle(transform.position, closeTurnDistance, playerLayer);
         if (hit == null || !hit.TryGetComponent(out PlayerMain player) || !player.Detectable)
-        {
             return;
-        }
 
         snitchPatrolling.TryStartCloseTurnTowards(player.transform.position, closeTurnDuration, closeTurnCooldown);
     }
 
-    private bool CheckInstantCatch()
+    private bool CheckInstantVision(out PlayerMain player)
     {
+        player = null;
         if (eyePoint == null)
-        {
             return false;
-        }
 
-        Vector2 facing = FacingDirection;
-        if (drawDebug) Debug.DrawRay(eyePoint.position, facing * instantDistance, Color.red);
-
-        if (!TryGetDetectablePlayer(eyePoint.position, facing, instantDistance, out PlayerMain player))
-        {
-            return false;
-        }
-
-        StartRespawn(player);
-        return true;
+        return TryGetDetectablePlayer(eyePoint.position, FacingDirection, instantDistance, out player);
     }
 
-    private bool CheckSuspicion()
+    private bool CheckSuspicionVision(out PlayerMain player)
     {
+        player = null;
         if (suspicionPoint == null)
-        {
-            suspicionTimer = 0f;
             return false;
-        }
 
-        Vector2 facing = FacingDirection;
-        if (drawDebug) Debug.DrawRay(suspicionPoint.position, facing * suspicionDistance, Color.yellow);
-
-        bool seesPlayer = TryGetDetectablePlayer(suspicionPoint.position, facing, suspicionDistance, out PlayerMain player);
-        if (!seesPlayer)
-        {
-            suspicionTimer = 0f;
-            return false;
-        }
-
-        suspicionTimer += Time.deltaTime;
-        if (suspicionTimer < timeToCatch)
-        {
-            return true;
-        }
-
-        suspicionTimer = 0f;
-        StartRespawn(player);
-        return true;
+        return TryGetDetectablePlayer(suspicionPoint.position, FacingDirection, suspicionDistance, out player);
     }
 
     private bool TryGetDetectablePlayer(Vector2 origin, Vector2 direction, float distance, out PlayerMain player)
@@ -138,53 +125,70 @@ public class SnitchVision : MonoBehaviour
 
         RaycastHit2D hit = Physics2D.Raycast(origin, direction, distance, playerLayer);
         if (hit.collider == null)
-        {
             return false;
-        }
 
         if (!hit.collider.TryGetComponent(out PlayerMain foundPlayer) || !foundPlayer.Detectable)
-        {
             return false;
-        }
 
         player = foundPlayer;
         return true;
     }
 
+    private void StartCatch(PlayerMain player)
+    {
+        if (player == null || isCatching || isRespawning)
+            return;
+
+        isCatching = true;
+        playerToRespawn = player;
+        suspicionTimer = 0f;
+
+        SetSuspicious(false);
+        ApplyMovementStop(true);
+
+        if (animator != null)
+            animator.SetTrigger(DoShockHash);
+
+        StartCoroutine(CatchRoutine());
+    }
+
+    private IEnumerator CatchRoutine()
+    {
+        yield return new WaitForSeconds(catchDelay);
+        StartRespawn(playerToRespawn);
+    }
+
+    private void SetSuspicious(bool value)
+    {
+        if (animator != null)
+            animator.SetBool(IsSuspiciousHash, value);
+    }
+
     private void ApplyMovementStop(bool shouldStop)
     {
         if (snitchPatrolling != null)
-        {
             snitchPatrolling.canMove = !shouldStop;
-        }
     }
 
     private void StartRespawn(PlayerMain player)
     {
         if (isRespawning || player == null)
-        {
             return;
-        }
 
         isRespawning = true;
-        playerToRespawn = player;
-
-        DontDestroyOnLoad(playerToRespawn.gameObject);
+        DontDestroyOnLoad(player.gameObject);
         SceneManager.LoadScene(respawnSceneName, LoadSceneMode.Single);
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         if (!isRespawning || scene.name != respawnSceneName)
-        {
             return;
-        }
 
         GameObject spawnObject = GameObject.Find(respawnPointName);
         if (spawnObject == null)
         {
-            Debug.LogError($"[SnitchVision] Respawn point '{respawnPointName}' not found in scene '{respawnSceneName}'.", this);
-            CleanupRespawnState();
+            CleanupState();
             return;
         }
 
@@ -200,38 +204,16 @@ public class SnitchVision : MonoBehaviour
             SceneManager.MoveGameObjectToScene(playerToRespawn.gameObject, scene);
         }
 
-        CleanupRespawnState();
+        CleanupState();
     }
 
-    private void CleanupRespawnState()
+    private void CleanupState()
     {
         suspicionTimer = 0f;
-        playerToRespawn = null;
+        isCatching = false;
         isRespawning = false;
-    }
-
-    private void OnDrawGizmosSelected()
-    {
-        if (!drawDebug)
-        {
-            return;
-        }
-
-        Vector2 facing = Application.isPlaying && snitchPatrolling != null ? snitchPatrolling.FacingDirection : Vector2.right;
-
-        if (eyePoint != null)
-        {
-            Gizmos.color = Color.red;
-            Gizmos.DrawLine(eyePoint.position, eyePoint.position + (Vector3)(facing * instantDistance));
-        }
-
-        if (suspicionPoint != null)
-        {
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawLine(suspicionPoint.position, suspicionPoint.position + (Vector3)(facing * suspicionDistance));
-        }
-
-        Gizmos.color = Color.cyan;
-        Gizmos.DrawWireSphere(transform.position, closeTurnDistance);
+        playerToRespawn = null;
+        SetSuspicious(false);
+        ApplyMovementStop(false);
     }
 }
