@@ -22,6 +22,30 @@ public class PlayerHUDManager : MonoBehaviour
     [Header("Round Timer")]
     [SerializeField] private float roundDurationSeconds = 300f;
 
+    [Header("Hint Bubble")]
+    [SerializeField] private Button smallHintButton;
+    [SerializeField] private GameObject largeHintPanel;
+    [SerializeField] private TMP_Text largeHintText;
+
+    [Header("Hint Scenes")]
+    [SerializeField] private string[] allowedHintScenes = { "Buro", "Flur" };
+
+    [Header("Hint Texts")]
+    [TextArea(3, 8)]
+    [SerializeField]
+    private string buroHintText =
+        "The boss's office is to the left, and the hallway is to the right—where are you going?";
+
+    [TextArea(3, 8)]
+    [SerializeField]
+    private string flurHintText =
+        "Hide behind objects so you can sneak past the Switch.";
+
+    [TextArea(3, 8)]
+    [SerializeField]
+    private string defaultHintText =
+        "In dieser Szene gibt es aktuell keine zusätzliche Erklärung.";
+
     private PlayerStamina playerStamina;
 
     public bool IsRoundRunning { get; private set; }
@@ -45,11 +69,21 @@ public class PlayerHUDManager : MonoBehaviour
     private void OnEnable()
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
+
+        if (smallHintButton != null)
+        {
+            smallHintButton.onClick.AddListener(OnSmallHintClicked);
+        }
     }
 
     private void OnDisable()
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;
+
+        if (smallHintButton != null)
+        {
+            smallHintButton.onClick.RemoveListener(OnSmallHintClicked);
+        }
     }
 
     private void Start()
@@ -58,6 +92,7 @@ public class PlayerHUDManager : MonoBehaviour
         ResetHudDisplay();
         FindPlayerStaminaInScene();
         RefreshStaminaDisplay();
+        RefreshHintUI();
     }
 
     private void Update()
@@ -114,6 +149,9 @@ public class PlayerHUDManager : MonoBehaviour
             RefreshTimerDisplay();
             RefreshStaminaDisplay();
         }
+
+        CloseLargeHint();
+        RefreshHintUI();
     }
 
     public void StartRound()
@@ -124,6 +162,7 @@ public class PlayerHUDManager : MonoBehaviour
         RefreshPlayerName();
         RefreshTimerDisplay();
         RefreshStaminaDisplay();
+        RefreshHintUI();
     }
 
     public void StopRound()
@@ -140,6 +179,7 @@ public class PlayerHUDManager : MonoBehaviour
         RefreshTimerDisplay();
         RefreshStaminaDisplay();
         ApplyHudVisibility();
+        CloseLargeHint();
     }
 
     public void RefreshPlayerName()
@@ -161,6 +201,7 @@ public class PlayerHUDManager : MonoBehaviour
     public void HideHud()
     {
         hudManuallyHidden = true;
+        CloseLargeHint();
         ApplyHudVisibility();
     }
 
@@ -168,6 +209,34 @@ public class PlayerHUDManager : MonoBehaviour
     {
         hudManuallyHidden = false;
         ApplyHudVisibility();
+        RefreshHintUI();
+    }
+
+    public void OnLargeHintClicked()
+    {
+        if (!CanUseHintInCurrentScene())
+        {
+            CloseLargeHint();
+            return;
+        }
+
+        if (GameSessionManager.Instance != null)
+        {
+            GameSessionManager.Instance.MarkSceneHintAsUsed(SceneManager.GetActiveScene().name);
+        }
+
+        CloseLargeHint();
+        RefreshHintUI();
+    }
+
+    private void OnSmallHintClicked()
+    {
+        if (!CanUseHintInCurrentScene())
+        {
+            return;
+        }
+
+        OpenLargeHint();
     }
 
     private void UpdateHudAvailability(Scene activeScene)
@@ -241,6 +310,7 @@ public class PlayerHUDManager : MonoBehaviour
         }
 
         float maxStamina = GetMaxStamina();
+
         if (maxStamina <= 0f)
         {
             return;
@@ -258,5 +328,109 @@ public class PlayerHUDManager : MonoBehaviour
     private float GetMaxStamina()
     {
         return playerStamina.MaxStamina;
+    }
+
+    private void RefreshHintUI()
+    {
+        if (smallHintButton == null)
+        {
+            return;
+        }
+
+        bool shouldShowSmallHint = hudAllowed
+            && !hudManuallyHidden
+            && CanUseHintInCurrentScene();
+
+        if (GameOverManager.Instance != null && GameOverManager.Instance.HasGameOverOccurred)
+        {
+            shouldShowSmallHint = false;
+        }
+
+        smallHintButton.gameObject.SetActive(shouldShowSmallHint);
+
+        if (largeHintPanel != null && !shouldShowSmallHint)
+        {
+            largeHintPanel.SetActive(false);
+        }
+    }
+
+    private bool CanUseHintInCurrentScene()
+    {
+        string currentSceneName = SceneManager.GetActiveScene().name;
+
+        if (!IsHintAllowedInScene(currentSceneName))
+        {
+            return false;
+        }
+
+        if (GameSessionManager.Instance == null)
+        {
+            return false;
+        }
+
+        return !GameSessionManager.Instance.HasSceneHintBeenUsed(currentSceneName);
+    }
+
+    private bool IsHintAllowedInScene(string sceneName)
+    {
+        if (string.IsNullOrWhiteSpace(sceneName))
+        {
+            return false;
+        }
+
+        if (allowedHintScenes == null || allowedHintScenes.Length == 0)
+        {
+            return false;
+        }
+
+        for (int i = 0; i < allowedHintScenes.Length; i++)
+        {
+            if (allowedHintScenes[i] == sceneName)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private void OpenLargeHint()
+    {
+        if (largeHintPanel == null)
+        {
+            return;
+        }
+
+        if (largeHintText != null)
+        {
+            largeHintText.text = GetHintTextForCurrentScene();
+        }
+
+        largeHintPanel.SetActive(true);
+    }
+
+    private void CloseLargeHint()
+    {
+        if (largeHintPanel != null)
+        {
+            largeHintPanel.SetActive(false);
+        }
+    }
+
+    private string GetHintTextForCurrentScene()
+    {
+        string currentSceneName = SceneManager.GetActiveScene().name;
+
+        switch (currentSceneName)
+        {
+            case "Buro":
+                return buroHintText;
+
+            case "Flur":
+                return flurHintText;
+
+            default:
+                return defaultHintText;
+        }
     }
 }

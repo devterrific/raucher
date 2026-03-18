@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class GameSessionManager : MonoBehaviour
@@ -12,6 +13,9 @@ public class GameSessionManager : MonoBehaviour
 
     private bool sessionActive = false;
     private bool scoreSaved = false;
+
+    // Um sich zu Merken in welcher Szene die Sprechblase aktiv gewesen ist
+    private readonly HashSet<string> usedHintScenes = new HashSet<string>();
 
     private void Awake()
     {
@@ -32,6 +36,9 @@ public class GameSessionManager : MonoBehaviour
 
         sessionActive = true;
         scoreSaved = false;
+
+        // Neue Game Session = Hinweise wieder freigeben
+        usedHintScenes.Clear();
     }
 
     public void AddScore(int points)
@@ -60,6 +67,26 @@ public class GameSessionManager : MonoBehaviour
         }
 
         ResetSessionData();
+    }
+
+    public bool HasSceneHintBeenUsed(string sceneName)
+    {
+        if (string.IsNullOrWhiteSpace(sceneName))
+        {
+            return false;
+        }
+
+        return usedHintScenes.Contains(sceneName);
+    }
+
+    public void MarkSceneHintAsUsed(string sceneName)
+    {
+        if (string.IsNullOrWhiteSpace(sceneName))
+        {
+            return;
+        }
+
+        usedHintScenes.Add(sceneName);
     }
 
     private void SaveHighscore()
