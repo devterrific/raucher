@@ -10,19 +10,25 @@ public class PlayerMovementLockController : MonoBehaviour
 
     public bool AddMovementLock(object source)
     {
-        if (source == null) return false;
-        return movementLocks.Add(source);
+        if (source == null)
+            return false;
+
+        bool added = movementLocks.Add(source);
+        Debug.Log($"[MovementLocks] ADD: {source} | Count={movementLocks.Count}", this);
+        return added;
     }
 
-    public bool RemoveMovementLock(object source)
+    public void RemoveMovementLock(object source)
     {
-        if (source == null) return false;
-        return movementLocks.Remove(source);
+        if (source == null)
+            return;
+
+        movementLocks.Remove(source);
+        Debug.Log($"[MovementLocks] REMOVE: {source} | Count={movementLocks.Count}", this);
     }
 
-    public bool HasLockFrom(object source)
+    public bool HasLock(object source)
     {
-        if (source == null) return false;
-        return movementLocks.Contains(source);
+        return source != null && movementLocks.Contains(source);
     }
 }

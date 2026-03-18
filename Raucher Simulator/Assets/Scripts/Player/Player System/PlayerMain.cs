@@ -15,9 +15,11 @@ public class PlayerMain : MonoBehaviour
 {
     private readonly object sneakToken = new object();
 
+    [Header("Visual References")]
+    [SerializeField] private SpriteRenderer playerSpriteRenderer;
+    [SerializeField] private Animator playerAnimator;
+
     private Rigidbody2D rb;
-    private SpriteRenderer spriteRenderer;
-    private Animator animator;
 
     private PlayerInputReader inputReader;
     private PlayerMovementMotor movementMotor;
@@ -35,8 +37,12 @@ public class PlayerMain : MonoBehaviour
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-        spriteRenderer = GetComponent<SpriteRenderer>();
-        animator = GetComponent<Animator>();
+
+        if (playerSpriteRenderer == null)
+            playerSpriteRenderer = GetComponentInChildren<SpriteRenderer>();
+
+        if (playerAnimator == null)
+            playerAnimator = GetComponentInChildren<Animator>();
 
         inputReader = GetComponent<PlayerInputReader>();
         movementMotor = GetComponent<PlayerMovementMotor>();
@@ -51,12 +57,27 @@ public class PlayerMain : MonoBehaviour
         movementMotor.Initialize(rb);
         stamina.Initialize();
         visibility.Initialize();
-        visuals.Initialize(spriteRenderer, animator);
+        visuals.Initialize(playerSpriteRenderer, playerAnimator);
+
+        Debug.Log($"[PlayerMain] Animator: {(playerAnimator != null ? playerAnimator.name : "NULL")}", this);
     }
 
     private void Update()
     {
         inputReader.ReadInput();
+        if (Input.GetKeyDown(KeyCode.LeftControl) ||
+    Input.GetKeyDown(KeyCode.RightControl) ||
+    Input.GetKeyDown(KeyCode.C) ||
+    Input.GetKeyUp(KeyCode.LeftControl) ||
+    Input.GetKeyUp(KeyCode.RightControl) ||
+    Input.GetKeyUp(KeyCode.C))
+        {
+            Debug.Log($"SneakHeld={inputReader.SneakHeld}");
+        }
+        if (inputReader.SneakHeld)
+        {
+            Debug.Log($"CurrentMode={movementState.CurrentMode}");
+        }
         interaction.TryInteract(this, inputReader.InteractPressed);
 
         bool canMove = movementLocks.CanMove;
@@ -67,8 +88,7 @@ public class PlayerMain : MonoBehaviour
         movementState.Resolve(canMove, inputReader.MoveX, inputReader.SneakHeld, sprintActive);
         visibility.SetHidden(sneakToken, movementState.IsSneaking);
 
-        visuals.UpdateFlip(inputReader.MoveX);
-        visuals.UpdateAnimation(movementState.CurrentMode);
+        visuals.UpdateVisuals(inputReader.MoveX, movementState.CurrentMode, inputReader.SneakHeld);
     }
 
     private void FixedUpdate()
@@ -84,12 +104,15 @@ public class PlayerMain : MonoBehaviour
 
     public void AddMovementLock(object source)
     {
+        Debug.Log($"[PlayerMain] AddMovementLock from: {source}", this);
+
         if (movementLocks.AddMovementLock(source))
             movementMotor.StopImmediately();
     }
 
     public void RemoveMovementLock(object source)
     {
+        Debug.Log($"[PlayerMain] RemoveMovementLock from: {source}", this);
         movementLocks.RemoveMovementLock(source);
     }
 
