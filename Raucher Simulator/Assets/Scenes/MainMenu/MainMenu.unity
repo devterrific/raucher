@@ -1887,7 +1887,7 @@ MonoBehaviour:
   - {fileID: -4719701569255027762, guid: a39c1df80cd5cac43903720770f0ffc8, type: 3}
   - {fileID: 7751591749446328904, guid: ad69ace5d3d22414c907246c089b1ac2, type: 3}
   - {fileID: 1316734391144057893, guid: 13a63cc785161114096dd8a5afc4f846, type: 3}
-  roundDurationSeconds: 10
+  roundDurationSeconds: 300
 --- !u!1 &537096675
 GameObject:
   m_ObjectHideFlags: 0
