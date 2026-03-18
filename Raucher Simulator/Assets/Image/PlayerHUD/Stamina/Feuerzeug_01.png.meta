@@ -128,7 +128,8 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Feuerzeug_01_0: 1316734391144057893
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

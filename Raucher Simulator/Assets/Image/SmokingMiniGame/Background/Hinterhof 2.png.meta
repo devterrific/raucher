@@ -128,7 +128,8 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Hinterhof 2_0: 6755431503565032180
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
