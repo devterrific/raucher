@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class PlayerHUDManager : MonoBehaviour
 {
@@ -13,9 +14,15 @@ public class PlayerHUDManager : MonoBehaviour
     [Header("UI")]
     [SerializeField] private TMP_Text timerText;
     [SerializeField] private TMP_Text playerNameText;
+    [SerializeField] private Image staminaImage;
+
+    [Header("Stamina UI")]
+    [SerializeField] private Sprite[] staminaSprites;
 
     [Header("Round Timer")]
     [SerializeField] private float roundDurationSeconds = 300f;
+
+    private PlayerStamina playerStamina;
 
     public bool IsRoundRunning { get; private set; }
     public float TimeRemaining { get; private set; }
@@ -49,17 +56,21 @@ public class PlayerHUDManager : MonoBehaviour
     {
         UpdateHudAvailability(SceneManager.GetActiveScene());
         ResetHudDisplay();
+        FindPlayerStaminaInScene();
+        RefreshStaminaDisplay();
     }
 
     private void Update()
     {
         if (!hudAllowed || !IsRoundRunning)
         {
+            RefreshStaminaDisplay();
             return;
         }
 
         if (GameOverManager.Instance != null && GameOverManager.Instance.HasGameOverOccurred)
         {
+            RefreshStaminaDisplay();
             return;
         }
 
@@ -78,16 +89,20 @@ public class PlayerHUDManager : MonoBehaviour
                     GameOverManager.Instance.TriggerGameOver();
                 }
 
+                RefreshStaminaDisplay();
                 return;
             }
 
             RefreshTimerDisplay();
         }
+
+        RefreshStaminaDisplay();
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode loadMode)
     {
         UpdateHudAvailability(scene);
+        FindPlayerStaminaInScene();
 
         if (!hudAllowed)
         {
@@ -97,6 +112,7 @@ public class PlayerHUDManager : MonoBehaviour
         {
             RefreshPlayerName();
             RefreshTimerDisplay();
+            RefreshStaminaDisplay();
         }
     }
 
@@ -107,6 +123,7 @@ public class PlayerHUDManager : MonoBehaviour
 
         RefreshPlayerName();
         RefreshTimerDisplay();
+        RefreshStaminaDisplay();
     }
 
     public void StopRound()
@@ -121,6 +138,7 @@ public class PlayerHUDManager : MonoBehaviour
 
         RefreshPlayerName();
         RefreshTimerDisplay();
+        RefreshStaminaDisplay();
         ApplyHudVisibility();
     }
 
@@ -193,5 +211,52 @@ public class PlayerHUDManager : MonoBehaviour
         int seconds = totalSeconds % 60;
 
         timerText.text = minutes.ToString("00") + ":" + seconds.ToString("00");
+    }
+
+    private void FindPlayerStaminaInScene()
+    {
+        playerStamina = FindObjectOfType<PlayerStamina>();
+    }
+
+    private void RefreshStaminaDisplay()
+    {
+        if (staminaImage == null)
+        {
+            return;
+        }
+
+        if (playerStamina == null)
+        {
+            playerStamina = FindObjectOfType<PlayerStamina>();
+
+            if (playerStamina == null)
+            {
+                return;
+            }
+        }
+
+        if (staminaSprites == null || staminaSprites.Length == 0)
+        {
+            return;
+        }
+
+        float maxStamina = GetMaxStamina();
+        if (maxStamina <= 0f)
+        {
+            return;
+        }
+
+        float normalizedStamina = playerStamina.CurrentStamina / maxStamina;
+        normalizedStamina = Mathf.Clamp01(normalizedStamina);
+
+        int spriteIndex = Mathf.RoundToInt((staminaSprites.Length - 1) * normalizedStamina);
+        spriteIndex = Mathf.Clamp(spriteIndex, 0, staminaSprites.Length - 1);
+
+        staminaImage.sprite = staminaSprites[spriteIndex];
+    }
+
+    private float GetMaxStamina()
+    {
+        return playerStamina.MaxStamina;
     }
 }

@@ -14,6 +14,7 @@ public class PlayerStamina : MonoBehaviour
     private float regenCooldown;
 
     public float CurrentStamina => currentStamina;
+    public float MaxStamina => maxStamina;
     public bool CanStartOrMaintainSprint => currentStamina > minSprintThreshold;
 
     public void Initialize()
