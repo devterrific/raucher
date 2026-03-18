@@ -17,6 +17,7 @@ public class PlayerMain : MonoBehaviour
 
     private Rigidbody2D rb;
     private SpriteRenderer spriteRenderer;
+    private Animator animator;
 
     private PlayerInputReader inputReader;
     private PlayerMovementMotor movementMotor;
@@ -35,6 +36,7 @@ public class PlayerMain : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        animator = GetComponent<Animator>();
 
         inputReader = GetComponent<PlayerInputReader>();
         movementMotor = GetComponent<PlayerMovementMotor>();
@@ -49,7 +51,7 @@ public class PlayerMain : MonoBehaviour
         movementMotor.Initialize(rb);
         stamina.Initialize();
         visibility.Initialize();
-        visuals.Initialize(spriteRenderer);
+        visuals.Initialize(spriteRenderer, animator);
     }
 
     private void Update()
@@ -66,6 +68,7 @@ public class PlayerMain : MonoBehaviour
         visibility.SetHidden(sneakToken, movementState.IsSneaking);
 
         visuals.UpdateFlip(inputReader.MoveX);
+        visuals.UpdateAnimation(movementState.CurrentMode);
     }
 
     private void FixedUpdate()

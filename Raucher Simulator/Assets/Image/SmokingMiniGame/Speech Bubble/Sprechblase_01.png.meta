@@ -128,7 +128,8 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Sprechblase_01_0: -5317522576231657169
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
