@@ -8,13 +8,12 @@ public class PlayerVisuals : MonoBehaviour
     private static readonly int IsCrouchingHash = Animator.StringToHash("IsCrouching");
 
     private Vector3 baseScale;
-    private SpriteRenderer spriteRenderer;
     private Animator animator;
-    private Sprite spriteBeforeHide;
+
+    private bool isInHidezone;
 
     public void Initialize(SpriteRenderer sr, Animator anim)
     {
-        spriteRenderer = sr;
         animator = anim;
         baseScale = transform.localScale;
     }
@@ -22,7 +21,7 @@ public class PlayerVisuals : MonoBehaviour
     public void UpdateVisuals(float xInput, PlayerMovementState.MovementMode mode, bool crouchHeld)
     {
         UpdateFlip(xInput);
-        UpdateAnimation(mode, crouchHeld);
+        UpdateAnimation(xInput, mode, crouchHeld);
     }
 
     private void UpdateFlip(float xInput)
@@ -41,55 +40,42 @@ public class PlayerVisuals : MonoBehaviour
         }
     }
 
-    private void UpdateAnimation(PlayerMovementState.MovementMode mode, bool crouchHeld)
+    private void UpdateAnimation(float xInput, PlayerMovementState.MovementMode mode, bool crouchHeld)
     {
         if (animator == null)
             return;
 
+        bool isCrouching = crouchHeld || isInHidezone;
         bool isMoving = false;
         bool isSprinting = false;
-        bool isCrouching = false;
 
-        switch (mode)
+        if (!isCrouching)
         {
-            case PlayerMovementState.MovementMode.Walk:
-                isMoving = true;
-                break;
+            switch (mode)
+            {
+                case PlayerMovementState.MovementMode.Walk:
+                    isMoving = Mathf.Abs(xInput) > 0.01f;
+                    break;
 
-            case PlayerMovementState.MovementMode.Sprint:
-                isMoving = true;
-                isSprinting = true;
-                break;
-
-            case PlayerMovementState.MovementMode.Sneak:
-                isCrouching = true;
-                break;
+                case PlayerMovementState.MovementMode.Sprint:
+                    isMoving = Mathf.Abs(xInput) > 0.01f;
+                    isSprinting = isMoving;
+                    break;
+            }
         }
 
         animator.SetBool(IsMovingHash, isMoving);
         animator.SetBool(IsSprintingHash, isSprinting);
-        //animator.SetBool(IsCrouchingHash, isCrouching);
+        animator.SetBool(IsCrouchingHash, isCrouching);
     }
 
     public void EnterHidezone(Sprite hideSprite)
     {
-        //if (spriteRenderer == null)
-        //    return;
-
-        //spriteBeforeHide = spriteRenderer.sprite;
-
-        //if (hideSprite != null)
-        //    spriteRenderer.sprite = hideSprite;
-
-
-        animator.SetBool("IsCrouching", true);
+        isInHidezone = true;
     }
 
     public void ExitHidezone()
     {
-        //if (spriteRenderer != null && spriteBeforeHide != null)
-        //    spriteRenderer.sprite = spriteBeforeHide;
-
-        animator.SetBool("IsCrouching", false);
+        isInHidezone = false;
     }
 }
