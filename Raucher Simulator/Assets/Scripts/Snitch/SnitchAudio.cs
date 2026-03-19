@@ -1,6 +1,5 @@
 using UnityEngine;
 
-[RequireComponent(typeof(AudioSource))]
 [RequireComponent(typeof(Animator))]
 public class SnitchAudio : MonoBehaviour
 {
@@ -8,8 +7,9 @@ public class SnitchAudio : MonoBehaviour
     private static readonly int IsSuspiciousHash = Animator.StringToHash("IsSuspicious");
 
     [Header("References")]
-    [SerializeField] private AudioSource audioSource;
     [SerializeField] private Animator animator;
+    [SerializeField] private AudioSource walkingAudioSource;
+    [SerializeField] private AudioSource effectAudioSource;
 
     [Header("Audio Clips")]
     [SerializeField] private AudioClip walkingLoopClip;
@@ -20,7 +20,7 @@ public class SnitchAudio : MonoBehaviour
     [SerializeField, Min(0f)] private float walkingVolume = 1f;
     [SerializeField, Min(0.1f)] private float walkingPitch = 1f;
 
-    [Header("One Shot Settings")]
+    [Header("Effect Settings")]
     [SerializeField, Min(0f)] private float suspiciousVolume = 1f;
     [SerializeField, Min(0f)] private float shockVolume = 1f;
 
@@ -29,13 +29,10 @@ public class SnitchAudio : MonoBehaviour
 
     private void Awake()
     {
-        if (audioSource == null)
-            audioSource = GetComponent<AudioSource>();
-
         if (animator == null)
             animator = GetComponent<Animator>();
 
-        SetupAudioSource();
+        SetupAudioSources();
     }
 
     private void Update()
@@ -44,10 +41,19 @@ public class SnitchAudio : MonoBehaviour
         UpdateSuspiciousAudio();
     }
 
-    private void SetupAudioSource()
+    private void SetupAudioSources()
     {
-        audioSource.playOnAwake = false;
-        audioSource.loop = false;
+        if (walkingAudioSource != null)
+        {
+            walkingAudioSource.playOnAwake = false;
+            walkingAudioSource.loop = false;
+        }
+
+        if (effectAudioSource != null)
+        {
+            effectAudioSource.playOnAwake = false;
+            effectAudioSource.loop = false;
+        }
     }
 
     private void UpdateWalkingAudio()
@@ -80,41 +86,41 @@ public class SnitchAudio : MonoBehaviour
 
     private void StartWalkingLoop()
     {
-        if (walkingLoopClip == null || audioSource == null)
+        if (walkingAudioSource == null || walkingLoopClip == null)
             return;
 
-        audioSource.clip = walkingLoopClip;
-        audioSource.volume = walkingVolume;
-        audioSource.pitch = walkingPitch;
-        audioSource.loop = true;
-        audioSource.Play();
+        walkingAudioSource.clip = walkingLoopClip;
+        walkingAudioSource.volume = walkingVolume;
+        walkingAudioSource.pitch = walkingPitch;
+        walkingAudioSource.loop = true;
+
+        if (!walkingAudioSource.isPlaying)
+            walkingAudioSource.Play();
     }
 
     private void StopWalkingLoop()
     {
-        if (audioSource == null)
+        if (walkingAudioSource == null)
             return;
 
-        if (audioSource.clip == walkingLoopClip)
-            audioSource.Stop();
-
-        audioSource.loop = false;
-        audioSource.clip = null;
+        walkingAudioSource.Stop();
+        walkingAudioSource.loop = false;
+        walkingAudioSource.clip = null;
     }
 
     private void PlaySuspiciousSound()
     {
-        if (suspiciousClip == null || audioSource == null)
+        if (effectAudioSource == null || suspiciousClip == null)
             return;
 
-        audioSource.PlayOneShot(suspiciousClip, suspiciousVolume);
+        effectAudioSource.PlayOneShot(suspiciousClip, suspiciousVolume);
     }
 
     public void PlayShockSound()
     {
-        if (shockClip == null || audioSource == null)
+        if (effectAudioSource == null || shockClip == null)
             return;
 
-        audioSource.PlayOneShot(shockClip, shockVolume);
+        effectAudioSource.PlayOneShot(shockClip, shockVolume);
     }
 }
