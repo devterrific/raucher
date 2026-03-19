@@ -1,19 +1,25 @@
 fileFormatVersion: 2
-guid: e36d6681c38c6b7428df4c981f0784c0
+guid: 74b9e04ec9daa084db16277c3ebd4569
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 222950133747227811
-    second: Harold_05_0
+      213: 6937817954938267909
+    second: 2_0
   - first:
-      213: 6402011312483798386
-    second: Harold_05_1
+      213: 3191122964850554743
+    second: 2_1
   - first:
-      213: -228818499717971256
-    second: Harold_05_2
+      213: 5382512944479897801
+    second: 2_2
   - first:
-      213: 2669125281633263986
-    second: Harold_05_3
+      213: -5515383189529662604
+    second: 2_3
+  - first:
+      213: -3926759211464601419
+    second: 2_4
+  - first:
+      213: -4424780041397978121
+    second: 2_5
   externalObjects: {}
   serializedVersion: 12
   mipmaps:
@@ -107,13 +113,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Harold_05_0
+      name: 2_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 5
-        width: 144
-        height: 391
+        x: 266
+        y: 451
+        width: 36
+        height: 39
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -121,20 +127,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 3ac11a427f3181300800000000000000
-      internalID: 222950133747227811
+      spriteID: 5092c600ca4184060800000000000000
+      internalID: 6937817954938267909
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Harold_05_1
+      name: 2_1
       rect:
         serializedVersion: 2
-        x: 0
-        y: 175
-        width: 7
-        height: 96
+        x: 1466
+        y: 247
+        width: 146
+        height: 256
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -142,20 +148,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 27d01a09e5388d850800000000000000
-      internalID: 6402011312483798386
+      spriteID: 7773282ed65294c20800000000000000
+      internalID: 3191122964850554743
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Harold_05_2
+      name: 2_2
       rect:
         serializedVersion: 2
-        x: 1
-        y: 254
-        width: 6
-        height: 17
+        x: 414
+        y: 387
+        width: 42
+        height: 24
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -163,20 +169,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 8c2c54e69c213dcf0800000000000000
-      internalID: -228818499717971256
+      spriteID: 9c88aa6510782ba40800000000000000
+      internalID: 5382512944479897801
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Harold_05_3
+      name: 2_3
       rect:
         serializedVersion: 2
-        x: 0
-        y: 162
-        width: 7
-        height: 12
+        x: 1619
+        y: 357
+        width: 13
+        height: 14
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -184,8 +190,50 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 271e3c05d43aa0520800000000000000
-      internalID: 2669125281633263986
+      spriteID: 47b6cebf53c6573b0800000000000000
+      internalID: -5515383189529662604
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 2_4
+      rect:
+        serializedVersion: 2
+        x: 1478
+        y: 228
+        width: 13
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5b0d8225d495189c0800000000000000
+      internalID: -3926759211464601419
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 2_5
+      rect:
+        serializedVersion: 2
+        x: 1565
+        y: 239
+        width: 13
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7fb3c3feef50892c0800000000000000
+      internalID: -4424780041397978121
       vertices: []
       indices: 
       edges: []
@@ -200,11 +248,7 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable:
-      Harold_05_0: 222950133747227811
-      Harold_05_1: 6402011312483798386
-      Harold_05_2: -228818499717971256
-      Harold_05_3: 2669125281633263986
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

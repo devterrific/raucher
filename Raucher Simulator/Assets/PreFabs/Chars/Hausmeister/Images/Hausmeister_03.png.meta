@@ -128,7 +128,8 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Hausmeister_03_0: 7338178459489332353
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
