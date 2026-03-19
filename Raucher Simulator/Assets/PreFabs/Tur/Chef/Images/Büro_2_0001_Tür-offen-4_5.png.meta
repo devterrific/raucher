@@ -128,7 +128,8 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      "B\xFCro_2_0001_T\xFCr-offen-4_5_0": -4032715950539634938
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

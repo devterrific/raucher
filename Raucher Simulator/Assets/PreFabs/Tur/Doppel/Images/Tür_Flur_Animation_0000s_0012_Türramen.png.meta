@@ -128,7 +128,8 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      "T\xFCr_Flur_Animation_0000s_0012_T\xFCrramen_0": 1238551172188210500
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
