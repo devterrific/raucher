@@ -152,7 +152,9 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      "B\xFCro_Schreibtisch_0": -6668547721420493201
+      "B\xFCro_Schreibtisch_1": 7280203057939677650
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

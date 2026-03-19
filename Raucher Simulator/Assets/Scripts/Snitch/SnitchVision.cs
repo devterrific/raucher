@@ -34,6 +34,9 @@ public class SnitchVision : MonoBehaviour
     [SerializeField] private string respawnPointName = "startBuro";
     [SerializeField] private bool resetVelocityOnRespawn = true;
 
+    [Header("Snitch Audio")]
+    [SerializeField] private SnitchAudio snitchAudio;
+
     private SnitchPatrolling snitchPatrolling;
     private Animator animator;
 
@@ -46,6 +49,7 @@ public class SnitchVision : MonoBehaviour
     {
         snitchPatrolling = GetComponent<SnitchPatrolling>();
         animator = GetComponent<Animator>();
+        snitchAudio = GetComponent<SnitchAudio>();          // NEU: Für die Snitch-Audio
     }
 
     private void OnEnable() => SceneManager.sceneLoaded += OnSceneLoaded;
@@ -148,6 +152,13 @@ public class SnitchVision : MonoBehaviour
 
         if (animator != null)
             animator.SetTrigger(DoShockHash);
+
+        //  Neu: Für die Snitch-Audio
+        if (snitchAudio != null )
+        {
+            snitchAudio.PlayShockSound();
+        }
+        //  -------------------------------
 
         StartCoroutine(CatchRoutine());
     }

@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 3474f7020a323634cb79bead5ad3a0f6
+guid: af707d6d01a3c58449a4801a5982540d
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -2927590757710262281
-    second: "B\xFCro_3_0"
+      213: 5849612727162771064
+    second: Point_0
   externalObjects: {}
   serializedVersion: 12
   mipmaps:
@@ -98,13 +98,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: "B\xFCro_3_0"
+      name: Point_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 3457
-        height: 1080
+        x: 944
+        y: 587
+        width: 14
+        height: 38
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -112,8 +112,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 7ff86f687bb1f57d0800000000000000
-      internalID: -2927590757710262281
+      spriteID: 876142468cffd2150800000000000000
+      internalID: 5849612727162771064
       vertices: []
       indices: 
       edges: []
@@ -129,7 +129,7 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      "B\xFCro_3_0": -2927590757710262281
+      Point_0: 5849612727162771064
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

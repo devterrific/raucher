@@ -480,12 +480,12 @@ public class MiniGameFlow : MonoBehaviour
                 paperPackBtn.targetGraphic = spawnedPaperPackOpen;
             }
 
-            SetHint("Klicke die geöffnete Papierpackung erneut, um ein Blatt zu entnehmen.");
+            SetHint("Click the open pack of paper again to take out a sheet.");
             return;
         }
 
         paperPackBtn.interactable = false;
-        SetHint("Papier wird vorbereitet…");
+        SetHint("Paper is being prepared…");
 
         StartCoroutine(SpawnPaperAfterSound());
     }
@@ -574,7 +574,7 @@ public class MiniGameFlow : MonoBehaviour
         {
             Image chosenTobacco = GetTobaccoPrefabByRating();
 
-            SetHint("Platziere den Tabak auf dem Papier (Linksklick zum Ablegen).");
+            SetHint("Place the tobacco on the paper (left-click to drop it).");
 
             tobaccoDrag.BeginDrag(
                 mainCanvas,
@@ -589,7 +589,7 @@ public class MiniGameFlow : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("TobaccoDrag/MainCanvas/spawnedPaper fehlt – fallback zu Assemble.");
+            Debug.LogWarning("TobaccoDrag/MainCanvas/spawnedPaper fehlt – Ausweichlösung: Assemble.");
             EnterState(State.Assemble);
         }
     }
@@ -617,7 +617,7 @@ public class MiniGameFlow : MonoBehaviour
             tobaccoPackBtn.targetGraphic = spawnedTobaccoPackOpen;
         }
 
-        SetHint("Klicke den geöffneten Tabakbeutel erneut, um den Tabak zu platzieren.");
+        SetHint("Click the open tobacco pouch again to place the tobacco.");
         isTobaccoClickLocked = false;
     }
 
@@ -829,7 +829,7 @@ public class MiniGameFlow : MonoBehaviour
     {
         if (string.IsNullOrWhiteSpace(continueSceneName))
         {
-            Debug.LogError("MiniGameFlow: continueSceneName ist nicht gesetzt.");
+            Debug.LogError("MiniGameFlow: continueSceneName is not set.");
             return;
         }
         StopMiniGameLoopAudio();
@@ -1025,19 +1025,19 @@ public class MiniGameFlow : MonoBehaviour
         switch (state)
         {
             case State.WaitPaperClick:
-                return "Klicke die Papierpackung (rechts), um ein Blatt zu entnehmen.";
+                return "Click the paper pack (on the right) to remove a sheet.";
 
             case State.WaitFilterClick:
-                return "Klicke die Filterpackung oben, um einen Filter zu nehmen.";
+                return "Click the filter pack at the top to select a filter.";
 
             case State.FilterAiming:
-                return "Platziere den Filter: Drücke LEERTASTE im richtigen Moment.";
+                return "Place the filter: Press the SPACE BAR at the right moment.";
 
             case State.WaitTobaccoClick:
-                return "Klicke den Tabakbeutel (links), um Tabak hinzuzufügen.";
+                return "Click the tobacco pouch (on the left) to add tobacco.";
 
             case State.Assemble:
-                return "Zigarette wird fertiggestellt…";
+                return "The cigarette is being rolled…";
 
             case State.Results:
                 return "";

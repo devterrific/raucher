@@ -3518,13 +3518,13 @@ MonoBehaviour:
   resultPanel: {fileID: 650031781}
   resultText: {fileID: 1751058903}
   continueButton: {fileID: 1796996945}
-  continueSceneName: Flur
+  continueSceneName: Buro
   placementBanner: {fileID: 570197870}
   bannerPerfect: {fileID: 4799618668543402395, guid: a8ce34a9a1a923e43a8b5211d3dc1b81, type: 3}
   bannerGood: {fileID: 6256978819795432554, guid: 8df8d60918a4fce45b2e7938e8a2c2fa, type: 3}
   bannerOkay: {fileID: -5154847428942402932, guid: 648ada240f205294f84dceb9460b0bf3, type: 3}
   bannerFail: {fileID: -6405752098009995145, guid: 4b1e2c9d26054834f992b94422c4e6d1, type: 3}
-  bannerShowTime: 0.6
+  bannerShowTime: 0.8
   countdownAudioSource: {fileID: 1082906316}
   countdown321GoClip: {fileID: 8300000, guid: b9c76e9a28f2e994abe48f8dd557386a, type: 3}
   countdownVolume: 0.2
@@ -3533,7 +3533,7 @@ MonoBehaviour:
   miniGameMusicClip: {fileID: 8300000, guid: a8cd90b9c365dcf4196d7c463e9f6a68, type: 3}
   smokingMiniGameAmbienceClip: {fileID: 8300000, guid: 4c4b87fa3eb581845a9cbc490da9a272, type: 3}
   miniGameMusicVolume: 0.05
-  ambienceVolume: 0.1
+  ambienceVolume: 0.2
   uiSfxSource: {fileID: 1496609422}
   paperOpenClip: {fileID: 8300000, guid: 237f6a46785960647a4aaa90d9226ba1, type: 3}
   filterPickClip: {fileID: 8300000, guid: b8161e6674b34a944adcecc48a5c6e8c, type: 3}

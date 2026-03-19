@@ -1,10 +1,16 @@
 fileFormatVersion: 2
-guid: 3474f7020a323634cb79bead5ad3a0f6
+guid: 4f9ea6ebe7d6aa7408c6f6780e012168
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -2927590757710262281
-    second: "B\xFCro_3_0"
+      213: 3737897332693287829
+    second: Bar_0
+  - first:
+      213: -7767105433804115491
+    second: Bar_1
+  - first:
+      213: -8416889693971880612
+    second: Bar_2
   externalObjects: {}
   serializedVersion: 12
   mipmaps:
@@ -98,13 +104,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: "B\xFCro_3_0"
+      name: Bar_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 3457
-        height: 1080
+        x: 878
+        y: 596
+        width: 230
+        height: 17
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -112,8 +118,50 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 7ff86f687bb1f57d0800000000000000
-      internalID: -2927590757710262281
+      spriteID: 5934012e1ddafd330800000000000000
+      internalID: 3737897332693287829
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bar_1
+      rect:
+        serializedVersion: 2
+        x: 1112
+        y: 599
+        width: 11
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dd1791582c2b53490800000000000000
+      internalID: -7767105433804115491
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bar_2
+      rect:
+        serializedVersion: 2
+        x: 881
+        y: 584
+        width: 8
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c55e82dfa63313b80800000000000000
+      internalID: -8416889693971880612
       vertices: []
       indices: 
       edges: []
@@ -129,7 +177,9 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      "B\xFCro_3_0": -2927590757710262281
+      Bar_0: 3737897332693287829
+      Bar_1: -7767105433804115491
+      Bar_2: -8416889693971880612
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
