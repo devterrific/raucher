@@ -48,42 +48,48 @@ public class PlayerVisuals : MonoBehaviour
 
         bool isMoving = false;
         bool isSprinting = false;
-        bool isCrouching = crouchHeld;
+        bool isCrouching = false;
 
-        if (!isCrouching)
+        switch (mode)
         {
-            switch (mode)
-            {
-                case PlayerMovementState.MovementMode.Walk:
-                    isMoving = true;
-                    break;
+            case PlayerMovementState.MovementMode.Walk:
+                isMoving = true;
+                break;
 
-                case PlayerMovementState.MovementMode.Sprint:
-                    isMoving = true;
-                    isSprinting = true;
-                    break;
-            }
+            case PlayerMovementState.MovementMode.Sprint:
+                isMoving = true;
+                isSprinting = true;
+                break;
+
+            case PlayerMovementState.MovementMode.Sneak:
+                isCrouching = true;
+                break;
         }
 
         animator.SetBool(IsMovingHash, isMoving);
         animator.SetBool(IsSprintingHash, isSprinting);
-        animator.SetBool(IsCrouchingHash, isCrouching);
+        //animator.SetBool(IsCrouchingHash, isCrouching);
     }
 
     public void EnterHidezone(Sprite hideSprite)
     {
-        if (spriteRenderer == null)
-            return;
+        //if (spriteRenderer == null)
+        //    return;
 
-        spriteBeforeHide = spriteRenderer.sprite;
+        //spriteBeforeHide = spriteRenderer.sprite;
 
-        if (hideSprite != null)
-            spriteRenderer.sprite = hideSprite;
+        //if (hideSprite != null)
+        //    spriteRenderer.sprite = hideSprite;
+
+
+        animator.SetBool("IsCrouching", true);
     }
 
     public void ExitHidezone()
     {
-        if (spriteRenderer != null && spriteBeforeHide != null)
-            spriteRenderer.sprite = spriteBeforeHide;
+        //if (spriteRenderer != null && spriteBeforeHide != null)
+        //    spriteRenderer.sprite = spriteBeforeHide;
+
+        animator.SetBool("IsCrouching", false);
     }
 }
