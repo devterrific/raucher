@@ -14,7 +14,7 @@ public class GameSessionManager : MonoBehaviour
     private bool sessionActive = false;
     private bool scoreSaved = false;
 
-    // Um sich zu Merken in welcher Szene die Sprechblase aktiv gewesen ist
+    // Dient für das Merken, in welcher Szene die SpeechBubble schon geladen wurde
     private readonly HashSet<string> usedHintScenes = new HashSet<string>();
 
     private void Awake()
