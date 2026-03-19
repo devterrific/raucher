@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
 [DisallowMultipleComponent]
@@ -9,7 +9,7 @@ public class PlayerMovementMotor : MonoBehaviour
     [Min(0f)][SerializeField] private float decel = 40f;
 
     [Header("Physics Setup")]
-    [SerializeField] private RigidbodyType2D bodyType = RigidbodyType2D.Kinematic;
+    [SerializeField] private RigidbodyType2D bodyType = RigidbodyType2D.Dynamic;
     [SerializeField] private RigidbodyInterpolation2D interpolation = RigidbodyInterpolation2D.Interpolate;
     [SerializeField] private CollisionDetectionMode2D collisionDetection = CollisionDetectionMode2D.Continuous;
 
@@ -29,6 +29,8 @@ public class PlayerMovementMotor : MonoBehaviour
         rb.constraints = RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation;
 
         currentSpeedX = 0f;
+        rb.velocity = Vector2.zero;
+        rb.angularVelocity = 0f;
     }
 
     public void Execute(float xInput, float targetSpeed, bool canMove)
@@ -38,14 +40,30 @@ public class PlayerMovementMotor : MonoBehaviour
 
         float desiredSpeedX = canMove ? xInput * targetSpeed : 0f;
         float rate = Mathf.Abs(desiredSpeedX) > Mathf.Abs(currentSpeedX) ? accel : decel;
-        currentSpeedX = Mathf.MoveTowards(currentSpeedX, desiredSpeedX, rate * Time.fixedDeltaTime);
 
-        Vector2 delta = new Vector2(currentSpeedX * Time.fixedDeltaTime, 0f);
-        rb.MovePosition(rb.position + delta);
+        currentSpeedX = Mathf.MoveTowards(
+            currentSpeedX,
+            desiredSpeedX,
+            rate * Time.fixedDeltaTime
+        );
+
+        Vector2 velocity = rb.velocity;
+        velocity.x = currentSpeedX;
+        velocity.y = 0f;
+        rb.velocity = velocity;
     }
 
     public void StopImmediately()
     {
         currentSpeedX = 0f;
+
+        if (rb == null)
+            return;
+
+        Vector2 velocity = rb.velocity;
+        velocity.x = 0f;
+        velocity.y = 0f;
+        rb.velocity = velocity;
+        rb.angularVelocity = 0f;
     }
 }

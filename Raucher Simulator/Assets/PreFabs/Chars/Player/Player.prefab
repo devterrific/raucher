@@ -204,7 +204,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   accel: 30
   decel: 40
-  bodyType: 1
+  bodyType: 0
   interpolation: 1
   collisionDetection: 1
 --- !u!114 &5575613242803664933

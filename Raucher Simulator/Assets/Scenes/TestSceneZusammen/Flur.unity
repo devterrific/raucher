@@ -2467,6 +2467,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Wasserspender
       objectReference: {fileID: 0}
+    - target: {fileID: 7797498602544179284, guid: 16f015e2e969e2a4da2c82ee748133dd, type: 3}
+      propertyPath: m_Size.x
+      value: 3.21
+      objectReference: {fileID: 0}
+    - target: {fileID: 7797498602544179284, guid: 16f015e2e969e2a4da2c82ee748133dd, type: 3}
+      propertyPath: m_Offset.y
+      value: -0.7
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2657,11 +2665,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3943602182226497185, guid: 662a98eae0c0afc45a9363db410ef660, type: 3}
       propertyPath: m_SortingOrder
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8135392989199208616, guid: 662a98eae0c0afc45a9363db410ef660, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1.920002
+      value: 2.013
       objectReference: {fileID: 0}
     - target: {fileID: 8135392989199208616, guid: 662a98eae0c0afc45a9363db410ef660, type: 3}
       propertyPath: m_LocalPosition.y
