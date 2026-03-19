@@ -6,29 +6,27 @@ public class SpawnManager : MonoBehaviour
     public static SpawnManager Instance;
 
     [Header("Player")]
-    public GameObject playerPrefab;
+    [SerializeField] private GameObject playerPrefab;
+    [SerializeField] private string playerTag = "Player";
     private GameObject player;
 
     [Header("Scene Names")]
-    public string buroScene = "Buro";
-    public string flurScene = "Flur";
-    public string smokingScene = "Smoking Mini Game";
+    [SerializeField] private string mainMenuScene = "MainMenu";
+    [SerializeField] private string buroScene = "Buro";
+    [SerializeField] private string flurScene = "Flur";
+    [SerializeField] private string smokingScene = "Smoking Mini Game";
 
     [Header("Spawn IDs")]
-    public string startBuro = "Start_Buro";
-    public string doorBuro = "Door_Buro";
-
-    public string leftFlur = "Links_Flur";
-    public string rightFlur = "Rechts_Flur";
-
-    public string startSmoking = "Start_Smoking";
+    [SerializeField] private string startBuro = "Start_Buro";
+    [SerializeField] private string doorBuro = "Door_Buro";
+    [SerializeField] private string leftFlur = "Links_Flur";
+    [SerializeField] private string rightFlur = "Rechts_Flur";
+    [SerializeField] private string startSmoking = "Start_Smoking";
 
     private bool firstSpawnDone = false;
-
-    // wird automatisch gesetzt (egal wer LoadScene macht)
     private string prevSceneName = "";
 
-    void Awake()
+    private void Awake()
     {
         Debug.Log("[SpawnManager] Awake on: " + name);
 
@@ -45,21 +43,20 @@ public class SpawnManager : MonoBehaviour
         }
     }
 
-    void OnEnable()
+    private void OnEnable()
     {
         Debug.Log("[SpawnManager] OnEnable subscribe");
         SceneManager.sceneLoaded += OnSceneLoaded;
         SceneManager.activeSceneChanged += OnActiveSceneChanged;
     }
 
-    void OnDisable()
+    private void OnDisable()
     {
         Debug.Log("[SpawnManager] OnDisable unsubscribe");
         SceneManager.sceneLoaded -= OnSceneLoaded;
         SceneManager.activeSceneChanged -= OnActiveSceneChanged;
     }
 
-    // optional: kannst du weiter benutzen, muss aber nicht
     public void LoadScene(string targetScene)
     {
         string current = SceneManager.GetActiveScene().name;
@@ -68,20 +65,27 @@ public class SpawnManager : MonoBehaviour
         SceneManager.LoadScene(targetScene);
     }
 
-    void OnActiveSceneChanged(Scene oldScene, Scene newScene)
+    private void OnActiveSceneChanged(Scene oldScene, Scene newScene)
     {
-        // oldScene ist die Scene, aus der wir kommen
         prevSceneName = oldScene.name;
         Debug.Log("[SpawnManager] activeSceneChanged old=" + oldScene.name + " new=" + newScene.name);
     }
 
-    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         Debug.Log("[SpawnManager] OnSceneLoaded: " + scene.name +
                   " | prevScene=" + (prevSceneName == "" ? "(leer/start)" : prevSceneName) +
                   " | firstSpawnDone=" + firstSpawnDone);
 
+        if (scene.name == mainMenuScene)
+        {
+            DestroyExistingPlayerIfNeeded();
+            prevSceneName = "";
+            return;
+        }
+
         MakeSurePlayerExists();
+
         if (player == null)
         {
             Debug.LogError("[SpawnManager] player ist NULL -> STOP");
@@ -105,14 +109,17 @@ public class SpawnManager : MonoBehaviour
         Debug.Log("[SpawnManager] Player moved to: " + sp.id);
 
         firstSpawnDone = true;
-        prevSceneName = ""; // reset
+        prevSceneName = "";
     }
 
-    void MakeSurePlayerExists()
+    private void MakeSurePlayerExists()
     {
-        if (player != null) return;
+        if (player != null)
+        {
+            return;
+        }
 
-        GameObject found = GameObject.FindGameObjectWithTag("Player");
+        GameObject found = GameObject.FindGameObjectWithTag(playerTag);
         if (found != null)
         {
             player = found;
@@ -132,9 +139,25 @@ public class SpawnManager : MonoBehaviour
         Debug.Log("[SpawnManager] Player instantiated");
     }
 
-    string PickSpawn(string currentScene, string fromScene)
+    private void DestroyExistingPlayerIfNeeded()
     {
-        // echter spielstart nur 1x
+        if (player != null)
+        {
+            Destroy(player);
+            player = null;
+            Debug.Log("[SpawnManager] Player Referenz gelöscht");
+        }
+
+        GameObject found = GameObject.FindGameObjectWithTag(playerTag);
+        if (found != null)
+        {
+            Destroy(found);
+            Debug.Log("[SpawnManager] Player per Tag gelöscht");
+        }
+    }
+
+    private string PickSpawn(string currentScene, string fromScene)
+    {
         if (!firstSpawnDone)
         {
             if (currentScene == buroScene) return startBuro;
@@ -142,44 +165,44 @@ public class SpawnManager : MonoBehaviour
             if (currentScene == smokingScene) return startSmoking;
         }
 
-        // buro -> flur
         if (currentScene == flurScene && fromScene == buroScene) return leftFlur;
-
-        // flur -> buro
         if (currentScene == buroScene && fromScene == flurScene) return doorBuro;
-
-        // flur -> smoking
         if (currentScene == smokingScene && fromScene == flurScene) return startSmoking;
-
-        // smoking -> flur
         if (currentScene == flurScene && fromScene == smokingScene) return rightFlur;
 
-        // fallback
-        if (currentScene == buroScene) return doorBuro; // nie wieder start nach dem start
+        if (currentScene == buroScene) return doorBuro;
         if (currentScene == flurScene) return leftFlur;
         if (currentScene == smokingScene) return startSmoking;
 
         return doorBuro;
     }
 
-    SpawnPoint FindSpawn(string id)
+    private SpawnPoint FindSpawn(string id)
     {
         SpawnPoint[] points = FindObjectsOfType<SpawnPoint>(true);
         for (int i = 0; i < points.Length; i++)
         {
             if (points[i] != null && points[i].id == id)
+            {
                 return points[i];
+            }
         }
+
         return null;
     }
 
-    void PrintSpawns()
+    private void PrintSpawns()
     {
         SpawnPoint[] points = FindObjectsOfType<SpawnPoint>(true);
         Debug.Log("[SpawnManager] SpawnPoints:");
+
         for (int i = 0; i < points.Length; i++)
         {
-            if (points[i] == null) continue;
+            if (points[i] == null)
+            {
+                continue;
+            }
+
             Debug.Log(" - " + points[i].id + " (" + points[i].name + ")");
         }
     }

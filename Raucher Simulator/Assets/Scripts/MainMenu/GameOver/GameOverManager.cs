@@ -19,6 +19,9 @@ public class GameOverManager : MonoBehaviour
     [Header("Canvas Order")]
     [SerializeField] private int gameOverSortingOrder = 1000;
 
+    [Header("Player")]
+    [SerializeField] private string playerTag = "Player";
+
     public bool HasGameOverOccurred { get; private set; }
     public bool IsGameplayInputBlocked => HasGameOverOccurred;
 
@@ -111,6 +114,7 @@ public class GameOverManager : MonoBehaviour
     {
         Time.timeScale = 1f;
         ResetGameOverState();
+        DestroyPersistentPlayerIfExists();
         SceneManager.LoadScene(mainMenuSceneName);
     }
 
@@ -154,5 +158,15 @@ public class GameOverManager : MonoBehaviour
         HasGameOverOccurred = false;
         Time.timeScale = 1f;
         HideGameOverPanel();
+    }
+
+    private void DestroyPersistentPlayerIfExists()
+    {
+        GameObject playerObject = GameObject.FindGameObjectWithTag(playerTag);
+
+        if (playerObject != null)
+        {
+            Destroy(playerObject);
+        }
     }
 }

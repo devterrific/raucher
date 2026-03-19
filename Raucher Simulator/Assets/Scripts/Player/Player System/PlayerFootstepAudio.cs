@@ -7,13 +7,14 @@ public class PlayerFootstepAudio : MonoBehaviour
     [Header("References")]
     [SerializeField] private PlayerInputReader input;
     [SerializeField] private PlayerMovementState movementState;
+    [SerializeField] private PlayerMovementLockController movementLocks;
 
     [Header("Audio")]
     [SerializeField] private AudioClip footstepClip;
 
     [Header("Settings")]
     [SerializeField] private float walkPitch = 1f;
-    [SerializeField] private float sprintPitch = 1.3f;
+    [SerializeField] private float sprintPitch = 1.2f;
 
     private AudioSource audioSource;
 
@@ -27,6 +28,9 @@ public class PlayerFootstepAudio : MonoBehaviour
         if (movementState == null)
             movementState = GetComponent<PlayerMovementState>();
 
+        if (movementLocks == null)
+            movementLocks = GetComponent<PlayerMovementLockController>();
+
         audioSource.loop = true;
         audioSource.playOnAwake = false;
         audioSource.clip = footstepClip;
@@ -39,23 +43,49 @@ public class PlayerFootstepAudio : MonoBehaviour
 
     private void HandleFootsteps()
     {
+        if (ShouldBlockAudio())
+        {
+            StopFootsteps();
+            return;
+        }
+
         bool isMoving = Mathf.Abs(input.MoveX) > 0.01f;
-        bool canMove = movementState.CurrentMode != PlayerMovementState.MovementMode.Locked;
 
-        if (isMoving && canMove)
+        if (!isMoving)
         {
-            if (!audioSource.isPlaying)
-                audioSource.Play();
-
-            if (movementState.CurrentMode == PlayerMovementState.MovementMode.Sprint)
-                audioSource.pitch = sprintPitch;
-            else
-                audioSource.pitch = walkPitch;
+            StopFootsteps();
+            return;
         }
+
+        if (!audioSource.isPlaying)
+            audioSource.Play();
+
+        if (movementState.CurrentMode == PlayerMovementState.MovementMode.Sprint)
+            audioSource.pitch = sprintPitch;
         else
-        {
-            if (audioSource.isPlaying)
-                audioSource.Stop();
-        }
+            audioSource.pitch = walkPitch;
+    }
+
+    private bool ShouldBlockAudio()
+    {
+        if (Time.timeScale == 0f)
+            return true;
+
+        if (movementLocks != null && !movementLocks.CanMove)
+            return true;
+
+        if (movementState == null)
+            return true;
+
+        if (movementState.CurrentMode == PlayerMovementState.MovementMode.Locked)
+            return true;
+
+        return false;
+    }
+
+    private void StopFootsteps()
+    {
+        if (audioSource.isPlaying)
+            audioSource.Stop();
     }
 }

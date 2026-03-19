@@ -12,6 +12,9 @@ public class PauseMenuManager : MonoBehaviour
     [Header("Scenes")]
     [SerializeField] private string mainMenuSceneName = "MainMenu";
 
+    [Header("Player")]
+    [SerializeField] private string playerTag = "Player";
+
     [Header("Input")]
     [SerializeField] private KeyCode pauseKey = KeyCode.Escape;
 
@@ -96,6 +99,7 @@ public class PauseMenuManager : MonoBehaviour
     {
         EndCurrentSessionIfNeeded();
         ApplyPauseState(false);
+        DestroyPersistentPlayerIfExists();
         SceneManager.LoadScene(mainMenuSceneName);
     }
 
@@ -116,6 +120,16 @@ public class PauseMenuManager : MonoBehaviour
         if (GameSessionManager.Instance != null)
         {
             GameSessionManager.Instance.EndSession();
+        }
+    }
+
+    private void DestroyPersistentPlayerIfExists()
+    {
+        GameObject playerObject = GameObject.FindGameObjectWithTag(playerTag);
+
+        if (playerObject != null)
+        {
+            Destroy(playerObject);
         }
     }
 

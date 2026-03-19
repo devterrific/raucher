@@ -449,6 +449,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   input: {fileID: 5578821313200306815}
   movementState: {fileID: 5575613242803664933}
+  movementLocks: {fileID: 0}
   footstepClip: {fileID: 8300000, guid: 7aed9769db070d6499295ae4707d92c9, type: 3}
   walkPitch: 0.8
   sprintPitch: 1.3
