@@ -75,6 +75,16 @@ public class MiniGameFlow : MonoBehaviour
     [SerializeField] private AudioClip countdown321GoClip;
     [SerializeField, Range(0f, 1f)] private float countdownVolume = 1f;
 
+    [Header("Mini Game Loop Audio")]
+    [SerializeField] private AudioSource musicAudioSource;
+    [SerializeField] private AudioSource ambienceAudioSource;
+
+    [SerializeField] private AudioClip miniGameMusicClip;
+    [SerializeField] private AudioClip smokingMiniGameAmbienceClip;
+
+    [SerializeField, Range(0f, 1f)] private float miniGameMusicVolume = 0.1f;
+    [SerializeField, Range(0f, 1f)] private float ambienceVolume = 0.02f;
+
     [Header("UI Interaction Sounds")]
     [SerializeField] private AudioSource uiSfxSource;
     [SerializeField] private AudioClip paperOpenClip;
@@ -150,6 +160,7 @@ public class MiniGameFlow : MonoBehaviour
         hasGlobalGameOverHappened = true;
 
         StopAllCoroutines();
+        StopMiniGameLoopAudio();
 
         if (resultPanel != null) resultPanel.SetActive(false);
         if (placementBanner != null) placementBanner.gameObject.SetActive(false);
@@ -237,6 +248,7 @@ public class MiniGameFlow : MonoBehaviour
 
         if (continueButton != null) continueButton.onClick.RemoveListener(ContinueAfterMiniGame);
 
+        StopMiniGameLoopAudio();
         ShowPlayerHud();
     }
 
@@ -311,6 +323,8 @@ public class MiniGameFlow : MonoBehaviour
             countdownPanel.gameObject.SetActive(false);
         }
 
+        StartMiniGameLoopAudio();
+
         if (gameplayBackground != null)
         {
             var cg = gameplayBackground.GetComponent<CanvasGroup>();
@@ -338,6 +352,38 @@ public class MiniGameFlow : MonoBehaviour
         if (PlayerHUDManager.Instance != null)
         {
             PlayerHUDManager.Instance.ShowHud();
+        }
+    }
+
+    private void StartMiniGameLoopAudio()
+    {
+        if (musicAudioSource != null && miniGameMusicClip != null)
+        {
+            musicAudioSource.clip = miniGameMusicClip;
+            musicAudioSource.volume = miniGameMusicVolume;
+            musicAudioSource.loop = true;
+            musicAudioSource.Play();
+        }
+
+        if (ambienceAudioSource != null && smokingMiniGameAmbienceClip != null)
+        {
+            ambienceAudioSource.clip = smokingMiniGameAmbienceClip;
+            ambienceAudioSource.volume = ambienceVolume;
+            ambienceAudioSource.loop = true;
+            ambienceAudioSource.Play();
+        }
+    }
+
+    private void StopMiniGameLoopAudio()
+    {
+        if (musicAudioSource != null)
+        {
+            musicAudioSource.Stop();
+        }
+
+        if (ambienceAudioSource != null)
+        {
+            ambienceAudioSource.Stop();
         }
     }
 
@@ -786,7 +832,7 @@ public class MiniGameFlow : MonoBehaviour
             Debug.LogError("MiniGameFlow: continueSceneName ist nicht gesetzt.");
             return;
         }
-
+        StopMiniGameLoopAudio();
         SceneManager.LoadScene(continueSceneName);
     }
 
