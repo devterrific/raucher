@@ -119,7 +119,6 @@ public class PauseMenuManager : MonoBehaviour
         }
     }
 
-    // Für das EventSystem
     private void EnsureEventSystemExists()
     {
         EventSystem existingEventSystem = FindFirstObjectByType<EventSystem>();
@@ -152,6 +151,18 @@ public class PauseMenuManager : MonoBehaviour
         if (pauseMenuPanel != null)
         {
             pauseMenuPanel.SetActive(IsPaused);
+        }
+
+        if (PlayerHUDManager.Instance != null)
+        {
+            if (IsPaused)
+            {
+                PlayerHUDManager.Instance.HideHud();
+            }
+            else
+            {
+                PlayerHUDManager.Instance.ShowHud();
+            }
         }
     }
 }
