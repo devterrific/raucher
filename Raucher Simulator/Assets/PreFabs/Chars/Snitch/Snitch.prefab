@@ -220,7 +220,7 @@ MonoBehaviour:
   suspiciousClip: {fileID: 8300000, guid: d66186d8f4293194f9ce06805d84b5d1, type: 3}
   shockClip: {fileID: 8300000, guid: 5f1cb2b7c7695444a896931c9c98d86b, type: 3}
   walkingVolume: 1
-  walkingPitch: 1
+  walkingPitch: 0.7
   suspiciousVolume: 1
   shockVolume: 1
 --- !u!1 &3155125325049614850

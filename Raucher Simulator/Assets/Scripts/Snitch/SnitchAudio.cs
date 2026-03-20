@@ -26,6 +26,7 @@ public class SnitchAudio : MonoBehaviour
 
     private bool wasWalking;
     private bool wasSuspicious;
+    private bool walkingStoppedByPause;
 
     private void Awake()
     {
@@ -37,6 +38,13 @@ public class SnitchAudio : MonoBehaviour
 
     private void Update()
     {
+        if (IsGamePaused())
+        {
+            HandlePauseAudio();
+            return;
+        }
+
+        HandleResumeAudio();
         UpdateWalkingAudio();
         UpdateSuspiciousAudio();
     }
@@ -53,6 +61,35 @@ public class SnitchAudio : MonoBehaviour
         {
             effectAudioSource.playOnAwake = false;
             effectAudioSource.loop = false;
+        }
+    }
+
+    private bool IsGamePaused()
+    {
+        return PauseMenuManager.Instance != null && PauseMenuManager.Instance.IsPaused;
+    }
+
+    private void HandlePauseAudio()
+    {
+        if (walkingAudioSource != null && walkingAudioSource.isPlaying)
+        {
+            walkingAudioSource.Stop();
+            walkingStoppedByPause = true;
+        }
+    }
+
+    private void HandleResumeAudio()
+    {
+        if (!walkingStoppedByPause)
+            return;
+
+        walkingStoppedByPause = false;
+
+        bool isWalking = animator != null && animator.GetBool(IsWalkingHash);
+
+        if (isWalking)
+        {
+            StartWalkingLoop();
         }
     }
 
@@ -110,6 +147,9 @@ public class SnitchAudio : MonoBehaviour
 
     private void PlaySuspiciousSound()
     {
+        if (IsGamePaused())
+            return;
+
         if (effectAudioSource == null || suspiciousClip == null)
             return;
 
@@ -118,6 +158,9 @@ public class SnitchAudio : MonoBehaviour
 
     public void PlayShockSound()
     {
+        if (IsGamePaused())
+            return;
+
         if (effectAudioSource == null || shockClip == null)
             return;
 
