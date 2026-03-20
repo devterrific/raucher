@@ -22,29 +22,33 @@ public class PlayerHUDManager : MonoBehaviour
     [Header("Round Timer")]
     [SerializeField] private float roundDurationSeconds = 300f;
 
-    [Header("Hint Bubble")]
+    [Header("Small Hint Bubble")]
     [SerializeField] private Button smallHintButton;
-    [SerializeField] private GameObject largeHintPanel;
-    [SerializeField] private TMP_Text largeHintText;
 
-    [Header("Hint Scenes")]
-    [SerializeField] private string[] allowedHintScenes = { "Buro", "Flur" };
+    [Header("Large Hint Panels")]
+    [SerializeField] private GameObject buroHintPanel;
+    [SerializeField] private GameObject flurHintPanel;
 
-    [Header("Hint Texts")]
+    [Header("Buro Hint")]
+    [SerializeField] private TMP_Text buroHintTextUI;
+
     [TextArea(3, 8)]
     [SerializeField]
     private string buroHintText =
-        "The boss's office is to the left, and the hallway is to the right—where are you going?";
+        "The boss's office is to the left, and the hallway is to the right—where are you going?\n\nInteract: press E";
+
+    [Header("Flur Hint")]
+    [SerializeField] private TMP_Text flurHintTextUI;
+    [SerializeField] private Image flurClosetImage;
+    [SerializeField] private Image flurWaterDispenserImage;
 
     [TextArea(3, 8)]
     [SerializeField]
     private string flurHintText =
         "Hide behind objects so you can sneak past the Switch.";
 
-    [TextArea(3, 8)]
-    [SerializeField]
-    private string defaultHintText =
-        "In dieser Szene gibt es aktuell keine zusätzliche Erklärung.";
+    [Header("Hint Scenes")]
+    [SerializeField] private string[] allowedHintScenes = { "Buro", "Flur" };
 
     private PlayerStamina playerStamina;
 
@@ -150,7 +154,7 @@ public class PlayerHUDManager : MonoBehaviour
             RefreshStaminaDisplay();
         }
 
-        CloseLargeHint();
+        CloseAllHintPanels();
         RefreshHintUI();
     }
 
@@ -179,7 +183,7 @@ public class PlayerHUDManager : MonoBehaviour
         RefreshTimerDisplay();
         RefreshStaminaDisplay();
         ApplyHudVisibility();
-        CloseLargeHint();
+        CloseAllHintPanels();
     }
 
     public void RefreshPlayerName()
@@ -201,7 +205,7 @@ public class PlayerHUDManager : MonoBehaviour
     public void HideHud()
     {
         hudManuallyHidden = true;
-        CloseLargeHint();
+        CloseAllHintPanels();
         ApplyHudVisibility();
     }
 
@@ -216,7 +220,7 @@ public class PlayerHUDManager : MonoBehaviour
     {
         if (!CanUseHintInCurrentScene())
         {
-            CloseLargeHint();
+            CloseAllHintPanels();
             return;
         }
 
@@ -225,7 +229,7 @@ public class PlayerHUDManager : MonoBehaviour
             GameSessionManager.Instance.MarkSceneHintAsUsed(SceneManager.GetActiveScene().name);
         }
 
-        CloseLargeHint();
+        CloseAllHintPanels();
         RefreshHintUI();
     }
 
@@ -236,7 +240,7 @@ public class PlayerHUDManager : MonoBehaviour
             return;
         }
 
-        OpenLargeHint();
+        OpenHintForCurrentScene();
     }
 
     private void UpdateHudAvailability(Scene activeScene)
@@ -348,9 +352,9 @@ public class PlayerHUDManager : MonoBehaviour
 
         smallHintButton.gameObject.SetActive(shouldShowSmallHint);
 
-        if (largeHintPanel != null && !shouldShowSmallHint)
+        if (!shouldShowSmallHint)
         {
-            largeHintPanel.SetActive(false);
+            CloseAllHintPanels();
         }
     }
 
@@ -394,43 +398,74 @@ public class PlayerHUDManager : MonoBehaviour
         return false;
     }
 
-    private void OpenLargeHint()
+    private void OpenHintForCurrentScene()
     {
-        if (largeHintPanel == null)
-        {
-            return;
-        }
+        CloseAllHintPanels();
 
-        if (largeHintText != null)
-        {
-            largeHintText.text = GetHintTextForCurrentScene();
-        }
-
-        largeHintPanel.SetActive(true);
-    }
-
-    private void CloseLargeHint()
-    {
-        if (largeHintPanel != null)
-        {
-            largeHintPanel.SetActive(false);
-        }
-    }
-
-    private string GetHintTextForCurrentScene()
-    {
         string currentSceneName = SceneManager.GetActiveScene().name;
 
         switch (currentSceneName)
         {
             case "Buro":
-                return buroHintText;
+                OpenBuroHint();
+                break;
 
             case "Flur":
-                return flurHintText;
+                OpenFlurHint();
+                break;
+        }
+    }
 
-            default:
-                return defaultHintText;
+    private void OpenBuroHint()
+    {
+        if (buroHintPanel == null)
+        {
+            return;
+        }
+
+        if (buroHintTextUI != null)
+        {
+            buroHintTextUI.text = buroHintText;
+        }
+
+        buroHintPanel.SetActive(true);
+    }
+
+    private void OpenFlurHint()
+    {
+        if (flurHintPanel == null)
+        {
+            return;
+        }
+
+        if (flurHintTextUI != null)
+        {
+            flurHintTextUI.text = flurHintText;
+        }
+
+        if (flurClosetImage != null)
+        {
+            flurClosetImage.gameObject.SetActive(true);
+        }
+
+        if (flurWaterDispenserImage != null)
+        {
+            flurWaterDispenserImage.gameObject.SetActive(true);
+        }
+
+        flurHintPanel.SetActive(true);
+    }
+
+    private void CloseAllHintPanels()
+    {
+        if (buroHintPanel != null)
+        {
+            buroHintPanel.SetActive(false);
+        }
+
+        if (flurHintPanel != null)
+        {
+            flurHintPanel.SetActive(false);
         }
     }
 }
