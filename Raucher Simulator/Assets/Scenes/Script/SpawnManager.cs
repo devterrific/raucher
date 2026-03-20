@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,30 +6,86 @@ using UnityEngine.SceneManagement;
 
 public class SpawnManager : MonoBehaviour
 {
-    [SerializeField] private GameObject Player;
+    public static SpawnManager Instance;
+
+    [SerializeField] private GameObject playerPrefab;
 
     // privat vars...
-    public bool PlayerReadyToGo = false;
-    private Transform _SpawnPoint;
+    [HideInInspector] public bool PlayerReadyToGo = false;
+
+    private GameObject _currentPlayer;
+    private bool _isLoadingScene = false;
 
     private void Awake()
     {
-        _SpawnPoint = GameObject.FindGameObjectWithTag("SpawnPoint").GetComponent<Transform>();
+        if (Instance != null && Instance != this)
+        {
+            Destroy(Instance);
+            return;
+        }
+
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+
+        SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
     private void Start()
     {
-        Instantiate(Player, _SpawnPoint.position, Quaternion.identity);
+        SpwnPlayer();
+    }
+
+    private void SpwnPlayer()
+    {
+        if (playerPrefab == null)
+        {
+            Debug.Log("Player Prefab is missing in SpawnManager!");
+        }
+
+        GameObject spawnObj = GameObject.FindGameObjectWithTag("SpawnPoint");
+
+        if (spawnObj == null)
+        {
+            Debug.Log("No Object with tag 'SpawnPoint'");
+            return;
+        }
+
+        if (_currentPlayer != null)
+        {
+            Destroy(_currentPlayer);
+        }
+
+        _currentPlayer = Instantiate(playerPrefab, spawnObj.transform.position, Quaternion.identity);
     }
 
     public void LoadSceneWithDelay(int index, float delay)
     {
-        StartCoroutine(LoadSceneAfterTime(index, delay));
+        if (!_isLoadingScene)
+            StartCoroutine(LoadSceneAfterTime(index, delay));
     }
 
     private IEnumerator LoadSceneAfterTime(int index, float delay)
     {
+        _isLoadingScene = true;
+
         yield return new WaitForSeconds(delay);
         SceneManager.LoadScene(index);
+
+        _isLoadingScene = false;
+        PlayerReadyToGo = false;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        Debug.Log("Scene loaded: " + scene.name);
+        SpwnPlayer();
+    }
+
+    private void OnDestroy()
+    {
+        if (Instance == this)
+        {
+            SceneManager.sceneLoaded -= OnSceneLoaded;
+        }
     }
 }

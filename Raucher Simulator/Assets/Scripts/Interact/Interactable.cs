@@ -26,7 +26,7 @@ public class Interactable : MonoBehaviour
 
     /// <summary>
     /// Optionales Hilfs-Tool, falls du pro Interactable Distanz prüfen willst.
-    /// Player nutzt aktuell OverlapCircle -> das ist okay.
+    /// playerPrefab nutzt aktuell OverlapCircle -> das ist okay.
     /// </summary>
     public bool IsInRange(Transform player)
     {
