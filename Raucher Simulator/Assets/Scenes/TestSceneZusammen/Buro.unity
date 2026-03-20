@@ -253,6 +253,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3204175006605193381, guid: 99b62b9e4266b8844962c6afb5a8db36, type: 3}
+      propertyPath: panLevelCustomCurve.m_Curve.Array.data[0].value
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6989866459397360036, guid: 99b62b9e4266b8844962c6afb5a8db36, type: 3}
       propertyPath: maxTimeMinutes
       value: 1
@@ -773,6 +777,10 @@ PrefabInstance:
     - target: {fileID: 1186928925529831797, guid: db065137250b65f47aefdfe73c8680f7, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2405555009947847428, guid: db065137250b65f47aefdfe73c8680f7, type: 3}
+      propertyPath: panLevelCustomCurve.m_Curve.Array.data[0].value
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
