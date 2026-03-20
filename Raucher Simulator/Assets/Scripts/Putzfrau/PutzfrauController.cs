@@ -19,7 +19,7 @@ public class PutzfrauController : MonoBehaviour
 
     [Header("PzzPzz Sound")]
     [SerializeField] private AudioClip pzzPzzSound;
-    [SerializeField, Range(0f, 1f)] private float volume = 1f;
+    [SerializeField, Range(0f, 10f)] private float volume = 1f;
 
     [Header("Loop")]
     [SerializeField] private bool loop = true;

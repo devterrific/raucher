@@ -18,7 +18,7 @@ public class StinkySleepTrigger : MonoBehaviour
 
     [Header("Audio")]
     [SerializeField] private AudioClip sleepSound;
-    [Range(0f, 1f)]
+    [Range(0f, 10f)]
     [SerializeField] private float volume = 1f;
 
     [Header("Control")]

@@ -26,6 +26,9 @@ public class MitarbeiterNr2 : MonoBehaviour
     [Tooltip("Random Pitch für Variation")]
     [SerializeField] private Vector2 pitchRange = new Vector2(0.9f, 1.1f);
 
+    [Tooltip("Lautstärke vom Sound")]
+    [Range(0f, 10f)][SerializeField] private float volume = 1f;
+
     private float timer;
     private float targetTime;
     private float activeTimer;
@@ -95,6 +98,8 @@ public class MitarbeiterNr2 : MonoBehaviour
             return;
 
         audioSource.pitch = Random.Range(pitchRange.x, pitchRange.y);
-        audioSource.PlayOneShot(moneySounds[Random.Range(0, moneySounds.Length)]);
+
+        AudioClip clip = moneySounds[Random.Range(0, moneySounds.Length)];
+        audioSource.PlayOneShot(clip, volume);
     }
 }
