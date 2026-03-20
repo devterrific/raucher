@@ -2,33 +2,37 @@ using UnityEngine;
 using System.Collections;
 
 [RequireComponent(typeof(Animator))]
+[RequireComponent(typeof(AudioSource))]
 public class HaroldAniTrigger : MonoBehaviour
 {
     private static readonly int AniHash = Animator.StringToHash("Ani");
 
     [Header("Timing (in Minuten)")]
-    [Tooltip("Minimale Zeit bis zum nächsten Trigger.")]
     [Min(0f)]
     [SerializeField] private float minTimeMinutes = 1f;
 
-    [Tooltip("Maximale Zeit bis zum nächsten Trigger.")]
     [Min(0f)]
     [SerializeField] private float maxTimeMinutes = 5f;
 
-    [Header("Active Phase")]
-    [Tooltip("Wie lange Ani auf TRUE bleibt (in Sekunden).")]
+    [Header("Fallback Dauer (wenn kein Sound)")]
     [Min(0f)]
     [SerializeField] private float activeDurationSeconds = 2f;
 
+    [Header("Audio")]
+    [SerializeField] private AudioClip sound;
+    [Range(0f, 1f)]
+    [SerializeField] private float volume = 1f;
+
     [Header("Control")]
-    [Tooltip("Wenn deaktiviert, passiert gar nichts.")]
     [SerializeField] private bool enabledTrigger = true;
 
     private Animator animator;
+    private AudioSource audioSource;
 
     private void Awake()
     {
         animator = GetComponent<Animator>();
+        audioSource = GetComponent<AudioSource>();
     }
 
     private void OnEnable()
@@ -55,7 +59,18 @@ public class HaroldAniTrigger : MonoBehaviour
 
             animator.SetBool(AniHash, true);
 
-            yield return new WaitForSeconds(activeDurationSeconds);
+            if (sound != null)
+            {
+                audioSource.PlayOneShot(sound, volume);
+
+                // Warten bis Sound fertig ist
+                yield return new WaitForSeconds(sound.length);
+            }
+            else
+            {
+                // Fallback wenn kein Sound gesetzt
+                yield return new WaitForSeconds(activeDurationSeconds);
+            }
 
             animator.SetBool(AniHash, false);
         }
