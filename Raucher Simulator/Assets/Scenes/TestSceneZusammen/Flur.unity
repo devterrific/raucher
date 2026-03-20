@@ -1176,6 +1176,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 682176009829365621, guid: 2532a4c2fa7144e4ca3f1f17c8415b04, type: 3}
+      propertyPath: panLevelCustomCurve.m_Curve.Array.data[0].value
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1600918564958438872, guid: 2532a4c2fa7144e4ca3f1f17c8415b04, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.8856901
@@ -2755,6 +2759,10 @@ PrefabInstance:
       propertyPath: m_audioClip
       value: 
       objectReference: {fileID: 8300000, guid: 88eb7549e8b178a4692c8de07c7f094d, type: 3}
+    - target: {fileID: 1265418709074619751, guid: 8a45dc0293360134b858a810208e1eae, type: 3}
+      propertyPath: panLevelCustomCurve.m_Curve.Array.data[0].value
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2966687445452696534, guid: 8a45dc0293360134b858a810208e1eae, type: 3}
       propertyPath: volume
       value: 1
@@ -2897,6 +2905,14 @@ PrefabInstance:
     - target: {fileID: 3943602182226497185, guid: 662a98eae0c0afc45a9363db410ef660, type: 3}
       propertyPath: m_SortingOrder
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3959170179220241203, guid: 662a98eae0c0afc45a9363db410ef660, type: 3}
+      propertyPath: panLevelCustomCurve.m_Curve.Array.data[0].value
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7112256022633432679, guid: 662a98eae0c0afc45a9363db410ef660, type: 3}
+      propertyPath: volume
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8135392989199208616, guid: 662a98eae0c0afc45a9363db410ef660, type: 3}
       propertyPath: m_LocalPosition.x
