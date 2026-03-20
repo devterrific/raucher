@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerPortalCheck : MonoBehaviour
@@ -48,6 +49,14 @@ public class PlayerPortalCheck : MonoBehaviour
             {
                 _spawnManager.LoadSceneWithDelay(spawnerPoints.Index, spawnerPoints.delayTime);
             }
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.gameObject.CompareTag("PortalPoint"))
+        {
+            _spawnManager.PlayerReadyToGo = true;
         }
     }
 
