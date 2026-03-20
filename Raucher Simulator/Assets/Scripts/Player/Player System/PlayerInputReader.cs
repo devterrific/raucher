@@ -20,6 +20,12 @@ public class PlayerInputReader : MonoBehaviour
 
     public void ReadInput()
     {
+        if (IsGameplayInputBlocked())
+        {
+            ClearInput();
+            return;
+        }
+
         MoveX = Input.GetAxisRaw(horizontalAxis);
         SprintHeld = Input.GetKey(sprintKey);
 
@@ -29,5 +35,24 @@ public class PlayerInputReader : MonoBehaviour
             Input.GetKey(crouchKeyFallback);
 
         InteractPressed = Input.GetKeyDown(interactKey);
+    }
+
+    private bool IsGameplayInputBlocked()
+    {
+        if (PauseMenuManager.Instance != null && PauseMenuManager.Instance.IsPaused)
+            return true;
+
+        if (GameOverManager.Instance != null && GameOverManager.Instance.IsGameplayInputBlocked)
+            return true;
+
+        return false;
+    }
+
+    private void ClearInput()
+    {
+        MoveX = 0f;
+        SprintHeld = false;
+        SneakHeld = false;
+        InteractPressed = false;
     }
 }

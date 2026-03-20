@@ -2155,7 +2155,7 @@ MonoBehaviour:
   - {fileID: -4719701569255027762, guid: a39c1df80cd5cac43903720770f0ffc8, type: 3}
   - {fileID: 7751591749446328904, guid: ad69ace5d3d22414c907246c089b1ac2, type: 3}
   - {fileID: 1316734391144057893, guid: 13a63cc785161114096dd8a5afc4f846, type: 3}
-  roundDurationSeconds: 300
+  roundDurationSeconds: 10
   smallHintButton: {fileID: 656036886}
   largeHintPanel: {fileID: 2132764332}
   largeHintText: {fileID: 1027624765}
@@ -2164,7 +2164,7 @@ MonoBehaviour:
   - Flur
   buroHintText: The boss's office is to the left, and the hallway is to the right
     - where are you going?
-  flurHintText: Hide behind objects so you can sneak past the Switch.
+  flurHintText: Hide behind objects so you can sneak past the Snitch.
   defaultHintText: ...
 --- !u!1 &537096675
 GameObject:
