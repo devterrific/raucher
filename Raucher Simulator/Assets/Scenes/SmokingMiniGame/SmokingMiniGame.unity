@@ -170,11 +170,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b52f9dee3c518ca49927dfaff44bb1b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 80
-  directionChangeInterval: 1.2
-  directionStrength: 30
-  jitterAmount: 30
-  jitterSpeed: 5
+  moveSpeed: 200
+  directionChangeInterval: 1
+  directionStrength: 100
+  jitterAmount: 1
+  jitterSpeed: 100
+  pulseAmount: 0.06
+  pulseSpeed: 1.5
   movementArea: {fileID: 781724844}
 --- !u!114 &15577859
 MonoBehaviour:
@@ -964,8 +966,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -457.9, y: 160.6}
-  m_SizeDelta: {x: 139.0297, y: 235.3272}
+  m_AnchoredPosition: {x: -458.4752, y: 15.085}
+  m_SizeDelta: {x: 312.728, y: 526.358}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &781724845
 MonoBehaviour:
@@ -1055,11 +1057,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b52f9dee3c518ca49927dfaff44bb1b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 120
-  directionChangeInterval: 0.6
-  directionStrength: 20
-  jitterAmount: 20
-  jitterSpeed: 10
+  moveSpeed: 200
+  directionChangeInterval: 1
+  directionStrength: 100
+  jitterAmount: 1
+  jitterSpeed: 100
+  pulseAmount: 0.06
+  pulseSpeed: 1.5
   movementArea: {fileID: 781724844}
 --- !u!114 &814470736
 MonoBehaviour:
@@ -1705,11 +1709,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b52f9dee3c518ca49927dfaff44bb1b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 120
-  directionChangeInterval: 0.8
-  directionStrength: 20
-  jitterAmount: 20
-  jitterSpeed: 15
+  moveSpeed: 200
+  directionChangeInterval: 1
+  directionStrength: 100
+  jitterAmount: 1
+  jitterSpeed: 100
+  pulseAmount: 0.06
+  pulseSpeed: 1.5
   movementArea: {fileID: 781724844}
 --- !u!114 &1107682060
 MonoBehaviour:
@@ -4455,11 +4461,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b52f9dee3c518ca49927dfaff44bb1b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 100
+  moveSpeed: 200
   directionChangeInterval: 1
-  directionStrength: 20
-  jitterAmount: 20
-  jitterSpeed: 10
+  directionStrength: 100
+  jitterAmount: 1
+  jitterSpeed: 100
+  pulseAmount: 0.06
+  pulseSpeed: 1.5
   movementArea: {fileID: 781724844}
 --- !u!114 &2128995366
 MonoBehaviour:
