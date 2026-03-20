@@ -11,6 +11,10 @@ public class CanvasFlyUI : MonoBehaviour
     [SerializeField] private float jitterAmount = 6f;
     [SerializeField] private float jitterSpeed = 18f;
 
+    [Header("Pulsieren")]
+    [SerializeField] private float pulseAmount = 0.08f;
+    [SerializeField] private float pulseSpeed = 6f;
+
     [Header("Bewegungsbereich")]
     [SerializeField] private RectTransform movementArea;
 
@@ -19,6 +23,7 @@ public class CanvasFlyUI : MonoBehaviour
     private Vector2 currentDirection;
     private float directionTimer;
     private Vector2 basePosition;
+    private Vector3 originalScale;
 
     private void Awake()
     {
@@ -36,6 +41,7 @@ public class CanvasFlyUI : MonoBehaviour
 
         directionTimer = directionChangeInterval;
         basePosition = flyRectTransform.anchoredPosition;
+        originalScale = flyRectTransform.localScale;
     }
 
     private void Update()
@@ -44,6 +50,7 @@ public class CanvasFlyUI : MonoBehaviour
         MoveFly();
         KeepInsideArea();
         ApplyJitter();
+        ApplyPulse();
     }
 
     private void UpdateDirection()
@@ -77,6 +84,13 @@ public class CanvasFlyUI : MonoBehaviour
 
         Vector2 jitterOffset = new Vector2(jitterX, jitterY);
         flyRectTransform.anchoredPosition = basePosition + jitterOffset;
+    }
+
+    private void ApplyPulse()
+    {
+        float pulse = Mathf.Sin(Time.time * pulseSpeed) * pulseAmount;
+        Vector3 newScale = originalScale + Vector3.one * pulse;
+        flyRectTransform.localScale = newScale;
     }
 
     private void KeepInsideArea()
