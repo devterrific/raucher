@@ -20,7 +20,7 @@ public class SpawnManager : MonoBehaviour
     {
         if (Instance != null && Instance != this)
         {
-            Destroy(Instance);
+            Destroy(gameObject);
             return;
         }
 
@@ -39,7 +39,8 @@ public class SpawnManager : MonoBehaviour
     {
         if (playerPrefab == null)
         {
-            Debug.Log("Player Prefab is missing in SpawnManager!");
+            Debug.LogError("Player Prefab is missing in SpawnManager!");
+            return;
         }
 
         GameObject spawnObj = GameObject.FindGameObjectWithTag("SpawnPoint");
@@ -77,7 +78,9 @@ public class SpawnManager : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        Debug.Log("Scene loaded: " + scene.name);
+        if (scene.name == "MainMenu")
+            return;
+
         SpwnPlayer();
     }
 
