@@ -24,11 +24,13 @@ public class Door2 : Interactable
 
     private float closeTimer = 0f;
     private bool isClosing = false;
+    private SpawnManager _spawnManager;
 
     private void Awake()
     {
         animator = GetComponent<Animator>();
         audioSource = GetComponent<AudioSource>();
+        _spawnManager = GameObject.FindGameObjectWithTag("SpawnManager").GetComponent<SpawnManager>();
     }
 
     private void Update()
@@ -108,5 +110,10 @@ public class Door2 : Interactable
         }
 
         return 0.1f;
+    }
+
+    public void AnimationEnd()
+    {
+        _spawnManager.PlayerReadyToGo = true;
     }
 }
