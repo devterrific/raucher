@@ -123,4 +123,6 @@ MonoBehaviour:
   minTimeMinutes: 0.2
   maxTimeMinutes: 1
   activeDurationSeconds: 10
+  sound: {fileID: 8300000, guid: 4522380f2e39a7e41afe4da81b9430a2, type: 3}
+  volume: 1
   enabledTrigger: 1
