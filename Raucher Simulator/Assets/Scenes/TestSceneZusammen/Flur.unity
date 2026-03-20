@@ -826,65 +826,6 @@ MonoBehaviour:
   areaSize: {x: 0.75, y: 2}
   pulseAmount: 0.06
   pulseSpeed: 1.5
---- !u!1 &477775442
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 477775444}
-  - component: {fileID: 477775443}
-  - component: {fileID: 477775445}
-  m_Layer: 0
-  m_Name: Rechts_Flur
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &477775443
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 477775442}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a33e4edd69bd2d44a86299c49e86936f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  id: Rechts_Flur
---- !u!4 &477775444
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 477775442}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 47.62, y: -2, z: -0.0730197}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &477775445
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 477775442}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7faa2a3ec4d9a8e4da695e7d4e8900ec, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  targetScene: Smoking Mini Game
 --- !u!4 &479141609 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8135392989199208616, guid: 662a98eae0c0afc45a9363db410ef660, type: 3}
@@ -2501,51 +2442,6 @@ Transform:
   - {fileID: 1222063348}
   m_Father: {fileID: 1722800327}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1985933894
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1985933896}
-  - component: {fileID: 1985933895}
-  m_Layer: 0
-  m_Name: Links_Flur
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1985933895
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1985933894}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a33e4edd69bd2d44a86299c49e86936f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  id: Links_Flur
---- !u!4 &1985933896
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1985933894}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -8.23, y: -2, z: -0.0730197}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &2009732328 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3563627081113587934, guid: 69e38e76b50e1974a99a5c91df46b800, type: 3}
@@ -2965,8 +2861,6 @@ SceneRoots:
   m_Roots:
   - {fileID: 1549189380}
   - {fileID: 1480748400}
-  - {fileID: 1985933896}
-  - {fileID: 477775444}
   - {fileID: 147687817}
   - {fileID: 749097634}
   - {fileID: 249204019}

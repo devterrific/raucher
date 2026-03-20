@@ -31,6 +31,6 @@ public class Door : Interactable
             return;
         }
 
-        SceneManager.LoadScene(targetSceneName);
+        //SceneManager.LoadScene(targetSceneName);
     }
 }

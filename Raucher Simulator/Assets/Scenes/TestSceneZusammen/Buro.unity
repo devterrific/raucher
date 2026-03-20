@@ -312,51 +312,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3116523185949725858, guid: 112840923cbe9c3478960cc352f2c571, type: 3}
   m_PrefabInstance: {fileID: 722608248}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &435818196
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 435818197}
-  - component: {fileID: 435818198}
-  m_Layer: 0
-  m_Name: Start_Buro
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &435818197
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 435818196}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -10.04, y: -2, z: -0.0730197}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &435818198
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 435818196}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a33e4edd69bd2d44a86299c49e86936f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  id: Start_Buro
 --- !u!1001 &722608248
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -501,51 +456,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 112840923cbe9c3478960cc352f2c571, type: 3}
---- !u!1 &822628510
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 822628512}
-  - component: {fileID: 822628511}
-  m_Layer: 0
-  m_Name: Door_Buro
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &822628511
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 822628510}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a33e4edd69bd2d44a86299c49e86936f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  id: Door_Buro
---- !u!4 &822628512
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 822628510}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 11.09, y: -2, z: -0.0730197}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &989935949
 GameObject:
   m_ObjectHideFlags: 0
@@ -663,61 +573,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 989935950}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1301262778
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1301262779}
-  - component: {fileID: 1301262780}
-  m_Layer: 0
-  m_Name: SpawnManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1301262779
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1301262778}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.18539727, y: -0.24207377, z: -0.0730197}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1301262780
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1301262778}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ffecef2bed7ed9141bb98d33513a5dcd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerPrefab: {fileID: 9105331101459031560, guid: 9b6023025af342e44b619a10d3fd2f66, type: 3}
-  playerTag: Player
-  mainMenuScene: MainMenu
-  buroScene: Buro
-  flurScene: Flur
-  smokingScene: Smoking Mini Game
-  startBuro: Start_Buro
-  doorBuro: Door_Buro
-  leftFlur: Links_Flur
-  rightFlur: Rechts_Flur
-  startSmoking: Start_Smoking
 --- !u!1001 &1563226680
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1217,9 +1072,6 @@ SceneRoots:
   - {fileID: 110437233}
   - {fileID: 1577975308}
   - {fileID: 7912745413414484667}
-  - {fileID: 435818197}
-  - {fileID: 1301262779}
-  - {fileID: 822628512}
   - {fileID: 6392622577862994444}
   - {fileID: 201460646}
   - {fileID: 989935950}
