@@ -192,7 +192,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 15
   m_Sprite: {fileID: -8065471655795356911, guid: e256cf5ac05561942a71b7c7752925b8, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -460,6 +460,10 @@ PrefabInstance:
       propertyPath: m_Size.y
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 8924151770065765427, guid: 3dac4fd09ad24ac4097bbdfd7b04345b, type: 3}
+      propertyPath: m_Offset.y
+      value: -0.83
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -579,7 +583,7 @@ Transform:
   m_GameObject: {fileID: 421551800}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -6.6, y: -2.97, z: 0}
+  m_LocalPosition: {x: -6.6, y: -2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -740,6 +744,10 @@ PrefabInstance:
     - target: {fileID: 8924151770065765427, guid: 3dac4fd09ad24ac4097bbdfd7b04345b, type: 3}
       propertyPath: m_Size.x
       value: 2.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8924151770065765427, guid: 3dac4fd09ad24ac4097bbdfd7b04345b, type: 3}
+      propertyPath: m_Offset.y
+      value: -0.83
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1289,6 +1297,10 @@ PrefabInstance:
     - target: {fileID: 4557695033793619222, guid: 2532a4c2fa7144e4ca3f1f17c8415b04, type: 3}
       propertyPath: m_Color.r
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6023085429094761012, guid: 2532a4c2fa7144e4ca3f1f17c8415b04, type: 3}
+      propertyPath: m_SortingOrder
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 7301388192289036817, guid: 2532a4c2fa7144e4ca3f1f17c8415b04, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2666,6 +2678,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8630868466267228801, guid: c612a812e24ef574e94a3c2a8423ffdd, type: 3}
+      propertyPath: m_Offset.y
+      value: -2.03
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2729,7 +2745,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7797498602544179284, guid: 16f015e2e969e2a4da2c82ee748133dd, type: 3}
       propertyPath: m_Offset.y
-      value: -0.7
+      value: -2.16
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2799,6 +2815,10 @@ PrefabInstance:
     - target: {fileID: 5146521983569215511, guid: 8a45dc0293360134b858a810208e1eae, type: 3}
       propertyPath: m_Name
       value: Putzfrau
+      objectReference: {fileID: 0}
+    - target: {fileID: 6928897887363688064, guid: 8a45dc0293360134b858a810208e1eae, type: 3}
+      propertyPath: m_SortingOrder
+      value: 15
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2870,6 +2890,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1663163562}
     m_Modifications:
+    - target: {fileID: 2700218016518113195, guid: 69e38e76b50e1974a99a5c91df46b800, type: 3}
+      propertyPath: m_Offset.y
+      value: -2
+      objectReference: {fileID: 0}
     - target: {fileID: 3022836405193504307, guid: 69e38e76b50e1974a99a5c91df46b800, type: 3}
       propertyPath: m_Name
       value: Schrank_02_0
