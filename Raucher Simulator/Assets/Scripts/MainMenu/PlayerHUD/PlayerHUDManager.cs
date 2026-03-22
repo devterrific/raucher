@@ -22,6 +22,12 @@ public class PlayerHUDManager : MonoBehaviour
     [Header("Round Timer")]
     [SerializeField] private float roundDurationSeconds = 300f;
 
+    [Header("Timer Audio")]
+    [SerializeField] private AudioSource lastSecondsTickAudioSource;
+    [SerializeField] private int tickStartSeconds = 10;
+
+    private bool isLastSecoundsTickPlaying = false;
+
     [Header("Small Hint Bubble")]
     [SerializeField] private Button smallHintButton;
 
@@ -57,6 +63,7 @@ public class PlayerHUDManager : MonoBehaviour
 
     private bool hudAllowed = false;
     private bool hudManuallyHidden = false;
+    private bool isLastSecondsTickPlaying = false;
 
     private void Awake()
     {
@@ -103,12 +110,21 @@ public class PlayerHUDManager : MonoBehaviour
     {
         if (!hudAllowed || !IsRoundRunning)
         {
+            StopLastSecondsTicking();
             RefreshStaminaDisplay();
             return;
         }
 
         if (GameOverManager.Instance != null && GameOverManager.Instance.HasGameOverOccurred)
         {
+            StopLastSecondsTicking();
+            RefreshStaminaDisplay();
+            return;
+        }
+
+        if (PauseMenuManager.Instance != null && PauseMenuManager.Instance.IsPaused)
+        {
+            StopLastSecondsTicking();
             RefreshStaminaDisplay();
             return;
         }
@@ -132,7 +148,12 @@ public class PlayerHUDManager : MonoBehaviour
                 return;
             }
 
+            HandleLastSecondsTicking();
             RefreshTimerDisplay();
+        }
+        else
+        {
+            StopLastSecondsTicking();
         }
 
         RefreshStaminaDisplay();
@@ -163,6 +184,7 @@ public class PlayerHUDManager : MonoBehaviour
         TimeRemaining = roundDurationSeconds;
         IsRoundRunning = true;
 
+        StopLastSecondsTicking();
         RefreshPlayerName();
         RefreshTimerDisplay();
         RefreshStaminaDisplay();
@@ -172,6 +194,7 @@ public class PlayerHUDManager : MonoBehaviour
     public void StopRound()
     {
         IsRoundRunning = false;
+        StopLastSecondsTicking();
     }
 
     public void ResetHudDisplay()
@@ -205,6 +228,7 @@ public class PlayerHUDManager : MonoBehaviour
     public void HideHud()
     {
         hudManuallyHidden = true;
+        StopLastSecondsTicking();
         CloseAllHintPanels();
         ApplyHudVisibility();
     }
@@ -284,6 +308,52 @@ public class PlayerHUDManager : MonoBehaviour
         int seconds = totalSeconds % 60;
 
         timerText.text = minutes.ToString("00") + ":" + seconds.ToString("00");
+    }
+
+    private void HandleLastSecondsTicking()
+    {
+        int remainingWholeSeconds = Mathf.CeilToInt(TimeRemaining);
+
+        if (remainingWholeSeconds <= tickStartSeconds && remainingWholeSeconds > 0)
+        {
+            StartLastSecondsTicking();
+        }
+        else
+        {
+            StopLastSecondsTicking();
+        }
+    }
+
+    private void StartLastSecondsTicking()
+    {
+        if (lastSecondsTickAudioSource == null)
+        {
+            return;
+        }
+
+        if (isLastSecondsTickPlaying)
+        {
+            return;
+        }
+
+        lastSecondsTickAudioSource.Play();
+        isLastSecondsTickPlaying = true;
+    }
+
+    private void StopLastSecondsTicking()
+    {
+        if (lastSecondsTickAudioSource == null)
+        {
+            isLastSecondsTickPlaying = false;
+            return;
+        }
+
+        if (lastSecondsTickAudioSource.isPlaying)
+        {
+            lastSecondsTickAudioSource.Stop();
+        }
+
+        isLastSecondsTickPlaying = false;
     }
 
     private void FindPlayerStaminaInScene()

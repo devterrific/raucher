@@ -106,7 +106,10 @@ public class StinkySleepTrigger : MonoBehaviour
 
     private bool IsGamePaused()
     {
-        return PauseMenuManager.Instance != null && PauseMenuManager.Instance.IsPaused;
+        bool isPaused = PauseMenuManager.Instance != null && PauseMenuManager.Instance.IsPaused;
+        bool isGameOver = GameOverManager.Instance != null && GameOverManager.Instance.HasGameOverOccurred;
+
+        return isPaused || isGameOver;
     }
 
     private void PauseAudio()
