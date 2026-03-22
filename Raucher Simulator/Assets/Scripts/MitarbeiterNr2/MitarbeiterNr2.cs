@@ -34,6 +34,9 @@ public class MitarbeiterNr2 : MonoBehaviour
     private float activeTimer;
     private bool isActive;
 
+    private bool isPausedByMenu = false;
+    private bool isGameOver = false;
+
     private void Awake()
     {
         animator = GetComponent<Animator>();
@@ -41,8 +44,26 @@ public class MitarbeiterNr2 : MonoBehaviour
         SetNewRandomTime();
     }
 
+    private void OnEnable()
+    {
+        PauseMenuManager.OnPauseStateChanged += HandlePauseStateChanged;
+        GameOverManager.OnGameOverStateChanged += HandleGameOverStateChanged;
+    }
+
+    private void OnDisable()
+    {
+        PauseMenuManager.OnPauseStateChanged -= HandlePauseStateChanged;
+        GameOverManager.OnGameOverStateChanged -= HandleGameOverStateChanged;
+
+        audioSource.Stop();
+        animator.SetBool(MoneyHash, false);
+    }
+
     private void Update()
     {
+        if (isPausedByMenu || isGameOver)
+            return;
+
         if (!enabledTrigger)
             return;
 
@@ -73,8 +94,7 @@ public class MitarbeiterNr2 : MonoBehaviour
         activeTimer = 0f;
 
         animator.SetBool(MoneyHash, true);
-
-        PlaySound();
+        PlaySoundOnce();
     }
 
     private void Deactivate()
@@ -92,7 +112,7 @@ public class MitarbeiterNr2 : MonoBehaviour
         timer = 0f;
     }
 
-    private void PlaySound()
+    private void PlaySoundOnce()
     {
         if (moneySounds == null || moneySounds.Length == 0)
             return;
@@ -101,5 +121,41 @@ public class MitarbeiterNr2 : MonoBehaviour
 
         AudioClip clip = moneySounds[Random.Range(0, moneySounds.Length)];
         audioSource.PlayOneShot(clip, volume);
+    }
+
+    private void HandlePauseStateChanged(bool isPaused)
+    {
+        isPausedByMenu = isPaused;
+
+        if (isPausedByMenu)
+        {
+            audioSource.Pause();
+        }
+        else
+        {
+            if (!isGameOver)
+            {
+                audioSource.UnPause();
+            }
+        }
+    }
+
+    private void HandleGameOverStateChanged(bool gameOverActive)
+    {
+        isGameOver = gameOverActive;
+
+        if (isGameOver)
+        {
+            audioSource.Stop();
+            isActive = false;
+            animator.SetBool(MoneyHash, false);
+        }
+        else
+        {
+            audioSource.Stop();
+            isActive = false;
+            animator.SetBool(MoneyHash, false);
+            SetNewRandomTime();
+        }
     }
 }

@@ -29,6 +29,9 @@ public class HaroldAniTrigger : MonoBehaviour
     private Animator animator;
     private AudioSource audioSource;
 
+    private bool isPausedByMenu = false;
+    private bool isGameOver = false;
+
     private void Awake()
     {
         animator = GetComponent<Animator>();
@@ -37,13 +40,32 @@ public class HaroldAniTrigger : MonoBehaviour
 
     private void OnEnable()
     {
+        PauseMenuManager.OnPauseStateChanged += HandlePauseStateChanged;
+        GameOverManager.OnGameOverStateChanged += HandleGameOverStateChanged;
+
         StartCoroutine(Loop());
+    }
+
+    private void OnDisable()
+    {
+        PauseMenuManager.OnPauseStateChanged -= HandlePauseStateChanged;
+        GameOverManager.OnGameOverStateChanged -= HandleGameOverStateChanged;
+
+        animator.SetBool(AniHash, false);
+        audioSource.Stop();
+        StopAllCoroutines();
     }
 
     private IEnumerator Loop()
     {
         while (true)
         {
+            if (isPausedByMenu || isGameOver)
+            {
+                yield return null;
+                continue;
+            }
+
             if (!enabledTrigger)
             {
                 animator.SetBool(AniHash, false);
@@ -54,7 +76,7 @@ public class HaroldAniTrigger : MonoBehaviour
             float waitTime = Random.Range(minTimeMinutes * 60f, maxTimeMinutes * 60f);
             yield return new WaitForSeconds(waitTime);
 
-            if (!enabledTrigger)
+            if (!enabledTrigger || isPausedByMenu || isGameOver)
                 continue;
 
             animator.SetBool(AniHash, true);
@@ -62,23 +84,49 @@ public class HaroldAniTrigger : MonoBehaviour
             if (sound != null)
             {
                 audioSource.PlayOneShot(sound, volume);
-
-                // Warten bis Sound fertig ist
                 yield return new WaitForSeconds(sound.length);
             }
             else
             {
-                // Fallback wenn kein Sound gesetzt
                 yield return new WaitForSeconds(activeDurationSeconds);
             }
 
-            animator.SetBool(AniHash, false);
+            if (!isPausedByMenu && !isGameOver)
+            {
+                animator.SetBool(AniHash, false);
+            }
         }
     }
 
-    private void OnDisable()
+    private void HandlePauseStateChanged(bool isPaused)
     {
-        animator.SetBool(AniHash, false);
-        StopAllCoroutines();
+        isPausedByMenu = isPaused;
+
+        if (isPausedByMenu)
+        {
+            audioSource.Pause();
+        }
+        else
+        {
+            if (!isGameOver)
+            {
+                audioSource.UnPause();
+            }
+        }
+    }
+
+    private void HandleGameOverStateChanged(bool gameOverActive)
+    {
+        isGameOver = gameOverActive;
+
+        if (isGameOver)
+        {
+            audioSource.Stop();
+            animator.SetBool(AniHash, false);
+        }
+        else
+        {
+            animator.SetBool(AniHash, false);
+        }
     }
 }

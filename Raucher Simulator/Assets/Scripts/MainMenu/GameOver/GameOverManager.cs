@@ -8,6 +8,7 @@ public class GameOverManager : MonoBehaviour
     public static GameOverManager Instance { get; private set; }
 
     public static event Action OnGameOverTriggered;
+    public static event Action<bool> OnGameOverStateChanged;
 
     [Header("UI")]
     [SerializeField] private GameObject gameOverPanel;
@@ -108,6 +109,7 @@ public class GameOverManager : MonoBehaviour
 
         ShowGameOverPanel();
         OnGameOverTriggered?.Invoke();
+        OnGameOverStateChanged?.Invoke(true);
     }
 
     public void RestartToMainMenu()
@@ -158,6 +160,7 @@ public class GameOverManager : MonoBehaviour
         HasGameOverOccurred = false;
         Time.timeScale = 1f;
         HideGameOverPanel();
+        OnGameOverStateChanged?.Invoke(false);
     }
 
     private void DestroyPersistentPlayerIfExists()

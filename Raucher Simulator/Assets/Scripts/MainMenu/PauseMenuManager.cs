@@ -1,10 +1,13 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
 
 public class PauseMenuManager : MonoBehaviour
 {
     public static PauseMenuManager Instance { get; private set; }
+
+    public static event Action<bool> OnPauseStateChanged;
 
     [Header("UI")]
     [SerializeField] private GameObject pauseMenuPanel;
@@ -193,5 +196,7 @@ public class PauseMenuManager : MonoBehaviour
                 PlayerHUDManager.Instance.ShowHud();
             }
         }
+
+        OnPauseStateChanged?.Invoke(IsPaused);
     }
 }
