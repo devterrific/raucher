@@ -288,7 +288,7 @@ public class PlayerHUDManager : MonoBehaviour
 
     private void FindPlayerStaminaInScene()
     {
-        playerStamina = FindObjectOfType<PlayerStamina>();
+        playerStamina = FindFirstObjectByType<PlayerStamina>();
     }
 
     private void RefreshStaminaDisplay()
@@ -300,7 +300,7 @@ public class PlayerHUDManager : MonoBehaviour
 
         if (playerStamina == null)
         {
-            playerStamina = FindObjectOfType<PlayerStamina>();
+            playerStamina = FindFirstObjectByType<PlayerStamina>();
 
             if (playerStamina == null)
             {

@@ -53,7 +53,7 @@ public class PauseMenuManager : MonoBehaviour
 
     private void Update()
     {
-        if (!pauseAllowed)
+        if (!CanUsePauseMenu())
         {
             return;
         }
@@ -77,7 +77,7 @@ public class PauseMenuManager : MonoBehaviour
 
     public void TogglePause()
     {
-        if (!pauseAllowed)
+        if (!CanUsePauseMenu())
         {
             return;
         }
@@ -113,6 +113,21 @@ public class PauseMenuManager : MonoBehaviour
 #else
         Application.Quit();
 #endif
+    }
+
+    private bool CanUsePauseMenu()
+    {
+        if (!pauseAllowed)
+        {
+            return false;
+        }
+
+        if (GameOverManager.Instance != null && GameOverManager.Instance.HasGameOverOccurred)
+        {
+            return false;
+        }
+
+        return true;
     }
 
     private void EndCurrentSessionIfNeeded()

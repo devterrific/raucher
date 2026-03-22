@@ -132,7 +132,7 @@ GameObject:
   - component: {fileID: 13304384}
   - component: {fileID: 13304385}
   m_Layer: 0
-  m_Name: ClosetImage
+  m_Name: FileCabinet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -154,7 +154,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 265, y: -20}
+  m_AnchoredPosition: {x: 150, y: -20}
   m_SizeDelta: {x: 50, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &13304384
@@ -2230,7 +2230,7 @@ MonoBehaviour:
   - {fileID: -4719701569255027762, guid: a39c1df80cd5cac43903720770f0ffc8, type: 3}
   - {fileID: 7751591749446328904, guid: ad69ace5d3d22414c907246c089b1ac2, type: 3}
   - {fileID: 1316734391144057893, guid: 13a63cc785161114096dd8a5afc4f846, type: 3}
-  roundDurationSeconds: 300
+  roundDurationSeconds: 100
   smallHintButton: {fileID: 656036886}
   buroHintPanel: {fileID: 2132764332}
   flurHintPanel: {fileID: 1859043087}
@@ -2240,7 +2240,10 @@ MonoBehaviour:
   flurHintTextUI: {fileID: 910983437}
   flurClosetImage: {fileID: 13304385}
   flurWaterDispenserImage: {fileID: 946139663}
-  flurHintText: Hide behind objects so you can sneak past the Snitch.
+  flurHintText: 'Hide behind objects so you can sneak past the Snitch.
+
+    Sneak
+    object: '
   allowedHintScenes:
   - Buro
   - Flur
@@ -3868,7 +3871,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 
+  m_text: No highscores yet.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -4020,7 +4023,7 @@ MonoBehaviour:
   m_fontColor32:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -4419,7 +4422,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 315, y: -20}
+  m_AnchoredPosition: {x: 200, y: -20}
   m_SizeDelta: {x: 40, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &966419127
@@ -4731,7 +4734,7 @@ MonoBehaviour:
   m_fontColor32:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -8578,7 +8581,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 20, y: 330}
+  m_AnchoredPosition: {x: 20, y: 350}
   m_SizeDelta: {x: 825, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1859043089
@@ -9904,7 +9907,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 20, y: 330}
+  m_AnchoredPosition: {x: 20, y: 350}
   m_SizeDelta: {x: 816.468, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2132764334
