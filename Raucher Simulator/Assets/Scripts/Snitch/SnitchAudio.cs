@@ -26,7 +26,9 @@ public class SnitchAudio : MonoBehaviour
 
     private bool wasWalking;
     private bool wasSuspicious;
-    private bool walkingStoppedByPause;
+
+    private bool walkingPausedByMenu;
+    private bool effectPausedByMenu;
 
     private void Awake()
     {
@@ -73,23 +75,29 @@ public class SnitchAudio : MonoBehaviour
     {
         if (walkingAudioSource != null && walkingAudioSource.isPlaying)
         {
-            walkingAudioSource.Stop();
-            walkingStoppedByPause = true;
+            walkingAudioSource.Pause();
+            walkingPausedByMenu = true;
+        }
+
+        if (effectAudioSource != null && effectAudioSource.isPlaying)
+        {
+            effectAudioSource.Pause();
+            effectPausedByMenu = true;
         }
     }
 
     private void HandleResumeAudio()
     {
-        if (!walkingStoppedByPause)
-            return;
-
-        walkingStoppedByPause = false;
-
-        bool isWalking = animator != null && animator.GetBool(IsWalkingHash);
-
-        if (isWalking)
+        if (walkingPausedByMenu && walkingAudioSource != null)
         {
-            StartWalkingLoop();
+            walkingAudioSource.UnPause();
+            walkingPausedByMenu = false;
+        }
+
+        if (effectPausedByMenu && effectAudioSource != null)
+        {
+            effectAudioSource.UnPause();
+            effectPausedByMenu = false;
         }
     }
 

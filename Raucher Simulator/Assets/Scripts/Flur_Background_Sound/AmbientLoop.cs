@@ -18,6 +18,7 @@ public class AmbientLoop : MonoBehaviour
     [SerializeField] private float startDelay = 0f;
 
     private AudioSource source;
+    private bool pausedByMenu;
 
     private void Awake()
     {
@@ -25,7 +26,7 @@ public class AmbientLoop : MonoBehaviour
 
         source.playOnAwake = false;
         source.loop = loop;
-        source.spatialBlend = 0f; // 2D Sound
+        source.spatialBlend = 0f;
         source.volume = volume;
 
         if (clip != null)
@@ -46,6 +47,17 @@ public class AmbientLoop : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+        if (IsGamePaused())
+        {
+            PauseAudio();
+            return;
+        }
+
+        ResumeAudio();
+    }
+
     public void Play()
     {
         if (source.clip == null)
@@ -59,11 +71,36 @@ public class AmbientLoop : MonoBehaviour
     {
         if (source.isPlaying)
             source.Stop();
+
+        pausedByMenu = false;
     }
 
     public void SetVolume(float newVolume)
     {
         volume = Mathf.Clamp01(newVolume);
         source.volume = volume;
+    }
+
+    private bool IsGamePaused()
+    {
+        return PauseMenuManager.Instance != null && PauseMenuManager.Instance.IsPaused;
+    }
+
+    private void PauseAudio()
+    {
+        if (source != null && source.isPlaying)
+        {
+            source.Pause();
+            pausedByMenu = true;
+        }
+    }
+
+    private void ResumeAudio()
+    {
+        if (pausedByMenu && source != null)
+        {
+            source.UnPause();
+            pausedByMenu = false;
+        }
     }
 }

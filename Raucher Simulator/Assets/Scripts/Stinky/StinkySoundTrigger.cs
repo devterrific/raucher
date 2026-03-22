@@ -27,6 +27,7 @@ public class StinkySleepTrigger : MonoBehaviour
     private Animator animator;
     private AudioSource audioSource;
     private Coroutine loopRoutine;
+    private bool pausedByMenu;
 
     private void Awake()
     {
@@ -42,6 +43,17 @@ public class StinkySleepTrigger : MonoBehaviour
     private void OnEnable()
     {
         loopRoutine = StartCoroutine(SleepLoop());
+    }
+
+    private void Update()
+    {
+        if (IsGamePaused())
+        {
+            PauseAudio();
+            return;
+        }
+
+        ResumeAudio();
     }
 
     private IEnumerator SleepLoop()
@@ -87,6 +99,31 @@ public class StinkySleepTrigger : MonoBehaviour
         {
             if (audioSource.isPlaying)
                 audioSource.Stop();
+
+            pausedByMenu = false;
+        }
+    }
+
+    private bool IsGamePaused()
+    {
+        return PauseMenuManager.Instance != null && PauseMenuManager.Instance.IsPaused;
+    }
+
+    private void PauseAudio()
+    {
+        if (audioSource != null && audioSource.isPlaying)
+        {
+            audioSource.Pause();
+            pausedByMenu = true;
+        }
+    }
+
+    private void ResumeAudio()
+    {
+        if (pausedByMenu && audioSource != null)
+        {
+            audioSource.UnPause();
+            pausedByMenu = false;
         }
     }
 

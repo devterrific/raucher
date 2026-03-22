@@ -31,6 +31,7 @@ public class PutzfrauController : MonoBehaviour
     private Animator animator;
     private AudioSource audioSource;
     private Coroutine routine;
+    private bool pausedByMenu;
 
     private void Awake()
     {
@@ -50,6 +51,17 @@ public class PutzfrauController : MonoBehaviour
         Debug.Log("[Putzfrau] OnEnable");
         ResetStates();
         routine = StartCoroutine(MainLoop());
+    }
+
+    private void Update()
+    {
+        if (IsGamePaused())
+        {
+            PauseAudio();
+            return;
+        }
+
+        ResumeAudio();
     }
 
     private IEnumerator MainLoop()
@@ -128,6 +140,31 @@ public class PutzfrauController : MonoBehaviour
 
         if (audioSource != null && audioSource.isPlaying)
             audioSource.Stop();
+
+        pausedByMenu = false;
+    }
+
+    private bool IsGamePaused()
+    {
+        return PauseMenuManager.Instance != null && PauseMenuManager.Instance.IsPaused;
+    }
+
+    private void PauseAudio()
+    {
+        if (audioSource != null && audioSource.isPlaying)
+        {
+            audioSource.Pause();
+            pausedByMenu = true;
+        }
+    }
+
+    private void ResumeAudio()
+    {
+        if (pausedByMenu && audioSource != null)
+        {
+            audioSource.UnPause();
+            pausedByMenu = false;
+        }
     }
 
     private void OnDisable()
