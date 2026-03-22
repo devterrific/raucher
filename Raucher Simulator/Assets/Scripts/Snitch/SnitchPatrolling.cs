@@ -11,6 +11,11 @@ public class SnitchPatrolling : MonoBehaviour
     [SerializeField, Min(0f)] private float waitTimeAtPoint = 2.2f;
     [SerializeField, Min(0.001f)] private float arrivalThreshold = 0.05f;
 
+    [Header("Patrol Variation")]
+    [SerializeField, Min(0f)] private float patrolSpeedMultiplierMin = 0.9f;
+    [SerializeField, Min(0f)] private float patrolSpeedMultiplierMax = 1.35f;
+    [SerializeField, Range(0f, 1f)] private float turnAroundChanceAtPoint = 0.7f;
+
     [Header("Runtime")]
     [SerializeField] private int currentPointIndex;
 
@@ -25,13 +30,19 @@ public class SnitchPatrolling : MonoBehaviour
     private float forcedFacingTimer;
     private float closeTurnCooldownTimer;
 
+    private float currentMoveSpeed;
+    private float currentWaitDuration;
+    private bool hasTurnedAroundDuringWait;
+
     private void Awake()
     {
         animator = GetComponent<Animator>();
         currentPointIndex = Mathf.Clamp(currentPointIndex, 0, Mathf.Max(0, patrolPoints.Length - 1));
         isFacingRight = transform.rotation.eulerAngles.y < 90f || transform.rotation.eulerAngles.y > 270f;
+
         ApplyFacingRotation();
         SetWalking(false);
+        SetRandomPatrolSpeed();
     }
 
     private void Update()
@@ -48,11 +59,14 @@ public class SnitchPatrolling : MonoBehaviour
         {
             SetWalking(false);
 
+            TryTurnAroundWhileWaiting();
+
             waitTimer -= Time.deltaTime;
             if (waitTimer <= 0f)
             {
                 isWaiting = false;
                 AdvanceToNextValidPoint();
+                SetRandomPatrolSpeed();
             }
 
             return;
@@ -101,7 +115,7 @@ public class SnitchPatrolling : MonoBehaviour
             UpdateFacing(horizontalDelta);
         }
 
-        Vector3 newPosition = Vector2.MoveTowards(currentPosition, targetPosition, moveSpeed * Time.deltaTime);
+        Vector3 newPosition = Vector2.MoveTowards(currentPosition, targetPosition, currentMoveSpeed * Time.deltaTime);
         transform.position = new Vector3(newPosition.x, newPosition.y, -9f);
 
         bool moved = (newPosition - currentPosition).sqrMagnitude > 0.000001f;
@@ -112,6 +126,8 @@ public class SnitchPatrolling : MonoBehaviour
         {
             isWaiting = true;
             waitTimer = waitTimeAtPoint;
+            currentWaitDuration = waitTimeAtPoint;
+            hasTurnedAroundDuringWait = false;
             SetWalking(false);
         }
     }
@@ -164,5 +180,35 @@ public class SnitchPatrolling : MonoBehaviour
     {
         if (animator != null)
             animator.SetBool(IsWalkingHash, value);
+    }
+
+    private void SetRandomPatrolSpeed()
+    {
+        float minMultiplier = Mathf.Max(0f, patrolSpeedMultiplierMin);
+        float maxMultiplier = Mathf.Max(minMultiplier, patrolSpeedMultiplierMax);
+
+        currentMoveSpeed = moveSpeed * Random.Range(minMultiplier, maxMultiplier);
+    }
+
+    private void TryTurnAroundWhileWaiting()
+    {
+        if (hasTurnedAroundDuringWait)
+            return;
+
+        if (forcedFacingTimer > 0f)
+            return;
+
+        if (currentWaitDuration <= 0f)
+            return;
+
+        if (waitTimer > currentWaitDuration * 0.5f)
+            return;
+
+        if (Random.value > turnAroundChanceAtPoint)
+            return;
+
+        isFacingRight = !isFacingRight;
+        ApplyFacingRotation();
+        hasTurnedAroundDuringWait = true;
     }
 }
