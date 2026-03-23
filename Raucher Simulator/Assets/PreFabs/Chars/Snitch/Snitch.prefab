@@ -97,6 +97,9 @@ MonoBehaviour:
   moveSpeed: 2
   waitTimeAtPoint: 2.2
   arrivalThreshold: 0.05
+  patrolSpeedMultiplierMin: 0.9
+  patrolSpeedMultiplierMax: 1.35
+  turnAroundChanceAtPoint: 0.7
   currentPointIndex: 0
   canMove: 1
 --- !u!114 &9044366550782611595
@@ -114,7 +117,7 @@ MonoBehaviour:
   eyePoint: {fileID: 7883182566718649128}
   suspicionPoint: {fileID: 7301388192289036817}
   instantDistance: 1.5
-  suspicionDistance: 5
+  suspicionDistance: 4.5
   playerLayer:
     serializedVersion: 2
     m_Bits: 64
@@ -223,6 +226,7 @@ MonoBehaviour:
   walkingPitch: 0.7
   suspiciousVolume: 1
   shockVolume: 1
+  suspiciousSoundCooldown: 1
 --- !u!1 &3155125325049614850
 GameObject:
   m_ObjectHideFlags: 0

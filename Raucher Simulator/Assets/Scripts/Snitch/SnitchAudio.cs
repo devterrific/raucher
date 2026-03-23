@@ -24,11 +24,16 @@ public class SnitchAudio : MonoBehaviour
     [SerializeField, Min(0f)] private float suspiciousVolume = 1f;
     [SerializeField, Min(0f)] private float shockVolume = 1f;
 
+    [Header("Suspicious Sound Delay")]
+    [SerializeField, Min(0f)] private float suspiciousSoundCooldown = 1.5f;
+
     private bool wasWalking;
     private bool wasSuspicious;
 
     private bool walkingPausedByMenu;
     private bool effectPausedByMenu;
+
+    private float nextSuspiciousSoundTime;
 
     private void Awake()
     {
@@ -164,7 +169,11 @@ public class SnitchAudio : MonoBehaviour
         if (effectAudioSource == null || suspiciousClip == null)
             return;
 
+        if (Time.time < nextSuspiciousSoundTime)
+            return;
+
         effectAudioSource.PlayOneShot(suspiciousClip, suspiciousVolume);
+        nextSuspiciousSoundTime = Time.time + suspiciousSoundCooldown;
     }
 
     public void PlayShockSound()
