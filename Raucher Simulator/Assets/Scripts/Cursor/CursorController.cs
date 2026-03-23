@@ -10,6 +10,21 @@ public class CursorController : MonoBehaviour
     [SerializeField] private Vector2 hotspot = Vector2.zero;
     [SerializeField] private CursorMode cursorMode = CursorMode.Auto;
 
+    private static CursorController instance;
+
+    private void Awake()
+    {
+        // Singleton-Schutz
+        if (instance != null && instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        instance = this;
+        DontDestroyOnLoad(gameObject);
+    }
+
     private void Start()
     {
         SetNormalCursor();
