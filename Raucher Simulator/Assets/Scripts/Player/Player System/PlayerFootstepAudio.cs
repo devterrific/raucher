@@ -12,11 +12,15 @@ public class PlayerFootstepAudio : MonoBehaviour
     [Header("Audio")]
     [SerializeField] private AudioClip footstepClip;
 
-    [Header("Settings")]
+    [Tooltip("Wie lange vom Clip abgespielt werden soll (Sekunden)")]
+    [SerializeField] private float clipDuration = 0.25f;
+
+    [Header("Pitch")]
     [SerializeField] private float walkPitch = 1f;
     [SerializeField] private float sprintPitch = 1.2f;
 
     private AudioSource audioSource;
+    private Coroutine stopRoutine;
 
     private void Awake()
     {
@@ -31,39 +35,50 @@ public class PlayerFootstepAudio : MonoBehaviour
         if (movementLocks == null)
             movementLocks = GetComponent<PlayerMovementLockController>();
 
-        audioSource.loop = true;
+        audioSource.loop = false;
         audioSource.playOnAwake = false;
-        audioSource.clip = footstepClip;
     }
 
-    private void Update()
-    {
-        HandleFootsteps();
-    }
-
-    private void HandleFootsteps()
+    public void Footstep()
     {
         if (ShouldBlockAudio())
-        {
-            StopFootsteps();
             return;
-        }
 
         bool isMoving = Mathf.Abs(input.MoveX) > 0.01f;
 
         if (!isMoving)
-        {
-            StopFootsteps();
             return;
-        }
 
-        if (!audioSource.isPlaying)
-            audioSource.Play();
+        PlayFootstep();
+    }
+
+    private void PlayFootstep()
+    {
+        if (footstepClip == null)
+            return;
 
         if (movementState.CurrentMode == PlayerMovementState.MovementMode.Sprint)
             audioSource.pitch = sprintPitch;
         else
             audioSource.pitch = walkPitch;
+
+        audioSource.clip = footstepClip;
+        audioSource.time = 0f;
+
+        audioSource.Play();
+
+        if (stopRoutine != null)
+            StopCoroutine(stopRoutine);
+
+        stopRoutine = StartCoroutine(StopAfterTime());
+    }
+
+    private System.Collections.IEnumerator StopAfterTime()
+    {
+        yield return new WaitForSeconds(clipDuration);
+
+        if (audioSource.isPlaying)
+            audioSource.Stop();
     }
 
     private bool ShouldBlockAudio()
@@ -81,11 +96,5 @@ public class PlayerFootstepAudio : MonoBehaviour
             return true;
 
         return false;
-    }
-
-    private void StopFootsteps()
-    {
-        if (audioSource.isPlaying)
-            audioSource.Stop();
     }
 }
