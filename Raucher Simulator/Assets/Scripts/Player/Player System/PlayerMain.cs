@@ -65,15 +65,17 @@ public class PlayerMain : MonoBehaviour
     private void Update()
     {
         inputReader.ReadInput();
+        /*  //  Brauchen wir als Debug nicht mehr !!
         if (Input.GetKeyDown(KeyCode.LeftControl) ||
-    Input.GetKeyDown(KeyCode.RightControl) ||
-    Input.GetKeyDown(KeyCode.C) ||
-    Input.GetKeyUp(KeyCode.LeftControl) ||
-    Input.GetKeyUp(KeyCode.RightControl) ||
-    Input.GetKeyUp(KeyCode.C))
+            Input.GetKeyDown(KeyCode.RightControl) ||
+            Input.GetKeyDown(KeyCode.C) ||
+            Input.GetKeyUp(KeyCode.LeftControl) ||
+            Input.GetKeyUp(KeyCode.RightControl) ||
+            Input.GetKeyUp(KeyCode.C))
         {
             Debug.Log($"SneakHeld={inputReader.SneakHeld}");
         }
+        */
         if (inputReader.SneakHeld)
         {
             Debug.Log($"CurrentMode={movementState.CurrentMode}");

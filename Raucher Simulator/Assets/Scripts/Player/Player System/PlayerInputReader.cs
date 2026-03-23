@@ -8,11 +8,6 @@ public class PlayerInputReader : MonoBehaviour
     [SerializeField] private KeyCode sprintKey = KeyCode.LeftShift;
     [SerializeField] private KeyCode interactKey = KeyCode.E;
 
-    [Header("Crouch")]
-    [SerializeField] private KeyCode crouchKeyPrimary = KeyCode.LeftControl;
-    [SerializeField] private KeyCode crouchKeySecondary = KeyCode.RightControl;
-    [SerializeField] private KeyCode crouchKeyFallback = KeyCode.C;
-
     public float MoveX { get; private set; }
     public bool SprintHeld { get; private set; }
     public bool SneakHeld { get; private set; }
@@ -29,10 +24,9 @@ public class PlayerInputReader : MonoBehaviour
         MoveX = Input.GetAxisRaw(horizontalAxis);
         SprintHeld = Input.GetKey(sprintKey);
 
-        SneakHeld =
-            Input.GetKey(crouchKeyPrimary) ||
-            Input.GetKey(crouchKeySecondary) ||
-            Input.GetKey(crouchKeyFallback);
+        // Sneaken wird nicht mehr direkt über eine Taste ausgelöst.
+        // Das passiert nur noch über Interaktion mit Objekten / Hidezones.
+        SneakHeld = false;
 
         InteractPressed = Input.GetKeyDown(interactKey);
     }
