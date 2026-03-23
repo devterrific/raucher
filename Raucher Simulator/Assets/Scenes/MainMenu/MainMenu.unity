@@ -154,7 +154,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 175, y: -20}
+  m_AnchoredPosition: {x: 135, y: -20}
   m_SizeDelta: {x: 40, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &13304384
@@ -2410,11 +2410,13 @@ MonoBehaviour:
   flurHintPanel: {fileID: 1859043087}
   buroHintTextUI: {fileID: 1027624765}
   buroHintText: "The boss's office is to the left, and the hallway is to the right
-    - where are you going?\n \nInteract: press E"
+    - where are you going?\n \n\nInteract: press E"
   flurHintTextUI: {fileID: 910983437}
   flurClosetImage: {fileID: 13304385}
   flurWaterDispenserImage: {fileID: 946139663}
   flurHintText: 'Hide behind objects so you can sneak past the Snitch.
+
+
 
 
     Sneak
@@ -4615,7 +4617,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 230, y: -20}
+  m_AnchoredPosition: {x: 200, y: -20}
   m_SizeDelta: {x: 30, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &966419127
