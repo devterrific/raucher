@@ -404,6 +404,10 @@ PrefabInstance:
       propertyPath: sideHeight
       value: 4.31
       objectReference: {fileID: 0}
+    - target: {fileID: 2713196856940699948, guid: 3dac4fd09ad24ac4097bbdfd7b04345b, type: 3}
+      propertyPath: showInteractionGizmos
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4667567982850782613, guid: 3dac4fd09ad24ac4097bbdfd7b04345b, type: 3}
       propertyPath: m_LocalScale.x
       value: 2.1247303
