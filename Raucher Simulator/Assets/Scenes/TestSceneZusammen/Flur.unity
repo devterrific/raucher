@@ -1486,7 +1486,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ScenName: Buro
-  Index: 2
+  Index: 1
   delayTime: 0.5
 --- !u!61 &838107014
 BoxCollider2D:
