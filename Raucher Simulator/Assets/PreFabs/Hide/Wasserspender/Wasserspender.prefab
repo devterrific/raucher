@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1933097849084221045
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2404447949254820576}
+  m_Layer: 0
+  m_Name: Right
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2404447949254820576
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1933097849084221045}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 1.29, y: -1.87, z: 0.004422426}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1580236955526625871}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2561898041849782962
 GameObject:
   m_ObjectHideFlags: 0
@@ -31,7 +62,9 @@ Transform:
   m_LocalPosition: {x: -4.899706, y: 0.025410362, z: 0.5142875}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1020219775256287806}
+  - {fileID: 2404447949254820576}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &3881502263976646021
@@ -104,8 +137,18 @@ MonoBehaviour:
   sideHeight: 4.31
   horizontalBuffer: 0.2
   verticalBuffer: 0.09
+  centerDeadzone: 0.05
   interactionCooldown: 0.15
+  requireSnitchRule: 1
+  snitchTag: Snitch
+  allowHideWhenSnitchMissing: 1
+  snitchPlayerDeadzone: 0.05
+  leftHidePoint: {fileID: 1020219775256287806}
+  rightHidePoint: {fileID: 2404447949254820576}
+  moveToHideSpeed: 4
+  arriveDistance: 0.03
   crouchedSprite: {fileID: -2126135258883424569, guid: 7af0da5d70720884896dde787d70f062, type: 3}
+  logDebug: 1
   showInteractionGizmos: 1
 --- !u!61 &7797498602544179284
 BoxCollider2D:
@@ -153,3 +196,34 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 2, y: 3.98}
   m_EdgeRadius: 0
+--- !u!1 &6995567686439964706
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1020219775256287806}
+  m_Layer: 0
+  m_Name: Left
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1020219775256287806
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6995567686439964706}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -1.41, y: -1.83, z: 0.004422426}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1580236955526625871}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

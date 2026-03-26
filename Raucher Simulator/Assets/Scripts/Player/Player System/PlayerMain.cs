@@ -31,6 +31,8 @@ public class PlayerMain : MonoBehaviour
     private PlayerVisuals visuals;
     private PlayerRespawn respawn;
 
+    private bool externalVisualControl;
+
     public bool CanMove => movementLocks != null && movementLocks.CanMove;
     public bool Detectable => visibility != null && visibility.Detectable;
 
@@ -65,21 +67,12 @@ public class PlayerMain : MonoBehaviour
     private void Update()
     {
         inputReader.ReadInput();
-        /*  //  Brauchen wir als Debug nicht mehr !!
-        if (Input.GetKeyDown(KeyCode.LeftControl) ||
-            Input.GetKeyDown(KeyCode.RightControl) ||
-            Input.GetKeyDown(KeyCode.C) ||
-            Input.GetKeyUp(KeyCode.LeftControl) ||
-            Input.GetKeyUp(KeyCode.RightControl) ||
-            Input.GetKeyUp(KeyCode.C))
-        {
-            Debug.Log($"SneakHeld={inputReader.SneakHeld}");
-        }
-        */
+
         if (inputReader.SneakHeld)
         {
             Debug.Log($"CurrentMode={movementState.CurrentMode}");
         }
+
         interaction.TryInteract(this, inputReader.InteractPressed);
 
         bool canMove = movementLocks.CanMove;
@@ -90,7 +83,10 @@ public class PlayerMain : MonoBehaviour
         movementState.Resolve(canMove, inputReader.MoveX, inputReader.SneakHeld, sprintActive);
         visibility.SetHidden(sneakToken, movementState.IsSneaking);
 
-        visuals.UpdateVisuals(inputReader.MoveX, movementState.CurrentMode, inputReader.SneakHeld);
+        if (!externalVisualControl)
+        {
+            visuals.UpdateVisuals(inputReader.MoveX, movementState.CurrentMode, inputReader.SneakHeld);
+        }
     }
 
     private void FixedUpdate()
@@ -144,5 +140,15 @@ public class PlayerMain : MonoBehaviour
         RemoveMovementLock(source);
         SetHidden(source, false);
         visuals.ExitHidezone();
+    }
+
+    public void SetExternalVisualControl(bool value)
+    {
+        externalVisualControl = value;
+    }
+
+    public Animator GetAnimator()
+    {
+        return playerAnimator;
     }
 }
