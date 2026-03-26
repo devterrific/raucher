@@ -99,7 +99,7 @@ MonoBehaviour:
   arrivalThreshold: 0.05
   patrolSpeedMultiplierMin: 0.9
   patrolSpeedMultiplierMax: 1.35
-  turnAroundChanceAtPoint: 0.7
+  turnAroundChanceAtPoint: 0.327
   currentPointIndex: 0
   canMove: 1
 --- !u!114 &9044366550782611595

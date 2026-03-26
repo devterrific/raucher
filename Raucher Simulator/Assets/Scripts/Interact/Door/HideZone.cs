@@ -19,44 +19,64 @@ public class Hidezone : Interactable
     }
 
     [Header("Interaction Window")]
-    [Tooltip("Distance from the collider's left/right edge that still allows interaction.")]
+    [Tooltip("How far left/right from the collider edge the player may stand to interact.")]
     [FormerlySerializedAs("sideRange")]
-    [SerializeField, Min(0f)] private float sideRange = 0.5f;
+    [SerializeField, Min(0f)] private float sideRange = 1.2f;
 
     [Tooltip("Base vertical size of the interaction window.")]
     [FormerlySerializedAs("sideHeight")]
-    [SerializeField, Min(0f)] private float sideHeight = 1.2f;
+    [SerializeField, Min(0f)] private float sideHeight = 2f;
 
-    [Tooltip("Additional horizontal tolerance to make interaction less strict.")]
-    [SerializeField, Min(0f)] private float horizontalBuffer = 0.2f;
+    [Tooltip("Extra horizontal tolerance so interaction is less strict.")]
+    [SerializeField, Min(0f)] private float horizontalBuffer = 0.5f;
 
-    [Tooltip("Additional vertical tolerance to make interaction less strict.")]
-    [SerializeField, Min(0f)] private float verticalBuffer = 0.15f;
+    [Tooltip("Extra vertical tolerance so interaction is less strict.")]
+    [SerializeField, Min(0f)] private float verticalBuffer = 0.35f;
+
+    [Tooltip("Near the center of the hidezone, choose the nearer side only if needed.")]
+    [SerializeField, Min(0f)] private float centerDeadzone = 0.05f;
 
     [Header("Interaction Safety")]
-    [Tooltip("Minimum time between successful interactions to avoid rapid toggle spam.")]
+    [Tooltip("Minimum time between successful interactions to avoid spam toggling.")]
     [SerializeField, Min(0f)] private float interactionCooldown = 0.15f;
 
     [Header("Snitch Logic")]
-    [SerializeField] private string snitchTag = "Snitch";
-    [SerializeField, Min(0f)] private float directionEpsilon = 0.001f;
     [SerializeField] private bool requireSnitchRule = true;
+    [SerializeField] private string snitchTag = "Snitch";
+
+    [Tooltip("Minimum X movement needed before direction updates.")]
+    [SerializeField, Min(0f)] private float directionThreshold = 0.005f;
+
+    [Tooltip("Keep the last valid snitch direction alive for a short time if movement becomes tiny.")]
+    [SerializeField, Min(0f)] private float directionMemoryTime = 0.2f;
+
+    [Tooltip("Ignore absurd X jumps like loop teleports.")]
+    [SerializeField, Min(0f)] private float teleportThreshold = 10f;
+
+    [Header("Fallback Behaviour")]
+    [Tooltip("If snitch is missing, allow hiding instead of blocking everything.")]
+    [SerializeField] private bool allowHideWhenSnitchMissing = true;
+
+    [Tooltip("If snitch direction is unclear, allow hiding instead of blocking everything.")]
+    [SerializeField] private bool allowHideWhenDirectionUnknown = true;
 
     [Header("Visuals")]
     [SerializeField] private Sprite crouchedSprite;
 
 #if UNITY_EDITOR
     [Header("Debug")]
-    [SerializeField] private bool showInteractionGizmos = true;
     [SerializeField] private bool logDebug = false;
+    [SerializeField] private bool showInteractionGizmos = true;
 #endif
 
     private BoxCollider2D box;
     private Transform snitchTransform;
 
     private float previousSnitchX;
-    private float currentSnitchX;
-    private bool hasSnitchSamples;
+    private bool hasSnitchSample;
+
+    private HorizontalDirection lastStableDirection = HorizontalDirection.None;
+    private float lastStableDirectionTime = float.NegativeInfinity;
 
     private float lastInteractionTime = float.NegativeInfinity;
 
@@ -82,11 +102,11 @@ public class Hidezone : Interactable
         if (!IsReady(player) || IsOnCooldown())
             return false;
 
-        if (!TryGetValidSide(player.transform.position, out InteractionSide playerSide))
-            return false;
-
         if (player.IsHiddenBy(this))
             return true;
+
+        if (!TryGetValidSide(player.transform.position, out InteractionSide playerSide))
+            return false;
 
         return CanEnterFromSide(playerSide);
     }
@@ -96,15 +116,15 @@ public class Hidezone : Interactable
         if (!IsReady(player) || IsOnCooldown())
             return;
 
-        if (!TryGetValidSide(player.transform.position, out InteractionSide playerSide))
-            return;
-
         if (player.IsHiddenBy(this))
         {
             player.ExitHidezone(this);
             lastInteractionTime = Time.time;
             return;
         }
+
+        if (!TryGetValidSide(player.transform.position, out InteractionSide playerSide))
+            return;
 
         if (!CanEnterFromSide(playerSide))
             return;
@@ -118,9 +138,7 @@ public class Hidezone : Interactable
         if (player == null)
             return false;
 
-        if (!box)
-            CacheCollider();
-
+        CacheCollider();
         CacheSnitch();
 
         return box != null;
@@ -138,60 +156,55 @@ public class Hidezone : Interactable
 
         if (snitchTransform == null)
         {
-            LogDebug("Snitch nicht gefunden -> fallback auf normales Verstecken.");
-            return true;
+            LogDebug("Snitch nicht gefunden.");
+            return allowHideWhenSnitchMissing;
         }
 
-        HorizontalDirection snitchDirection = GetSnitchMoveDirection();
+        HorizontalDirection snitchDirection = GetStableSnitchDirection();
+
         if (snitchDirection == HorizontalDirection.None)
         {
-            LogDebug("Snitch-Richtung unklar -> fallback auf normales Verstecken.");
-            return true;
+            LogDebug("Snitch-Richtung unklar.");
+            return allowHideWhenDirectionUnknown;
         }
 
-        InteractionSide allowedSide = GetAllowedEnterSide(snitchTransform.position.x, snitchDirection);
+        InteractionSide allowedSide = GetAllowedEnterSide(snitchDirection);
+
         if (allowedSide == InteractionSide.None)
         {
-            LogDebug("Snitch ist schon vorbei oder entfernt sich -> Enter blockiert.");
+            LogDebug("Keine erlaubte Seite bestimmbar.");
             return false;
         }
 
         bool allowed = playerSide == allowedSide;
-        LogDebug("PlayerSide: " + playerSide + " | AllowedSide: " + allowedSide + " | Allowed: " + allowed);
+        LogDebug("PlayerSide: " + playerSide + " | SnitchDirection: " + snitchDirection + " | AllowedSide: " + allowedSide + " | Allowed: " + allowed);
         return allowed;
     }
 
-    private InteractionSide GetAllowedEnterSide(float snitchX, HorizontalDirection snitchDirection)
+    private InteractionSide GetAllowedEnterSide(HorizontalDirection snitchDirection)
     {
-        if (!box)
-            return InteractionSide.None;
+        switch (snitchDirection)
+        {
+            case HorizontalDirection.Left:
+                // Snitch läuft nach links, schaut also nicht nach rechts.
+                return InteractionSide.Right;
 
-        float hidezoneCenterX = box.bounds.center.x;
+            case HorizontalDirection.Right:
+                // Snitch läuft nach rechts, schaut also nicht nach links.
+                return InteractionSide.Left;
 
-        bool snitchIsRightOfHidezone = snitchX > hidezoneCenterX;
-        bool snitchIsLeftOfHidezone = snitchX < hidezoneCenterX;
-
-        if (snitchIsRightOfHidezone && snitchDirection == HorizontalDirection.Left)
-            return InteractionSide.Left;
-
-        if (snitchIsLeftOfHidezone && snitchDirection == HorizontalDirection.Right)
-            return InteractionSide.Right;
-
-        return InteractionSide.None;
+            default:
+                return InteractionSide.None;
+        }
     }
 
-    private HorizontalDirection GetSnitchMoveDirection()
+    private HorizontalDirection GetStableSnitchDirection()
     {
-        if (snitchTransform == null || !hasSnitchSamples)
+        if (lastStableDirection == HorizontalDirection.None)
             return HorizontalDirection.None;
 
-        float deltaX = currentSnitchX - previousSnitchX;
-
-        if (deltaX > directionEpsilon)
-            return HorizontalDirection.Right;
-
-        if (deltaX < -directionEpsilon)
-            return HorizontalDirection.Left;
+        if (Time.time <= lastStableDirectionTime + directionMemoryTime)
+            return lastStableDirection;
 
         return HorizontalDirection.None;
     }
@@ -209,33 +222,58 @@ public class Hidezone : Interactable
     private void InitializeSnitchTracking()
     {
         if (snitchTransform == null)
+        {
+            hasSnitchSample = false;
+            lastStableDirection = HorizontalDirection.None;
             return;
+        }
 
-        float startX = snitchTransform.position.x;
-        previousSnitchX = startX;
-        currentSnitchX = startX;
-        hasSnitchSamples = true;
+        previousSnitchX = snitchTransform.position.x;
+        hasSnitchSample = true;
+        lastStableDirection = HorizontalDirection.None;
+        lastStableDirectionTime = float.NegativeInfinity;
     }
 
     private void UpdateSnitchTracking()
     {
+        Transform oldSnitch = snitchTransform;
         CacheSnitch();
 
         if (snitchTransform == null)
-            return;
-
-        float newX = snitchTransform.position.x;
-
-        if (!hasSnitchSamples)
         {
-            previousSnitchX = newX;
-            currentSnitchX = newX;
-            hasSnitchSamples = true;
+            hasSnitchSample = false;
+            lastStableDirection = HorizontalDirection.None;
             return;
         }
 
-        previousSnitchX = currentSnitchX;
-        currentSnitchX = newX;
+        if (oldSnitch != snitchTransform || !hasSnitchSample)
+        {
+            InitializeSnitchTracking();
+            return;
+        }
+
+        float currentX = snitchTransform.position.x;
+        float deltaX = currentX - previousSnitchX;
+
+        if (Mathf.Abs(deltaX) >= teleportThreshold)
+        {
+            LogDebug("Snitch-Teleport/Loop erkannt, Delta ignoriert: " + deltaX);
+            previousSnitchX = currentX;
+            return;
+        }
+
+        if (deltaX > directionThreshold)
+        {
+            lastStableDirection = HorizontalDirection.Right;
+            lastStableDirectionTime = Time.time;
+        }
+        else if (deltaX < -directionThreshold)
+        {
+            lastStableDirection = HorizontalDirection.Left;
+            lastStableDirectionTime = Time.time;
+        }
+
+        previousSnitchX = currentX;
     }
 
     private bool TryGetValidSide(Vector2 playerPosition, out InteractionSide side)
@@ -250,25 +288,46 @@ public class Hidezone : Interactable
 
         float maxVerticalDistance = sideHeight * 0.5f + verticalBuffer;
         if (Mathf.Abs(playerPosition.y - center.y) > maxVerticalDistance)
+        {
+            LogDebug("Player zu hoch oder zu tief.");
             return false;
+        }
 
         float maxHorizontalDistance = sideRange + horizontalBuffer;
+
         float leftDistance = Mathf.Abs(playerPosition.x - bounds.min.x);
         float rightDistance = Mathf.Abs(playerPosition.x - bounds.max.x);
+        float centerDelta = playerPosition.x - center.x;
 
-        bool canUseLeft = playerPosition.x <= center.x && leftDistance <= maxHorizontalDistance;
-        bool canUseRight = playerPosition.x >= center.x && rightDistance <= maxHorizontalDistance;
+        bool nearLeft = leftDistance <= maxHorizontalDistance;
+        bool nearRight = rightDistance <= maxHorizontalDistance;
 
-        if (!canUseLeft && !canUseRight)
-            return false;
-
-        if (canUseLeft && canUseRight)
+        if (!nearLeft && !nearRight)
         {
-            side = leftDistance <= rightDistance ? InteractionSide.Left : InteractionSide.Right;
+            LogDebug("Player nicht nah genug an einer Seite.");
+            return false;
+        }
+
+        if (centerDelta < -centerDeadzone && nearLeft)
+        {
+            side = InteractionSide.Left;
             return true;
         }
 
-        side = canUseLeft ? InteractionSide.Left : InteractionSide.Right;
+        if (centerDelta > centerDeadzone && nearRight)
+        {
+            side = InteractionSide.Right;
+            return true;
+        }
+
+        if (nearLeft && nearRight)
+        {
+            side = leftDistance <= rightDistance ? InteractionSide.Left : InteractionSide.Right;
+            LogDebug("Player nahe Mitte -> nähere Seite genommen: " + side);
+            return true;
+        }
+
+        side = nearLeft ? InteractionSide.Left : InteractionSide.Right;
         return true;
     }
 
@@ -300,6 +359,7 @@ public class Hidezone : Interactable
             return;
 
         Bounds bounds = box.bounds;
+
         float maxHorizontalDistance = sideRange + horizontalBuffer;
         float maxVerticalDistance = sideHeight * 0.5f + verticalBuffer;
 

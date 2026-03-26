@@ -128,7 +128,8 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Rauchen_1_0: 330248795502578169
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

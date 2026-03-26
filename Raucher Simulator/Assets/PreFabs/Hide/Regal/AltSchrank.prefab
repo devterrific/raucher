@@ -146,10 +146,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   interactRange: 1.5
   prompt: Press E
-  sideRange: 0.2
+  sideRange: 0.9
   sideHeight: 4.3
-  horizontalBuffer: 0.2
-  verticalBuffer: 0.15
+  playerSideDeadzone: 0.1
   interactionCooldown: 0.15
+  snitchTag: Snitch
+  requireSnitchRule: 1
+  directionThreshold: 0.01
+  snitchCenterDeadzone: 0.25
   crouchedSprite: {fileID: -2126135258883424569, guid: 7af0da5d70720884896dde787d70f062, type: 3}
+  logDebug: 0
   showInteractionGizmos: 1

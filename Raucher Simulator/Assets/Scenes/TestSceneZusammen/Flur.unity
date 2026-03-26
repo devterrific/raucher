@@ -398,7 +398,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2713196856940699948, guid: 3dac4fd09ad24ac4097bbdfd7b04345b, type: 3}
       propertyPath: sideRange
-      value: 0.2
+      value: 0.9
       objectReference: {fileID: 0}
     - target: {fileID: 2713196856940699948, guid: 3dac4fd09ad24ac4097bbdfd7b04345b, type: 3}
       propertyPath: sideHeight
@@ -691,7 +691,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2713196856940699948, guid: 3dac4fd09ad24ac4097bbdfd7b04345b, type: 3}
       propertyPath: sideRange
-      value: 0.2
+      value: 0.9
       objectReference: {fileID: 0}
     - target: {fileID: 2713196856940699948, guid: 3dac4fd09ad24ac4097bbdfd7b04345b, type: 3}
       propertyPath: sideHeight
