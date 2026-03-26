@@ -43,6 +43,7 @@ GameObject:
   - component: {fileID: 3881502263976646021}
   - component: {fileID: 1382611103780789458}
   - component: {fileID: 7797498602544179284}
+  - component: {fileID: 8717066782798259996}
   m_Layer: 7
   m_Name: Wasserspender
   m_TagString: Untagged
@@ -147,8 +148,9 @@ MonoBehaviour:
   rightHidePoint: {fileID: 2404447949254820576}
   moveToHideSpeed: 4
   arriveDistance: 0.03
+  hiddenSortingOrder: 1
+  normalSortingOrder: 10
   crouchedSprite: {fileID: -2126135258883424569, guid: 7af0da5d70720884896dde787d70f062, type: 3}
-  logDebug: 1
   showInteractionGizmos: 1
 --- !u!61 &7797498602544179284
 BoxCollider2D:
@@ -196,6 +198,28 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 2, y: 3.98}
   m_EdgeRadius: 0
+--- !u!95 &8717066782798259996
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2561898041849782962}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: c3537a162e43f3246b563d9bb801f430, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &6995567686439964706
 GameObject:
   m_ObjectHideFlags: 0
