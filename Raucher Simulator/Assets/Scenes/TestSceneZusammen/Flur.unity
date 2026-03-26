@@ -3067,7 +3067,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7396505155103242812, guid: 798f11321c105184cab5dcfb13e4713f, type: 3}
       propertyPath: triggerDistance
-      value: 6.5
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 7690230696801521613, guid: 798f11321c105184cab5dcfb13e4713f, type: 3}
       propertyPath: m_Name
