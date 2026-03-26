@@ -53,6 +53,12 @@ public class BackyardImageIntro : MonoBehaviour
         currentRoutine = StartCoroutine(PlayRoutine());
     }
 
+    // NEU:
+    public float GetTimeUntilFadeOutStarts()
+    {
+        return Mathf.Max(0f, showDelay) + Mathf.Max(0f, fadeInDuration) + Mathf.Max(0f, visibleDuration);
+    }
+
     public void HideImmediately()
     {
         EnsureReferences();

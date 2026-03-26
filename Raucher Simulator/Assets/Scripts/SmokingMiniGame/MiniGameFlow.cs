@@ -257,6 +257,17 @@ public class MiniGameFlow : MonoBehaviour
     private IEnumerator Start()
     {
         yield return StartCoroutine(RunCountdown());
+
+        if (backyardImageIntro != null)
+        {
+            float waitUntilBackyardFadeOutStarts = backyardImageIntro.GetTimeUntilFadeOutStarts();
+
+            if (waitUntilBackyardFadeOutStarts > 0f)
+            {
+                yield return new WaitForSecondsRealtime(waitUntilBackyardFadeOutStarts);
+            }
+        }
+
         yield return StartCoroutine(PlayPackIntros());
         EnterState(State.WaitPaperClick);
     }
@@ -564,6 +575,14 @@ public class MiniGameFlow : MonoBehaviour
 
             isTobaccoClickLocked = true;
 
+            var btnImg = tobaccoPackBtn.GetComponent<Image>();
+            if (btnImg != null)
+            {
+                Color color = btnImg.color;
+                color.a = 0.35f;
+                btnImg.color = color;
+            }
+
             float wait = 0f;
             if (uiSfxSource != null && tobaccoOpenClip != null)
             {
@@ -609,7 +628,13 @@ public class MiniGameFlow : MonoBehaviour
         }
 
         var btnImg = tobaccoPackBtn.GetComponent<Image>();
-        if (btnImg != null) btnImg.enabled = false;
+        if (btnImg != null)
+        {
+            Color color = btnImg.color;
+            color.a = 1f;
+            btnImg.color = color;
+            btnImg.enabled = false;
+        }
 
         if (spawnedTobaccoPackOpen == null && tobaccoPackOpenPrefab != null)
         {

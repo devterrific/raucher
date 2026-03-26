@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 47b336c7db991824ab0b2ba3a89f486b
+guid: ffd085731b6e5874284ddd94c9deb698
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 7262568586799382057
-    second: Raucher_walk_04_0
+      213: 6937817954938267909
+    second: 2_0
   externalObjects: {}
   serializedVersion: 12
   mipmaps:
@@ -48,7 +48,7 @@ TextureImporter:
   compressionQuality: 50
   spriteMode: 2
   spriteExtrude: 1
-  spriteMeshType: 0
+  spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spritePixelsToUnits: 100
@@ -98,22 +98,22 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Raucher_walk_04_0
+      name: 2_0
       rect:
         serializedVersion: 2
-        x: 24
+        x: 79
         y: 0
-        width: 132
-        height: 375
+        width: 582
+        height: 1341
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 92e7615a6a3d9c460800000000000000
-      internalID: 7262568586799382057
+      spriteID: 5092c600ca4184060800000000000000
+      internalID: 6937817954938267909
       vertices: []
       indices: 
       edges: []
@@ -121,15 +121,14 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: ca1919b22205d5649910f2b93a2a4c91
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable:
-      Raucher_walk_04_0: 7262568586799382057
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

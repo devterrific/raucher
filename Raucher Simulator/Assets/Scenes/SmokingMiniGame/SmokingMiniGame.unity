@@ -572,50 +572,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 316055811}
   m_CullTransparentMesh: 1
---- !u!1 &451353353
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 451353355}
-  - component: {fileID: 451353354}
-  m_Layer: 0
-  m_Name: Start_Smoking
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &451353354
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 451353353}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a33e4edd69bd2d44a86299c49e86936f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!4 &451353355
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 451353353}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -8.23, y: -1.79, z: -0.0730197}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &486332869
 GameObject:
   m_ObjectHideFlags: 0
@@ -978,7 +934,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   backyardImage: {fileID: 1952919052}
   canvasGroup: {fileID: 1952919055}
-  backyardRectTransform: {fileID: 0}
+  backyardRectTransform: {fileID: 1952919051}
   showDelay: 0
   fadeInDuration: 1
   visibleDuration: 1.8
@@ -2541,24 +2497,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   countdownRunnerImage: {fileID: 1690292420}
   walkSprites:
-  - {fileID: -5522308805756848731, guid: 9e56a42570890024093da12e1da83cce, type: 3}
-  - {fileID: 7030733902965772714, guid: 3ccc2eb8bda549d42985326be7e1face, type: 3}
-  - {fileID: 2667779599350749522, guid: 6796bcafe41fca14a9e4adb83843557a, type: 3}
-  - {fileID: 7262568586799382057, guid: 47b336c7db991824ab0b2ba3a89f486b, type: 3}
-  - {fileID: 460614124131972175, guid: 6d4a87cf00b55f3438ac469fbd4b9f71, type: 3}
-  - {fileID: 1429106849374440948, guid: eb83656e75c92944db7f5696560996e3, type: 3}
-  - {fileID: 475030736493679545, guid: 9bf9f059e843a494eb07edf1a8aae50f, type: 3}
-  - {fileID: 3999639485793191895, guid: 03a4321e406988444b508fe7c7b0f2e8, type: 3}
+  - {fileID: -855298285791758126, guid: c57afbecb40cbf144aa89a103eb94606, type: 3}
+  - {fileID: 6937817954938267909, guid: ffd085731b6e5874284ddd94c9deb698, type: 3}
+  - {fileID: -6470460504253458178, guid: d423d05ffe8e4d24e80b047c094ca13a, type: 3}
+  - {fileID: -4178046375966092550, guid: ed347bc385aa1d14db7895e608f34828, type: 3}
+  - {fileID: 4130640169021434097, guid: f7eff3f40aadbba488c49124a76803da, type: 3}
+  - {fileID: 3465286685962602723, guid: 9929cc621e05b204fac93a305bd1559d, type: 3}
+  - {fileID: 7028616704906629411, guid: 0b8cfa7d904a25a4f8d768a91860da3b, type: 3}
+  - {fileID: 8288426215254106694, guid: 24d0c4c13b17ecd4e93478f4d222da88, type: 3}
   walkFps: 10
   runStartPosition: {x: -1095, y: -250}
   runEndPosition: {x: 1095, y: -250}
   cornerCharacterImage: {fileID: 1954819146}
-  idleCornerSprite: {fileID: -5788773295668622458, guid: fec23127ae04f3b47bdbe3cdbf6defee, type: 3}
+  idleCornerSprite: {fileID: -7554498494277832466, guid: 029c11637b2c46e47be26295b5b52725, type: 3}
   smokingSprites:
-  - {fileID: -7868740617853943312, guid: 344db1f1df9e82a4483b31c0f8283b4a, type: 3}
-  - {fileID: 1543426029773507130, guid: 4a1e87018e85ce746893c609eb41fe15, type: 3}
-  - {fileID: -8300857808502934132, guid: aa5b6dde2bfa5f047aacd32ad27e32b9, type: 3}
-  - {fileID: 5508394645271247449, guid: 2d09c40f12d95794baf9970ae721e673, type: 3}
+  - {fileID: 330248795502578169, guid: d2a2ca8bf971f634eb50df0f33fd799a, type: 3}
+  - {fileID: 3879438078960659183, guid: ed8648cba6339f04087ba5ee5039d7f0, type: 3}
+  - {fileID: 8194136764471868061, guid: 440112429cb8c464fb6b0440b227d1de, type: 3}
+  - {fileID: 3295056397661296475, guid: 014151285119a7e48957ff3475aa078d, type: 3}
   smokingFrameTime: 0.25
   loopSmoking: 1
 --- !u!1 &1378524159
@@ -3380,7 +3336,7 @@ RectTransform:
   m_GameObject: {fileID: 1690292418}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.25, y: 0.25, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2052935861}
@@ -3388,7 +3344,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
   m_AnchoredPosition: {x: -1090, y: -287.6}
-  m_SizeDelta: {x: 100, y: 220}
+  m_SizeDelta: {x: 1, y: 1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1690292420
 MonoBehaviour:
@@ -3410,7 +3366,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -5522308805756848731, guid: 9e56a42570890024093da12e1da83cce, type: 3}
+  m_Sprite: {fileID: -855298285791758126, guid: c57afbecb40cbf144aa89a103eb94606, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -4119,7 +4075,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -5788773295668622458, guid: fec23127ae04f3b47bdbe3cdbf6defee, type: 3}
+  m_Sprite: {fileID: -7554498494277832466, guid: 029c11637b2c46e47be26295b5b52725, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -4206,7 +4162,7 @@ MonoBehaviour:
   filterPickClip: {fileID: 8300000, guid: b8161e6674b34a944adcecc48a5c6e8c, type: 3}
   tobaccoOpenClip: {fileID: 8300000, guid: 5b73c6aeb5973834dae3ed42d89956de, type: 3}
   uiSfxVolume: 0.9
-  countUpDuration: 0.8
+  countUpDuration: 1.5
   targetZone: {fileID: 278137358}
   zoneOkay: {fileID: 1849355041}
   zoneGood: {fileID: 316055812}
@@ -4661,5 +4617,4 @@ SceneRoots:
   - {fileID: 1292203860}
   - {fileID: 2003218054}
   - {fileID: 1860267683}
-  - {fileID: 451353355}
   - {fileID: 542485633}

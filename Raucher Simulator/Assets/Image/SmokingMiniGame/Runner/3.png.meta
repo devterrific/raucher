@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 4a1e87018e85ce746893c609eb41fe15
+guid: d423d05ffe8e4d24e80b047c094ca13a
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 1543426029773507130
-    second: Raucher_smoke_02_0
+      213: -6470460504253458178
+    second: 3_0
   externalObjects: {}
   serializedVersion: 12
   mipmaps:
@@ -48,7 +48,7 @@ TextureImporter:
   compressionQuality: 50
   spriteMode: 2
   spriteExtrude: 1
-  spriteMeshType: 0
+  spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spritePixelsToUnits: 100
@@ -98,22 +98,22 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Raucher_smoke_02_0
+      name: 3_0
       rect:
         serializedVersion: 2
-        x: 0
+        x: 99
         y: 0
-        width: 140
-        height: 375
+        width: 462
+        height: 1401
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: a3acdb1fbc95b6510800000000000000
-      internalID: 1543426029773507130
+      spriteID: ef817ce047e4436a0800000000000000
+      internalID: -6470460504253458178
       vertices: []
       indices: 
       edges: []
@@ -121,15 +121,14 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 656c1b0f17e4c0042ad5cfcc71aaf774
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable:
-      Raucher_smoke_02_0: 1543426029773507130
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
