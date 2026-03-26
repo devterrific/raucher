@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -15,197 +16,184 @@ public class StringManger : MonoBehaviour
     }
 
     [Header("Words")]
-    [SerializeField] private List<string> _worldList = new List<string>();
+    [SerializeField] private List<string> _worldList = new();
 
     [Header("UI")]
     [SerializeField] private TextMeshProUGUI _textHolder;
     [SerializeField] private TMP_InputField _inputField;
 
     [Header("Stages")]
-    [SerializeField] private List<StageData> _stages = new List<StageData>();
+    [SerializeField] private List<StageData> _stages = new();
 
     [Header("Scene Names")]
     [SerializeField] private string _successSceneName;
     [SerializeField] private string _failSceneName;
 
-    private int counterIndex;
-    private int worldCounter = 0;
-    private SpawnManager _spawnManager;
+    [Header("Player Freeze")]
+    [SerializeField] private string _playerTag = "Player";
+    [SerializeField] private List<Behaviour> _componentsToDisable = new();
 
-    private int currentStageIndex = -1;
-    private float remainingTime = 0f;
-    private bool stageRunning = false;
-    private bool gameEnded = false;
+    private SpawnManager _spawnManager;
+    private GameObject _player;
+    private Rigidbody2D _rb;
+    private SpriteRenderer _sprite;
+    private Animator _animator;
+
+    private RigidbodyConstraints2D _oldConstraints;
+    private bool _animatorWasEnabled;
+    private bool _playerFrozen;
+
+    private int _currentWordIndex;
+    private int _wordCounter;
+    private int _currentStageIndex = -1;
+    private float _remainingTime;
+    private bool _stageRunning;
+    private bool _gameEnded;
 
     private void Reset()
     {
-        if (_stages == null || _stages.Count == 0)
+        if (_stages.Count > 0) return;
+
+        _stages = new List<StageData>
         {
-            _stages = new List<StageData>
-            {
-                new StageData { wordsToType = 5,  timeLimit = 8f,  rewardPoints = 10 },
-                new StageData { wordsToType = 10, timeLimit = 14f, rewardPoints = 20 },
-                new StageData { wordsToType = 16, timeLimit = 20f, rewardPoints = 30 },
-                new StageData { wordsToType = 24, timeLimit = 30f, rewardPoints = 40 }
-            };
-        }
+            new() { wordsToType = 5,  timeLimit = 8f,  rewardPoints = 10 },
+            new() { wordsToType = 10, timeLimit = 14f, rewardPoints = 20 },
+            new() { wordsToType = 16, timeLimit = 20f, rewardPoints = 30 },
+            new() { wordsToType = 24, timeLimit = 30f, rewardPoints = 40 }
+        };
     }
 
     private void Awake()
     {
         GameObject spawnManagerObject = GameObject.FindGameObjectWithTag("SpawnManager");
-
         if (spawnManagerObject != null)
-        {
             _spawnManager = spawnManagerObject.GetComponent<SpawnManager>();
-        }
     }
 
-    private void Start()
+    private IEnumerator Start()
     {
-        if (_worldList == null || _worldList.Count == 0)
-        {
-            Debug.LogWarning("StringManger: _worldList is empty.");
-            return;
-        }
+        if (_worldList.Count == 0 || _stages.Count == 0 || _textHolder == null || _inputField == null)
+            yield break;
 
-        if (_stages == null || _stages.Count == 0)
-        {
-            Debug.LogWarning("StringManger: _stages is empty.");
-            return;
-        }
-
-        if (_textHolder == null)
-        {
-            Debug.LogWarning("StringManger: _textHolder is missing.");
-            return;
-        }
-
-        if (_inputField == null)
-        {
-            Debug.LogWarning("StringManger: _inputField is missing.");
-            return;
-        }
-
-        int randomStage = UnityEngine.Random.Range(0, _stages.Count);
-        StartStage(randomStage);
+        yield return FindPlayer();
+        FreezePlayer();
+        StartStage(UnityEngine.Random.Range(0, _stages.Count));
     }
 
     private void Update()
     {
-        if (!stageRunning || gameEnded)
-        {
+        if (!_stageRunning || _gameEnded)
             return;
-        }
 
-        remainingTime -= Time.deltaTime;
-
-        if (remainingTime <= 0f)
+        _remainingTime -= Time.deltaTime;
+        if (_remainingTime <= 0f)
         {
-            remainingTime = 0f;
+            _remainingTime = 0f;
             FailMinigame();
             return;
         }
 
         if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
-        {
             CheckEvent();
+    }
+
+    private void LateUpdate()
+    {
+        if (_playerFrozen)
+            ForcePlayerLookLeft();
+    }
+
+    private void OnDisable()
+    {
+        UnfreezePlayer();
+    }
+
+    private IEnumerator FindPlayer()
+    {
+        float timer = 0f;
+
+        while (_player == null && timer < 3f)
+        {
+            _player = GameObject.FindGameObjectWithTag(_playerTag);
+            timer += Time.deltaTime;
+            yield return null;
         }
+
+        if (_player == null)
+            yield break;
+
+        _rb = _player.GetComponent<Rigidbody2D>() ?? _player.GetComponentInChildren<Rigidbody2D>();
+        _sprite = _player.GetComponent<SpriteRenderer>() ?? _player.GetComponentInChildren<SpriteRenderer>();
+        _animator = _player.GetComponent<Animator>() ?? _player.GetComponentInChildren<Animator>();
+
+        if (_rb != null)
+            _oldConstraints = _rb.constraints;
     }
 
     private void StartStage(int stageIndex)
     {
-        if (stageIndex < 0 || stageIndex >= _stages.Count)
-        {
-            Debug.LogWarning("StringManger: invalid stage index.");
-            return;
-        }
-
-        currentStageIndex = stageIndex;
-        worldCounter = 0;
-        remainingTime = _stages[currentStageIndex].timeLimit;
-        stageRunning = true;
-        gameEnded = false;
+        _currentStageIndex = stageIndex;
+        _wordCounter = 0;
+        _remainingTime = _stages[stageIndex].timeLimit;
+        _stageRunning = true;
+        _gameEnded = false;
 
         _inputField.text = "";
         _inputField.ActivateInputField();
         _inputField.Select();
 
-        GetNextIndex();
+        GetNextWord();
     }
 
     public void CheckEvent()
     {
-        if (!stageRunning || gameEnded)
+        if (!_stageRunning || _gameEnded || _worldList.Count == 0)
+            return;
+
+        if (_inputField.text.Trim() != _worldList[_currentWordIndex])
         {
+            _inputField.ActivateInputField();
+            _inputField.Select();
             return;
         }
 
-        if (_inputField == null || _worldList == null || _worldList.Count == 0)
+        _inputField.text = "";
+        _wordCounter++;
+
+        if (_wordCounter >= _stages[_currentStageIndex].wordsToType)
         {
+            CompleteStage();
             return;
         }
 
-        string inputText = _inputField.text.Trim();
-        string targetWord = _worldList[counterIndex];
-
-        if (inputText == targetWord)
-        {
-            _inputField.text = "";
-            worldCounter++;
-
-            if (worldCounter >= _stages[currentStageIndex].wordsToType)
-            {
-                CompleteStage();
-                return;
-            }
-
-            GetNextIndex();
-        }
-
+        GetNextWord();
         _inputField.ActivateInputField();
         _inputField.Select();
     }
 
     private void CompleteStage()
     {
-        if (gameEnded)
-        {
-            return;
-        }
+        if (_gameEnded) return;
 
-        gameEnded = true;
-        stageRunning = false;
-
-        int earnedPoints = _stages[currentStageIndex].rewardPoints;
+        _gameEnded = true;
+        _stageRunning = false;
 
         if (GameSessionManager.Instance != null && GameSessionManager.Instance.IsSessionActive)
-        {
-            GameSessionManager.Instance.AddScore(earnedPoints);
-        }
-        else
-        {
-            Debug.LogWarning("StringManger: No active GameSessionManager session found. Points were not added.");
-        }
+            GameSessionManager.Instance.AddScore(_stages[_currentStageIndex].rewardPoints);
 
-        if (string.IsNullOrWhiteSpace(_successSceneName))
-        {
-            Debug.LogWarning("StringManger: Success scene name is empty.");
-            return;
-        }
+        UnfreezePlayer();
 
-        SceneManager.LoadScene(_successSceneName);
+        if (!string.IsNullOrWhiteSpace(_successSceneName))
+            SceneManager.LoadScene(_successSceneName);
     }
 
     private void FailMinigame()
     {
-        if (gameEnded)
-        {
-            return;
-        }
+        if (_gameEnded) return;
 
-        gameEnded = true;
-        stageRunning = false;
+        _gameEnded = true;
+        _stageRunning = false;
+        UnfreezePlayer();
 
         if (_spawnManager != null)
         {
@@ -213,73 +201,74 @@ public class StringManger : MonoBehaviour
             return;
         }
 
-        if (string.IsNullOrWhiteSpace(_failSceneName))
+        if (!string.IsNullOrWhiteSpace(_failSceneName))
+            SceneManager.LoadScene(_failSceneName);
+    }
+
+    private void FreezePlayer()
+    {
+        if (_player == null) return;
+
+        if (_rb != null)
         {
-            Debug.LogWarning("StringManger: Fail scene name is empty.");
-            return;
+            _rb.velocity = Vector2.zero;
+            _rb.angularVelocity = 0f;
+            _rb.constraints = RigidbodyConstraints2D.FreezeAll;
         }
 
-        SceneManager.LoadScene(_failSceneName);
-    }
+        foreach (Behaviour component in _componentsToDisable)
+            if (component != null) component.enabled = false;
 
-    private void GetNextIndex()
-    {
-        if (_worldList == null || _worldList.Count == 0)
+        if (_animator != null)
         {
-            return;
+            _animatorWasEnabled = _animator.enabled;
+            _animator.enabled = false;
         }
 
-        counterIndex = IndexGetter();
-        _textHolder.text = _worldList[counterIndex];
+        ForcePlayerLookLeft();
+        _playerFrozen = true;
     }
 
-    public int IndexGetter()
+    private void UnfreezePlayer()
     {
-        return UnityEngine.Random.Range(0, _worldList.Count);
+        if (!_playerFrozen) return;
+
+        if (_rb != null)
+            _rb.constraints = _oldConstraints;
+
+        foreach (Behaviour component in _componentsToDisable)
+            if (component != null) component.enabled = true;
+
+        if (_animator != null)
+            _animator.enabled = _animatorWasEnabled;
+
+        _playerFrozen = false;
     }
 
-    public float GetRemainingTime()
+    private void ForcePlayerLookLeft()
     {
-        return remainingTime;
+        if (_player == null) return;
+
+        _player.transform.rotation = Quaternion.identity;
+
+        Vector3 scale = _player.transform.localScale;
+        scale.x = -Mathf.Abs(scale.x);
+        _player.transform.localScale = scale;
+
+        if (_sprite != null)
+            _sprite.flipX = true;
     }
 
-    public int GetCurrentStageIndex()
+    private void GetNextWord()
     {
-        return currentStageIndex;
+        _currentWordIndex = UnityEngine.Random.Range(0, _worldList.Count);
+        _textHolder.text = _worldList[_currentWordIndex];
     }
 
-    public int GetWorldCounter()
-    {
-        return worldCounter;
-    }
-
-    public int GetTargetWords()
-    {
-        if (currentStageIndex < 0 || currentStageIndex >= _stages.Count)
-        {
-            return 0;
-        }
-
-        return _stages[currentStageIndex].wordsToType;
-    }
-
-    public int GetCurrentStageRewardPoints()
-    {
-        if (currentStageIndex < 0 || currentStageIndex >= _stages.Count)
-        {
-            return 0;
-        }
-
-        return _stages[currentStageIndex].rewardPoints;
-    }
-
-    public int GetCurrentSessionScore()
-    {
-        if (GameSessionManager.Instance == null)
-        {
-            return 0;
-        }
-
-        return GameSessionManager.Instance.CurrentScore;
-    }
+    public float GetRemainingTime() => _remainingTime;
+    public int GetCurrentStageIndex() => _currentStageIndex;
+    public int GetWorldCounter() => _wordCounter;
+    public int GetTargetWords() => _currentStageIndex >= 0 ? _stages[_currentStageIndex].wordsToType : 0;
+    public int GetCurrentStageRewardPoints() => _currentStageIndex >= 0 ? _stages[_currentStageIndex].rewardPoints : 0;
+    public int GetCurrentSessionScore() => GameSessionManager.Instance != null ? GameSessionManager.Instance.CurrentScore : 0;
 }
