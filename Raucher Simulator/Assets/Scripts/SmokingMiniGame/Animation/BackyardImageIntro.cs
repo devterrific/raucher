@@ -21,6 +21,7 @@ public class BackyardImageIntro : MonoBehaviour
 
     private Coroutine currentRoutine;
     private Vector2 originalAnchoredPosition;
+    private bool isPaused;
 
     private void Awake()
     {
@@ -32,6 +33,26 @@ public class BackyardImageIntro : MonoBehaviour
         }
 
         HideImmediately();
+    }
+
+    private void OnEnable()
+    {
+        PauseMenuManager.OnPauseStateChanged += HandlePauseStateChanged;
+
+        if (PauseMenuManager.Instance != null)
+        {
+            isPaused = PauseMenuManager.Instance.IsPaused;
+        }
+    }
+
+    private void OnDisable()
+    {
+        PauseMenuManager.OnPauseStateChanged -= HandlePauseStateChanged;
+    }
+
+    private void HandlePauseStateChanged(bool paused)
+    {
+        isPaused = paused;
     }
 
     public void Play()
@@ -53,7 +74,6 @@ public class BackyardImageIntro : MonoBehaviour
         currentRoutine = StartCoroutine(PlayRoutine());
     }
 
-    // NEU:
     public float GetTimeUntilFadeOutStarts()
     {
         return Mathf.Max(0f, showDelay) + Mathf.Max(0f, fadeInDuration) + Mathf.Max(0f, visibleDuration);
@@ -96,14 +116,17 @@ public class BackyardImageIntro : MonoBehaviour
         canvasGroup.alpha = 0f;
         backyardRectTransform.anchoredPosition = startPosition;
 
-        if (showDelay > 0f)
-        {
-            yield return new WaitForSecondsRealtime(showDelay);
-        }
+        yield return WaitForSecondsRealtimePausable(showDelay);
 
         float time = 0f;
         while (time < fadeInDuration)
         {
+            if (isPaused)
+            {
+                yield return null;
+                continue;
+            }
+
             time += Time.unscaledDeltaTime;
             float t = fadeInDuration <= 0f ? 1f : Mathf.Clamp01(time / fadeInDuration);
             float easedT = Mathf.SmoothStep(0f, 1f, t);
@@ -117,14 +140,17 @@ public class BackyardImageIntro : MonoBehaviour
         canvasGroup.alpha = 1f;
         backyardRectTransform.anchoredPosition = centerPosition;
 
-        if (visibleDuration > 0f)
-        {
-            yield return new WaitForSecondsRealtime(visibleDuration);
-        }
+        yield return WaitForSecondsRealtimePausable(visibleDuration);
 
         time = 0f;
         while (time < fadeOutDuration)
         {
+            if (isPaused)
+            {
+                yield return null;
+                continue;
+            }
+
             time += Time.unscaledDeltaTime;
             float t = fadeOutDuration <= 0f ? 1f : Mathf.Clamp01(time / fadeOutDuration);
             float easedT = Mathf.SmoothStep(0f, 1f, t);
@@ -140,6 +166,24 @@ public class BackyardImageIntro : MonoBehaviour
         backyardImage.gameObject.SetActive(false);
 
         currentRoutine = null;
+    }
+
+    private IEnumerator WaitForSecondsRealtimePausable(float duration)
+    {
+        if (duration <= 0f)
+            yield break;
+
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            if (!isPaused)
+            {
+                elapsed += Time.unscaledDeltaTime;
+            }
+
+            yield return null;
+        }
     }
 
     private void EnsureReferences()

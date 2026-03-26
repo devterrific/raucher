@@ -36,6 +36,7 @@ public class SceneBannerManager : MonoBehaviour
     private readonly Dictionary<string, Sprite> bannerLookup = new Dictionary<string, Sprite>();
 
     private Vector2 originalAnchoredPosition;
+    private bool isPaused;
 
     private void Awake()
     {
@@ -60,11 +61,26 @@ public class SceneBannerManager : MonoBehaviour
     private void OnEnable()
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
+        PauseMenuManager.OnPauseStateChanged += HandlePauseStateChanged;
     }
 
     private void OnDisable()
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;
+        PauseMenuManager.OnPauseStateChanged -= HandlePauseStateChanged;
+    }
+
+    private void HandlePauseStateChanged(bool paused)
+    {
+        isPaused = paused;
+    }
+
+    private IEnumerator WaitWhilePaused()
+    {
+        while (isPaused)
+        {
+            yield return null;
+        }
     }
 
     private void BuildLookup()
@@ -130,6 +146,11 @@ public class SceneBannerManager : MonoBehaviour
         float time = 0f;
         while (time < fadeInDuration)
         {
+            if (isPaused)
+            {
+                yield return StartCoroutine(WaitWhilePaused());
+            }
+
             time += Time.unscaledDeltaTime;
             float t = Mathf.Clamp01(time / fadeInDuration);
             float easedT = Mathf.SmoothStep(0f, 1f, t);
@@ -143,11 +164,26 @@ public class SceneBannerManager : MonoBehaviour
         canvasGroup.alpha = 1f;
         bannerRectTransform.anchoredPosition = centerPosition;
 
-        yield return new WaitForSecondsRealtime(visibleDuration);
+        float visibleTime = 0f;
+        while (visibleTime < visibleDuration)
+        {
+            if (isPaused)
+            {
+                yield return StartCoroutine(WaitWhilePaused());
+            }
+
+            visibleTime += Time.unscaledDeltaTime;
+            yield return null;
+        }
 
         time = 0f;
         while (time < fadeOutDuration)
         {
+            if (isPaused)
+            {
+                yield return StartCoroutine(WaitWhilePaused());
+            }
+
             time += Time.unscaledDeltaTime;
             float t = Mathf.Clamp01(time / fadeOutDuration);
             float easedT = Mathf.SmoothStep(0f, 1f, t);
