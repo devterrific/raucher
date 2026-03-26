@@ -41,6 +41,10 @@ public class Hidezone : Interactable
     [SerializeField, Min(0.01f)] private float moveToHideSpeed = 4f;
     [SerializeField, Min(0.001f)] private float arriveDistance = 0.03f;
 
+    [Header("Sorting")]
+    [SerializeField] private int hiddenSortingOrder = 1;
+    [SerializeField] private int normalSortingOrder = 10;
+
     [Header("Visuals")]
     [SerializeField] private Sprite crouchedSprite;
 
@@ -53,7 +57,6 @@ public class Hidezone : Interactable
 
     private float lastInteractionTime = float.NegativeInfinity;
     private bool isBusy;
-
     private Vector3 lastExitWorldPosition;
 
     private void Awake()
@@ -87,10 +90,7 @@ public class Hidezone : Interactable
         if (!CanEnterFromSide(player, playerSide))
             return false;
 
-        if (GetHidePoint(playerSide) == null)
-            return false;
-
-        return true;
+        return GetHidePoint(playerSide) != null;
     }
 
     public override void Interact(PlayerMain player)
@@ -150,8 +150,7 @@ public class Hidezone : Interactable
         if (!TryGetSnitchSideRelativeToPlayer(player, out InteractionSide snitchSide))
             return false;
 
-        InteractionSide allowedSide =
-            snitchSide == InteractionSide.Left
+        InteractionSide allowedSide = snitchSide == InteractionSide.Left
             ? InteractionSide.Right
             : InteractionSide.Left;
 
@@ -184,12 +183,15 @@ public class Hidezone : Interactable
 
     private Transform GetHidePoint(InteractionSide side)
     {
-        return side switch
+        switch (side)
         {
-            InteractionSide.Left => leftHidePoint,
-            InteractionSide.Right => rightHidePoint,
-            _ => null
-        };
+            case InteractionSide.Left:
+                return leftHidePoint;
+            case InteractionSide.Right:
+                return rightHidePoint;
+            default:
+                return null;
+        }
     }
 
     private IEnumerator EnterRoutine(PlayerMain player, Transform targetHidePoint)
@@ -198,15 +200,12 @@ public class Hidezone : Interactable
         lastExitWorldPosition = player.transform.position;
 
         player.SetExternalVisualControl(true);
+        SetPlayerSorting(player, hiddenSortingOrder);
 
         Animator animator = player.GetAnimator();
         SetMoveAnimation(animator, true);
 
-        yield return MovePlayerToPoint(
-            player.transform,
-            targetHidePoint.position,
-            moveToHideSpeed
-        );
+        yield return MovePlayerToPoint(player.transform, targetHidePoint.position, moveToHideSpeed);
 
         SetMoveAnimation(animator, false);
 
@@ -222,16 +221,13 @@ public class Hidezone : Interactable
         isBusy = true;
 
         player.ExitHidezone(this);
+        SetPlayerSorting(player, normalSortingOrder);
         player.SetExternalVisualControl(true);
 
         Animator animator = player.GetAnimator();
         SetMoveAnimation(animator, true);
 
-        yield return MovePlayerToPoint(
-            player.transform,
-            lastExitWorldPosition,
-            moveToHideSpeed
-        );
+        yield return MovePlayerToPoint(player.transform, lastExitWorldPosition, moveToHideSpeed);
 
         SetMoveAnimation(animator, false);
         player.SetExternalVisualControl(false);
@@ -240,10 +236,7 @@ public class Hidezone : Interactable
         isBusy = false;
     }
 
-    private IEnumerator MovePlayerToPoint(
-        Transform playerTransform,
-        Vector3 targetPosition,
-        float speed)
+    private IEnumerator MovePlayerToPoint(Transform playerTransform, Vector3 targetPosition, float speed)
     {
         targetPosition.z = playerTransform.position.z;
 
@@ -268,6 +261,16 @@ public class Hidezone : Interactable
 
         animator.SetBool(IsMovingHash, isMoving);
         animator.SetBool(IsSprintingHash, isMoving);
+    }
+
+    private void SetPlayerSorting(PlayerMain player, int order)
+    {
+        if (player == null)
+            return;
+
+        SpriteRenderer sr = player.GetComponentInChildren<SpriteRenderer>();
+        if (sr != null)
+            sr.sortingOrder = order;
     }
 
     private void CacheSnitch()
@@ -323,7 +326,6 @@ public class Hidezone : Interactable
             side = leftDistance <= rightDistance
                 ? InteractionSide.Left
                 : InteractionSide.Right;
-
             return true;
         }
 
@@ -354,18 +356,32 @@ public class Hidezone : Interactable
         float maxHorizontalDistance = sideRange + horizontalBuffer;
         float maxVerticalDistance = sideHeight * 0.5f + verticalBuffer;
 
-        Vector3 zoneSize =
-            new Vector3(maxHorizontalDistance * 2f, maxVerticalDistance * 2f, 0f);
-
-        Vector3 leftCenter =
-            new Vector3(bounds.min.x, bounds.center.y, 0f);
-
-        Vector3 rightCenter =
-            new Vector3(bounds.max.x, bounds.center.y, 0f);
+        Vector3 zoneSize = new Vector3(maxHorizontalDistance * 2f, maxVerticalDistance * 2f, 0f);
+        Vector3 leftCenter = new Vector3(bounds.min.x, bounds.center.y, 0f);
+        Vector3 rightCenter = new Vector3(bounds.max.x, bounds.center.y, 0f);
 
         Gizmos.color = new Color(0.1f, 0.8f, 1f, 0.45f);
         Gizmos.DrawWireCube(leftCenter, zoneSize);
         Gizmos.DrawWireCube(rightCenter, zoneSize);
+
+        if (leftHidePoint != null)
+        {
+            Gizmos.color = Color.green;
+            Gizmos.DrawWireSphere(leftHidePoint.position, 0.08f);
+        }
+
+        if (rightHidePoint != null)
+        {
+            Gizmos.color = Color.magenta;
+            Gizmos.DrawWireSphere(rightHidePoint.position, 0.08f);
+        }
+
+        if (snitchTransform != null)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawLine(transform.position, snitchTransform.position);
+            Gizmos.DrawWireSphere(snitchTransform.position, 0.1f);
+        }
     }
 #endif
 }

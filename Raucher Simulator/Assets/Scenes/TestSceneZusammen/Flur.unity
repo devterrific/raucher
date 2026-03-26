@@ -3055,7 +3055,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3943602182226497185, guid: 662a98eae0c0afc45a9363db410ef660, type: 3}
       propertyPath: m_SortingOrder
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3959170179220241203, guid: 662a98eae0c0afc45a9363db410ef660, type: 3}
       propertyPath: panLevelCustomCurve.m_Curve.Array.data[0].value
