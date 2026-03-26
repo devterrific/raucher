@@ -31,6 +31,7 @@ public class StringManger : MonoBehaviour
     // private vars...
     private int counterIndex;
     private int worldCounter = 0;
+    private SpawnManager _spawnManager;
 
     private int currentStageIndex = -1;
     private float remainingTime = 0f;
@@ -50,6 +51,11 @@ public class StringManger : MonoBehaviour
                 new StageData { wordsToType = 24, timeLimit = 30f, rewardPoints = 40 }
             };
         }
+    }
+
+    private void Awake()
+    {
+        _spawnManager = GameObject.FindGameObjectWithTag("SpawnManager").GetComponent<SpawnManager>();
     }
 
     private void Start()
@@ -189,8 +195,8 @@ public class StringManger : MonoBehaviour
         }
 
         SceneManager.LoadScene(_failSceneName);
-        Debug.Log("Nour");
-        
+        _spawnManager.LoadSceneWithDelay(1, .5f);
+
     }
 
     private void GetNextIndex()

@@ -128,7 +128,8 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Dampf_04_0: 7444615055155400065
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
