@@ -882,7 +882,7 @@ GameObject:
   - component: {fileID: 985195912}
   - component: {fileID: 985195911}
   m_Layer: 0
-  m_Name: bossraum_0
+  m_Name: Background_BossRoom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

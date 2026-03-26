@@ -1,4 +1,4 @@
-using TMPro;
+﻿using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -25,6 +25,8 @@ public class PlayerHUDManager : MonoBehaviour
     [Header("Timer Audio")]
     [SerializeField] private AudioSource lastSecondsTickAudioSource;
     [SerializeField] private int tickStartSeconds = 10;
+
+    [SerializeField] private BackgroundHUDFader hudFader;
 
     //private bool isLastSecoundsTickPlaying = false;
 
@@ -128,12 +130,22 @@ public class PlayerHUDManager : MonoBehaviour
         if (!hudAllowed)
         {
             ResetHudDisplay();
+
+            if (hudFader != null)
+            {
+                hudFader.ResetToHidden();
+            }
         }
         else
         {
             RefreshPlayerName();
             RefreshTimerDisplay();
             RefreshStaminaDisplay();
+
+            if (hudFader != null)
+            {
+                hudFader.PlayIntro();
+            }
         }
     }
 
