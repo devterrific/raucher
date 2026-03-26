@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -28,7 +29,10 @@ public class StringManger : MonoBehaviour
     [SerializeField] private string _successSceneName;
     [SerializeField] private string _failSceneName;
 
-    // private vars...
+    [Header("Player Freeze")]
+    [SerializeField] private string _playerTag = "Player";
+    [SerializeField] private List<Behaviour> _componentsToDisable = new List<Behaviour>();
+
     private int counterIndex;
     private int worldCounter = 0;
     private SpawnManager _spawnManager;
@@ -38,6 +42,10 @@ public class StringManger : MonoBehaviour
     private int totalPoints = 0;
     private bool stageRunning = false;
     private bool gameEnded = false;
+
+    private GameObject _mainPlayer;
+    private Rigidbody2D _playerRb;
+    private RigidbodyConstraints2D _originalConstraints;
 
     private void Reset()
     {
@@ -55,34 +63,38 @@ public class StringManger : MonoBehaviour
 
     private void Awake()
     {
-        _spawnManager = GameObject.FindGameObjectWithTag("SpawnManager").GetComponent<SpawnManager>();
+        GameObject spawnManagerObject = GameObject.FindGameObjectWithTag("SpawnManager");
+        if (spawnManagerObject != null)
+            _spawnManager = spawnManagerObject.GetComponent<SpawnManager>();
     }
 
-    private void Start()
+    private IEnumerator Start()
     {
         if (_worldList == null || _worldList.Count == 0)
         {
             Debug.LogWarning("StringManger: _worldList is empty.");
-            return;
+            yield break;
         }
 
         if (_stages == null || _stages.Count == 0)
         {
             Debug.LogWarning("StringManger: _stages is empty.");
-            return;
+            yield break;
         }
 
         if (_textHolder == null)
         {
             Debug.LogWarning("StringManger: _textHolder is missing.");
-            return;
+            yield break;
         }
 
         if (_inputField == null)
         {
             Debug.LogWarning("StringManger: _inputField is missing.");
-            return;
+            yield break;
         }
+
+        yield return StartCoroutine(FindAndFreezePlayer());
 
         int randomStage = UnityEngine.Random.Range(0, _stages.Count);
         StartStage(randomStage);
@@ -105,6 +117,58 @@ public class StringManger : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
         {
             CheckEvent();
+        }
+    }
+
+    private void OnDisable()
+    {
+        UnfreezePlayer();
+    }
+
+    private IEnumerator FindAndFreezePlayer()
+    {
+        float timeout = 3f;
+        float timer = 0f;
+
+        while (_mainPlayer == null && timer < timeout)
+        {
+            _mainPlayer = GameObject.FindGameObjectWithTag(_playerTag);
+
+            if (_mainPlayer != null)
+                break;
+
+            timer += Time.deltaTime;
+            yield return null;
+        }
+
+        if (_mainPlayer == null)
+        {
+            Debug.LogWarning($"StringManger: No player found with tag '{_playerTag}'.");
+            yield break;
+        }
+
+        _playerRb = _mainPlayer.GetComponent<Rigidbody2D>();
+
+        if (_playerRb == null)
+            _playerRb = _mainPlayer.GetComponentInChildren<Rigidbody2D>();
+
+        if (_playerRb != null)
+        {
+            _originalConstraints = _playerRb.constraints;
+            _playerRb.velocity = Vector2.zero;
+            _playerRb.angularVelocity = 0f;
+            _playerRb.constraints = RigidbodyConstraints2D.FreezeAll;
+            Debug.Log("StringManger: Player Rigidbody2D frozen.");
+        }
+        else
+        {
+            Debug.LogWarning("StringManger: No Rigidbody2D found on Player or its children.");
+        }
+
+        for (int i = 0; i < _componentsToDisable.Count; i++)
+        {
+            if (_componentsToDisable[i] != null)
+                _componentsToDisable[i].enabled = false;
         }
     }
 
@@ -195,8 +259,18 @@ public class StringManger : MonoBehaviour
         }
 
         SceneManager.LoadScene(_failSceneName);
-        _spawnManager.LoadSceneWithDelay(1, .5f);
+    }
 
+    private void UnfreezePlayer()
+    {
+        if (_playerRb != null)
+            _playerRb.constraints = _originalConstraints;
+
+        for (int i = 0; i < _componentsToDisable.Count; i++)
+        {
+            if (_componentsToDisable[i] != null)
+                _componentsToDisable[i].enabled = true;
+        }
     }
 
     private void GetNextIndex()
@@ -213,20 +287,9 @@ public class StringManger : MonoBehaviour
         return UnityEngine.Random.Range(0, _worldList.Count);
     }
 
-    public float GetRemainingTime()
-    {
-        return remainingTime;
-    }
-
-    public int GetCurrentStageIndex()
-    {
-        return currentStageIndex;
-    }
-
-    public int GetWorldCounter()
-    {
-        return worldCounter;
-    }
+    public float GetRemainingTime() => remainingTime;
+    public int GetCurrentStageIndex() => currentStageIndex;
+    public int GetWorldCounter() => worldCounter;
 
     public int GetTargetWords()
     {
@@ -236,10 +299,7 @@ public class StringManger : MonoBehaviour
         return _stages[currentStageIndex].wordsToType;
     }
 
-    public int GetTotalPoints()
-    {
-        return totalPoints;
-    }
+    public int GetTotalPoints() => totalPoints;
 
     public int GetCurrentStageRewardPoints()
     {
