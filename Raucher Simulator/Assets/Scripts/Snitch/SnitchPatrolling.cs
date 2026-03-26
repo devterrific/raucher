@@ -12,9 +12,8 @@ public class SnitchPatrolling : MonoBehaviour
     [SerializeField, Min(0.001f)] private float arrivalThreshold = 0.05f;
 
     [Header("Patrol Variation")]
-    [SerializeField, Min(0f)] private float patrolSpeedMultiplierMin = 0.9f;
-    [SerializeField, Min(0f)] private float patrolSpeedMultiplierMax = 1.35f;
-    [SerializeField, Range(0f, 1f)] private float turnAroundChanceAtPoint = 0.7f;
+    [SerializeField, Min(0f)] private float patrolSpeedMultiplierMin = 0.8f;
+    [SerializeField, Min(0f)] private float patrolSpeedMultiplierMax = 1.6f;
 
     [Header("Runtime")]
     [SerializeField] private int currentPointIndex;
@@ -31,8 +30,6 @@ public class SnitchPatrolling : MonoBehaviour
     private float closeTurnCooldownTimer;
 
     private float currentMoveSpeed;
-    private float currentWaitDuration;
-    private bool hasTurnedAroundDuringWait;
 
     private void Awake()
     {
@@ -58,8 +55,6 @@ public class SnitchPatrolling : MonoBehaviour
         if (isWaiting)
         {
             SetWalking(false);
-
-            TryTurnAroundWhileWaiting();
 
             waitTimer -= Time.deltaTime;
             if (waitTimer <= 0f)
@@ -126,8 +121,6 @@ public class SnitchPatrolling : MonoBehaviour
         {
             isWaiting = true;
             waitTimer = waitTimeAtPoint;
-            currentWaitDuration = waitTimeAtPoint;
-            hasTurnedAroundDuringWait = false;
             SetWalking(false);
         }
     }
@@ -188,27 +181,5 @@ public class SnitchPatrolling : MonoBehaviour
         float maxMultiplier = Mathf.Max(minMultiplier, patrolSpeedMultiplierMax);
 
         currentMoveSpeed = moveSpeed * Random.Range(minMultiplier, maxMultiplier);
-    }
-
-    private void TryTurnAroundWhileWaiting()
-    {
-        if (hasTurnedAroundDuringWait)
-            return;
-
-        if (forcedFacingTimer > 0f)
-            return;
-
-        if (currentWaitDuration <= 0f)
-            return;
-
-        if (waitTimer > currentWaitDuration * 0.5f)
-            return;
-
-        if (Random.value > turnAroundChanceAtPoint)
-            return;
-
-        isFacingRight = !isFacingRight;
-        ApplyFacingRotation();
-        hasTurnedAroundDuringWait = true;
     }
 }
