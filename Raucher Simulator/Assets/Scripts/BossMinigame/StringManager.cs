@@ -33,6 +33,9 @@ public class StringManger : MonoBehaviour
     [SerializeField] private string _playerTag = "Player";
     [SerializeField] private List<Behaviour> _componentsToDisable = new();
 
+    [Header("Stage Intro")]
+    [SerializeField] private StagePanelController _stagePanelController;
+
     private SpawnManager _spawnManager;
     private GameObject _player;
     private Rigidbody2D _rb;
@@ -77,7 +80,15 @@ public class StringManger : MonoBehaviour
 
         yield return FindPlayer();
         FreezePlayer();
-        StartStage(UnityEngine.Random.Range(0, _stages.Count));
+
+        int randomStageIndex = UnityEngine.Random.Range(0, _stages.Count);
+
+        if (_stagePanelController != null)
+            yield return _stagePanelController.ShowStagePanel(randomStageIndex);
+        else
+            yield return new WaitForSeconds(2f);
+
+        StartStage(randomStageIndex);
     }
 
     private void Update()
