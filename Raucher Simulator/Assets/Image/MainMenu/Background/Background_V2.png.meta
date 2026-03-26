@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 249b14f662dad5640a85e49065afcbd3
+guid: b59dee2f80479c14a9c956cdb0117c9a
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -357421434760999972
-    second: Mouse_0
+      213: 808669645052723574
+    second: Background_V2_0
   externalObjects: {}
   serializedVersion: 12
   mipmaps:
@@ -74,7 +74,7 @@ TextureImporter:
     buildTarget: DefaultTexturePlatform
     maxTextureSize: 2048
     resizeAlgorithm: 0
-    textureFormat: 4
+    textureFormat: -1
     textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
@@ -98,13 +98,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Mouse_0
+      name: Background_V2_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 182
-        height: 184
+        width: 1920
+        height: 2956
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -112,8 +112,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: cdbc5f9491f2a0bf0800000000000000
-      internalID: -357421434760999972
+      spriteID: 6714206f1c8f83b00800000000000000
+      internalID: 808669645052723574
       vertices: []
       indices: 
       edges: []
@@ -128,8 +128,7 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable:
-      Mouse_0: -357421434760999972
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

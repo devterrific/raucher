@@ -26,35 +26,7 @@ public class PlayerHUDManager : MonoBehaviour
     [SerializeField] private AudioSource lastSecondsTickAudioSource;
     [SerializeField] private int tickStartSeconds = 10;
 
-    private bool isLastSecoundsTickPlaying = false;
-
-    [Header("Small Hint Bubble")]
-    [SerializeField] private Button smallHintButton;
-
-    [Header("Large Hint Panels")]
-    [SerializeField] private GameObject buroHintPanel;
-    [SerializeField] private GameObject flurHintPanel;
-
-    [Header("Buro Hint")]
-    [SerializeField] private TMP_Text buroHintTextUI;
-
-    [TextArea(3, 8)]
-    [SerializeField]
-    private string buroHintText =
-        "The boss's office is to the left, and the hallway is to the right—where are you going?\n\nInteract: press E";
-
-    [Header("Flur Hint")]
-    [SerializeField] private TMP_Text flurHintTextUI;
-    [SerializeField] private Image flurClosetImage;
-    [SerializeField] private Image flurWaterDispenserImage;
-
-    [TextArea(3, 8)]
-    [SerializeField]
-    private string flurHintText =
-        "Hide behind objects so you can sneak past the Switch.";
-
-    [Header("Hint Scenes")]
-    [SerializeField] private string[] allowedHintScenes = { "Buro", "Flur" };
+    //private bool isLastSecoundsTickPlaying = false;
 
     private PlayerStamina playerStamina;
 
@@ -80,21 +52,11 @@ public class PlayerHUDManager : MonoBehaviour
     private void OnEnable()
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
-
-        if (smallHintButton != null)
-        {
-            smallHintButton.onClick.AddListener(OnSmallHintClicked);
-        }
     }
 
     private void OnDisable()
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;
-
-        if (smallHintButton != null)
-        {
-            smallHintButton.onClick.RemoveListener(OnSmallHintClicked);
-        }
     }
 
     private void Start()
@@ -103,7 +65,6 @@ public class PlayerHUDManager : MonoBehaviour
         ResetHudDisplay();
         FindPlayerStaminaInScene();
         RefreshStaminaDisplay();
-        RefreshHintUI();
     }
 
     private void Update()
@@ -174,9 +135,6 @@ public class PlayerHUDManager : MonoBehaviour
             RefreshTimerDisplay();
             RefreshStaminaDisplay();
         }
-
-        CloseAllHintPanels();
-        RefreshHintUI();
     }
 
     public void StartRound()
@@ -188,7 +146,6 @@ public class PlayerHUDManager : MonoBehaviour
         RefreshPlayerName();
         RefreshTimerDisplay();
         RefreshStaminaDisplay();
-        RefreshHintUI();
     }
 
     public void StopRound()
@@ -206,7 +163,6 @@ public class PlayerHUDManager : MonoBehaviour
         RefreshTimerDisplay();
         RefreshStaminaDisplay();
         ApplyHudVisibility();
-        CloseAllHintPanels();
     }
 
     public void RefreshPlayerName()
@@ -229,7 +185,6 @@ public class PlayerHUDManager : MonoBehaviour
     {
         hudManuallyHidden = true;
         StopLastSecondsTicking();
-        CloseAllHintPanels();
         ApplyHudVisibility();
     }
 
@@ -237,34 +192,6 @@ public class PlayerHUDManager : MonoBehaviour
     {
         hudManuallyHidden = false;
         ApplyHudVisibility();
-        RefreshHintUI();
-    }
-
-    public void OnLargeHintClicked()
-    {
-        if (!CanUseHintInCurrentScene())
-        {
-            CloseAllHintPanels();
-            return;
-        }
-
-        if (GameSessionManager.Instance != null)
-        {
-            GameSessionManager.Instance.MarkSceneHintAsUsed(SceneManager.GetActiveScene().name);
-        }
-
-        CloseAllHintPanels();
-        RefreshHintUI();
-    }
-
-    private void OnSmallHintClicked()
-    {
-        if (!CanUseHintInCurrentScene())
-        {
-            return;
-        }
-
-        OpenHintForCurrentScene();
     }
 
     private void UpdateHudAvailability(Scene activeScene)
@@ -402,140 +329,5 @@ public class PlayerHUDManager : MonoBehaviour
     private float GetMaxStamina()
     {
         return playerStamina.MaxStamina;
-    }
-
-    private void RefreshHintUI()
-    {
-        if (smallHintButton == null)
-        {
-            return;
-        }
-
-        bool shouldShowSmallHint = hudAllowed
-            && !hudManuallyHidden
-            && CanUseHintInCurrentScene();
-
-        if (GameOverManager.Instance != null && GameOverManager.Instance.HasGameOverOccurred)
-        {
-            shouldShowSmallHint = false;
-        }
-
-        smallHintButton.gameObject.SetActive(shouldShowSmallHint);
-
-        if (!shouldShowSmallHint)
-        {
-            CloseAllHintPanels();
-        }
-    }
-
-    private bool CanUseHintInCurrentScene()
-    {
-        string currentSceneName = SceneManager.GetActiveScene().name;
-
-        if (!IsHintAllowedInScene(currentSceneName))
-        {
-            return false;
-        }
-
-        if (GameSessionManager.Instance == null)
-        {
-            return false;
-        }
-
-        return !GameSessionManager.Instance.HasSceneHintBeenUsed(currentSceneName);
-    }
-
-    private bool IsHintAllowedInScene(string sceneName)
-    {
-        if (string.IsNullOrWhiteSpace(sceneName))
-        {
-            return false;
-        }
-
-        if (allowedHintScenes == null || allowedHintScenes.Length == 0)
-        {
-            return false;
-        }
-
-        for (int i = 0; i < allowedHintScenes.Length; i++)
-        {
-            if (allowedHintScenes[i] == sceneName)
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    private void OpenHintForCurrentScene()
-    {
-        CloseAllHintPanels();
-
-        string currentSceneName = SceneManager.GetActiveScene().name;
-
-        switch (currentSceneName)
-        {
-            case "Buro":
-                OpenBuroHint();
-                break;
-
-            case "Flur":
-                OpenFlurHint();
-                break;
-        }
-    }
-
-    private void OpenBuroHint()
-    {
-        if (buroHintPanel == null)
-        {
-            return;
-        }
-
-        if (buroHintTextUI != null)
-        {
-            buroHintTextUI.text = buroHintText;
-        }
-
-        buroHintPanel.SetActive(true);
-    }
-
-    private void OpenFlurHint()
-    {
-        if (flurHintPanel == null)
-        {
-            return;
-        }
-
-        if (flurHintTextUI != null)
-        {
-            flurHintTextUI.text = flurHintText;
-        }
-
-        if (flurClosetImage != null)
-        {
-            flurClosetImage.gameObject.SetActive(true);
-        }
-
-        if (flurWaterDispenserImage != null)
-        {
-            flurWaterDispenserImage.gameObject.SetActive(true);
-        }
-
-        flurHintPanel.SetActive(true);
-    }
-
-    private void CloseAllHintPanels()
-    {
-        if (buroHintPanel != null)
-        {
-            buroHintPanel.SetActive(false);
-        }
-
-        if (flurHintPanel != null)
-        {
-            flurHintPanel.SetActive(false);
-        }
     }
 }

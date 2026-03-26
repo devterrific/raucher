@@ -70,6 +70,8 @@ public class MiniGameFlow : MonoBehaviour
     [SerializeField] private Sprite bannerFail;
     [SerializeField] private float bannerShowTime = 0.6f;
 
+    [SerializeField] private BackyardImageIntro backyardImageIntro;
+
     [Header("Audio")]
     [SerializeField] private AudioSource countdownAudioSource;
     [SerializeField] private AudioClip countdown321GoClip;
@@ -321,6 +323,11 @@ public class MiniGameFlow : MonoBehaviour
         {
             countdownPanel.alpha = 0f;
             countdownPanel.gameObject.SetActive(false);
+        }
+
+        if (backyardImageIntro != null)
+        {
+            backyardImageIntro.Play();
         }
 
         StartMiniGameLoopAudio();
@@ -1013,11 +1020,55 @@ public class MiniGameFlow : MonoBehaviour
     private void OnEnable()
     {
         GameOverManager.OnGameOverTriggered += HandleGlobalGameOver;
+        PauseMenuManager.OnPauseStateChanged += HandlePauseStateChanged;
     }
 
     private void OnDisable()
     {
         GameOverManager.OnGameOverTriggered -= HandleGlobalGameOver;
+        PauseMenuManager.OnPauseStateChanged -= HandlePauseStateChanged;
+    }
+
+    private void HandlePauseStateChanged(bool isPaused)
+    {
+        if (isPaused)
+        {
+            PauseMiniGameAudio();
+        }
+        else
+        {
+            ResumeMiniGameAudio();
+        }
+    }
+
+    private void PauseMiniGameAudio()
+    {
+        if (musicAudioSource != null && musicAudioSource.isPlaying)
+            musicAudioSource.Pause();
+
+        if (ambienceAudioSource != null && ambienceAudioSource.isPlaying)
+            ambienceAudioSource.Pause();
+
+        if (countdownAudioSource != null && countdownAudioSource.isPlaying)
+            countdownAudioSource.Pause();
+
+        if (uiSfxSource != null && uiSfxSource.isPlaying)
+            uiSfxSource.Pause();
+    }
+
+    private void ResumeMiniGameAudio()
+    {
+        if (musicAudioSource != null)
+            musicAudioSource.UnPause();
+
+        if (ambienceAudioSource != null)
+            ambienceAudioSource.UnPause();
+
+        if (countdownAudioSource != null)
+            countdownAudioSource.UnPause();
+
+        if (uiSfxSource != null)
+            uiSfxSource.UnPause();
     }
 
     private string GetStateHint(State state)

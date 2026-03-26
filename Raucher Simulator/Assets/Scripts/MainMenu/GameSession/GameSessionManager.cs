@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 public class GameSessionManager : MonoBehaviour
@@ -11,11 +10,13 @@ public class GameSessionManager : MonoBehaviour
     public int CurrentScore { get; private set; }
     public bool IsSessionActive => sessionActive;
 
+    // Pause Hint Zustand für die aktuelle Game Session
+    public bool IsSmallPauseHintVisible { get; private set; }
+    public bool IsLargePauseHintOpen { get; private set; }
+    public int CurrentPauseHintPageIndex { get; private set; }
+
     private bool sessionActive = false;
     private bool scoreSaved = false;
-
-    // Dient für das Merken, in welcher Szene die SpeechBubble schon geladen wurde
-    private readonly HashSet<string> usedHintScenes = new HashSet<string>();
 
     private void Awake()
     {
@@ -37,8 +38,7 @@ public class GameSessionManager : MonoBehaviour
         sessionActive = true;
         scoreSaved = false;
 
-        // Neue Game Session = Hinweise wieder freigeben
-        usedHintScenes.Clear();
+        ResetPauseHintState();
     }
 
     public void AddScore(int points)
@@ -69,24 +69,39 @@ public class GameSessionManager : MonoBehaviour
         ResetSessionData();
     }
 
-    public bool HasSceneHintBeenUsed(string sceneName)
+    public void OpenLargePauseHint(int pageIndex)
     {
-        if (string.IsNullOrWhiteSpace(sceneName))
-        {
-            return false;
-        }
-
-        return usedHintScenes.Contains(sceneName);
+        IsSmallPauseHintVisible = true;
+        IsLargePauseHintOpen = true;
+        CurrentPauseHintPageIndex = Mathf.Max(0, pageIndex);
     }
 
-    public void MarkSceneHintAsUsed(string sceneName)
+    public void CloseLargePauseHint()
     {
-        if (string.IsNullOrWhiteSpace(sceneName))
-        {
-            return;
-        }
+        IsSmallPauseHintVisible = true;
+        IsLargePauseHintOpen = false;
+    }
 
-        usedHintScenes.Add(sceneName);
+    public void SetCurrentPauseHintPage(int pageIndex)
+    {
+        CurrentPauseHintPageIndex = Mathf.Max(0, pageIndex);
+    }
+
+    public void HideSmallPauseHint()
+    {
+        IsSmallPauseHintVisible = false;
+    }
+
+    public void ShowSmallPauseHint()
+    {
+        IsSmallPauseHintVisible = true;
+    }
+
+    public void ResetPauseHintState()
+    {
+        IsSmallPauseHintVisible = true;
+        IsLargePauseHintOpen = false;
+        CurrentPauseHintPageIndex = 0;
     }
 
     private void SaveHighscore()
@@ -108,6 +123,8 @@ public class GameSessionManager : MonoBehaviour
     {
         PlayerName = string.Empty;
         CurrentScore = 0;
+
+        ResetPauseHintState();
 
         PlayerPrefs.DeleteKey(PlayerNameKey);
         PlayerPrefs.Save();

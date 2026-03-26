@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
@@ -25,6 +25,9 @@ public class MainMenuController : MonoBehaviour
     [SerializeField] private Sprite soundOnSprite;
     [SerializeField] private Sprite soundOffSprite;
     [SerializeField] private Slider sliderVolume;
+    
+    [Header("Mover")]
+    [SerializeField] private BackgroundMover backgroundMover;
 
     [Header("Audio")]
     [SerializeField] private MainMenuAudio mainMenuAudio;
@@ -63,6 +66,11 @@ public class MainMenuController : MonoBehaviour
 
         SetOnlyOnePanelActive(mainMenuPanel);
         HideNameError();
+
+        if (backgroundMover != null)
+        {
+            backgroundMover.MoveToMainMenu();
+        }
     }
 
     public void ShowNewGamePanel()
@@ -80,6 +88,11 @@ public class MainMenuController : MonoBehaviour
         {
             highscoreManager.ReloadAndRefresh();
         }
+
+        if (backgroundMover != null)
+        {
+            backgroundMover.MoveToHighscore();
+        }
     }
 
     public void ShowOptionsPanel()
@@ -93,6 +106,11 @@ public class MainMenuController : MonoBehaviour
     {
         SetOnlyOnePanelActive(creditsPanel);
         HideNameError();
+
+        if (backgroundMover != null)
+        {
+            backgroundMover.MoveToCredits();
+        }
     }
 
     public void StartNewGame()

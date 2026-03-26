@@ -25,6 +25,13 @@ public class CreditsController : MonoBehaviour
         ResetScrollPosition();
     }
 
+    private void OnEnable()
+    {
+        ApplyCredits();
+        Canvas.ForceUpdateCanvases();
+        ResetScrollPosition();
+    }
+
     private void Update()
     {
         ScrollCredits();

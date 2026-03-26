@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class SpeechBubbleIdleAnimation : MonoBehaviour
+public class SpeechBubbleAnimation : MonoBehaviour
 {
     [Header("Move")]
     [SerializeField] private float moveAmplitude = 8f;
@@ -37,17 +37,6 @@ public class SpeechBubbleIdleAnimation : MonoBehaviour
 
     private void Update()
     {
-        if (PauseMenuManager.Instance != null && PauseMenuManager.Instance.IsPaused)
-        {
-            if (rectTransform != null)
-            {
-                rectTransform.anchoredPosition = startAnchoredPosition;
-            }
-
-            transform.localScale = startScale;
-            return;
-        }
-
         float time = Time.unscaledTime;
 
         float yOffset = Mathf.Sin(time * moveSpeed) * moveAmplitude;
