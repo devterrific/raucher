@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -29,23 +28,14 @@ public class StringManger : MonoBehaviour
     [SerializeField] private string _successSceneName;
     [SerializeField] private string _failSceneName;
 
-    [Header("Player Freeze")]
-    [SerializeField] private string _playerTag = "Player";
-    [SerializeField] private List<Behaviour> _componentsToDisable = new List<Behaviour>();
-
     private int counterIndex;
     private int worldCounter = 0;
     private SpawnManager _spawnManager;
 
     private int currentStageIndex = -1;
     private float remainingTime = 0f;
-    private int totalPoints = 0;
     private bool stageRunning = false;
     private bool gameEnded = false;
-
-    private GameObject _mainPlayer;
-    private Rigidbody2D _playerRb;
-    private RigidbodyConstraints2D _originalConstraints;
 
     private void Reset()
     {
@@ -64,37 +54,38 @@ public class StringManger : MonoBehaviour
     private void Awake()
     {
         GameObject spawnManagerObject = GameObject.FindGameObjectWithTag("SpawnManager");
+
         if (spawnManagerObject != null)
+        {
             _spawnManager = spawnManagerObject.GetComponent<SpawnManager>();
+        }
     }
 
-    private IEnumerator Start()
+    private void Start()
     {
         if (_worldList == null || _worldList.Count == 0)
         {
             Debug.LogWarning("StringManger: _worldList is empty.");
-            yield break;
+            return;
         }
 
         if (_stages == null || _stages.Count == 0)
         {
             Debug.LogWarning("StringManger: _stages is empty.");
-            yield break;
+            return;
         }
 
         if (_textHolder == null)
         {
             Debug.LogWarning("StringManger: _textHolder is missing.");
-            yield break;
+            return;
         }
 
         if (_inputField == null)
         {
             Debug.LogWarning("StringManger: _inputField is missing.");
-            yield break;
+            return;
         }
-
-        yield return StartCoroutine(FindAndFreezePlayer());
 
         int randomStage = UnityEngine.Random.Range(0, _stages.Count);
         StartStage(randomStage);
@@ -103,7 +94,9 @@ public class StringManger : MonoBehaviour
     private void Update()
     {
         if (!stageRunning || gameEnded)
+        {
             return;
+        }
 
         remainingTime -= Time.deltaTime;
 
@@ -117,58 +110,6 @@ public class StringManger : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
         {
             CheckEvent();
-        }
-    }
-
-    private void OnDisable()
-    {
-        UnfreezePlayer();
-    }
-
-    private IEnumerator FindAndFreezePlayer()
-    {
-        float timeout = 3f;
-        float timer = 0f;
-
-        while (_mainPlayer == null && timer < timeout)
-        {
-            _mainPlayer = GameObject.FindGameObjectWithTag(_playerTag);
-
-            if (_mainPlayer != null)
-                break;
-
-            timer += Time.deltaTime;
-            yield return null;
-        }
-
-        if (_mainPlayer == null)
-        {
-            Debug.LogWarning($"StringManger: No player found with tag '{_playerTag}'.");
-            yield break;
-        }
-
-        _playerRb = _mainPlayer.GetComponent<Rigidbody2D>();
-
-        if (_playerRb == null)
-            _playerRb = _mainPlayer.GetComponentInChildren<Rigidbody2D>();
-
-        if (_playerRb != null)
-        {
-            _originalConstraints = _playerRb.constraints;
-            _playerRb.velocity = Vector2.zero;
-            _playerRb.angularVelocity = 0f;
-            _playerRb.constraints = RigidbodyConstraints2D.FreezeAll;
-            Debug.Log("StringManger: Player Rigidbody2D frozen.");
-        }
-        else
-        {
-            Debug.LogWarning("StringManger: No Rigidbody2D found on Player or its children.");
-        }
-
-        for (int i = 0; i < _componentsToDisable.Count; i++)
-        {
-            if (_componentsToDisable[i] != null)
-                _componentsToDisable[i].enabled = false;
         }
     }
 
@@ -196,10 +137,14 @@ public class StringManger : MonoBehaviour
     public void CheckEvent()
     {
         if (!stageRunning || gameEnded)
+        {
             return;
+        }
 
         if (_inputField == null || _worldList == null || _worldList.Count == 0)
+        {
             return;
+        }
 
         string inputText = _inputField.text.Trim();
         string targetWord = _worldList[counterIndex];
@@ -216,24 +161,32 @@ public class StringManger : MonoBehaviour
             }
 
             GetNextIndex();
-            _inputField.ActivateInputField();
-            _inputField.Select();
         }
-        else
-        {
-            _inputField.ActivateInputField();
-            _inputField.Select();
-        }
+
+        _inputField.ActivateInputField();
+        _inputField.Select();
     }
 
     private void CompleteStage()
     {
         if (gameEnded)
+        {
             return;
+        }
 
         gameEnded = true;
         stageRunning = false;
-        totalPoints += _stages[currentStageIndex].rewardPoints;
+
+        int earnedPoints = _stages[currentStageIndex].rewardPoints;
+
+        if (GameSessionManager.Instance != null && GameSessionManager.Instance.IsSessionActive)
+        {
+            GameSessionManager.Instance.AddScore(earnedPoints);
+        }
+        else
+        {
+            Debug.LogWarning("StringManger: No active GameSessionManager session found. Points were not added.");
+        }
 
         if (string.IsNullOrWhiteSpace(_successSceneName))
         {
@@ -247,10 +200,18 @@ public class StringManger : MonoBehaviour
     private void FailMinigame()
     {
         if (gameEnded)
+        {
             return;
+        }
 
         gameEnded = true;
         stageRunning = false;
+
+        if (_spawnManager != null)
+        {
+            _spawnManager.LoadSceneWithDelay(1, 0.5f);
+            return;
+        }
 
         if (string.IsNullOrWhiteSpace(_failSceneName))
         {
@@ -261,22 +222,12 @@ public class StringManger : MonoBehaviour
         SceneManager.LoadScene(_failSceneName);
     }
 
-    private void UnfreezePlayer()
-    {
-        if (_playerRb != null)
-            _playerRb.constraints = _originalConstraints;
-
-        for (int i = 0; i < _componentsToDisable.Count; i++)
-        {
-            if (_componentsToDisable[i] != null)
-                _componentsToDisable[i].enabled = true;
-        }
-    }
-
     private void GetNextIndex()
     {
         if (_worldList == null || _worldList.Count == 0)
+        {
             return;
+        }
 
         counterIndex = IndexGetter();
         _textHolder.text = _worldList[counterIndex];
@@ -287,25 +238,48 @@ public class StringManger : MonoBehaviour
         return UnityEngine.Random.Range(0, _worldList.Count);
     }
 
-    public float GetRemainingTime() => remainingTime;
-    public int GetCurrentStageIndex() => currentStageIndex;
-    public int GetWorldCounter() => worldCounter;
+    public float GetRemainingTime()
+    {
+        return remainingTime;
+    }
+
+    public int GetCurrentStageIndex()
+    {
+        return currentStageIndex;
+    }
+
+    public int GetWorldCounter()
+    {
+        return worldCounter;
+    }
 
     public int GetTargetWords()
     {
         if (currentStageIndex < 0 || currentStageIndex >= _stages.Count)
+        {
             return 0;
+        }
 
         return _stages[currentStageIndex].wordsToType;
     }
 
-    public int GetTotalPoints() => totalPoints;
-
     public int GetCurrentStageRewardPoints()
     {
         if (currentStageIndex < 0 || currentStageIndex >= _stages.Count)
+        {
             return 0;
+        }
 
         return _stages[currentStageIndex].rewardPoints;
+    }
+
+    public int GetCurrentSessionScore()
+    {
+        if (GameSessionManager.Instance == null)
+        {
+            return 0;
+        }
+
+        return GameSessionManager.Instance.CurrentScore;
     }
 }
