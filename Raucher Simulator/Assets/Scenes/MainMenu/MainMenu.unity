@@ -837,7 +837,7 @@ MonoBehaviour:
   m_fontColor32:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -854,8 +854,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 15
-  m_fontSizeBase: 15
+  m_fontSize: 14
+  m_fontSizeBase: 14
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -865,7 +865,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
-  m_wordSpacing: 0
+  m_wordSpacing: 15
   m_lineSpacing: 0
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
@@ -1850,7 +1850,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &423393148
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2244,7 +2244,7 @@ MonoBehaviour:
   m_fontColor32:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -2261,18 +2261,18 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 15
-  m_fontSizeBase: 15
+  m_fontSize: 14
+  m_fontSizeBase: 14
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 1
-  m_VerticalAlignment: 256
+  m_HorizontalAlignment: 2
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
-  m_wordSpacing: 0
+  m_wordSpacing: 15
   m_lineSpacing: 0
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
@@ -2543,6 +2543,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hudRoot: {fileID: 1186144451}
   mainMenuSceneName: MainMenu
+  smokingMiniGameSceneName: SmokingMiniGame
+  bossRoomSceneName: BossRoom
   timerText: {fileID: 83915158}
   playerNameText: {fileID: 1933149747}
   staminaImage: {fileID: 373641887}
@@ -5048,8 +5050,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 50, y: -200}
-  m_SizeDelta: {x: 40, y: 50}
+  m_AnchoredPosition: {x: 60, y: -150}
+  m_SizeDelta: {x: 40, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1047642060
 GameObject:
@@ -7266,7 +7268,7 @@ MonoBehaviour:
   m_fontColor32:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -7283,8 +7285,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 15
-  m_fontSizeBase: 15
+  m_fontSize: 14
+  m_fontSizeBase: 14
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -7294,7 +7296,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
-  m_wordSpacing: 0
+  m_wordSpacing: 15
   m_lineSpacing: 0
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
@@ -7492,8 +7494,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -50, y: -200}
-  m_SizeDelta: {x: 40, y: 50}
+  m_AnchoredPosition: {x: -60, y: -150}
+  m_SizeDelta: {x: 80, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1356548347
 CanvasRenderer:
@@ -8523,13 +8525,27 @@ MonoBehaviour:
   bossRoomHintTextUI: {fileID: 1568732767}
   flurClosetImage: {fileID: 1356548348}
   flurWaterDispenserImage: {fileID: 1000641481}
-  buroHintText: "The boss's office is to the left, and the hallway is to the right\u2014where
-    are you going?\n\nInteract: press E"
-  flurHintText: Hide behind objects so you can sneak past the Switch.
-  smokingMiniGameHintText: In the smoking mini game, keep calm and complete the task
+  buroHintText: "The boss\u2019s office is the door on the left side of the room,
+    if you want to ask whether you\u2019re allowed to smoke.\r\n\r\nIf the boss freaks
+    you out too much, you can always try sneaking past the secretary in the hallway
+    instead.\r\n\r\nThe hallway is through the door on the right.\r\n\r\nPress \"E\"
+    to interact with objects \u2014 doors, cabinets, the water dispenser, and anything
+    else that might help you along the way.\r\n\r\nThe more cigarettes you roll,
+    the more points you earn \u2014 but keep an eye on the timer in the top left."
+  flurHintText: "You can hide next to the cabinets or by the water dispenser to slip
+    past the secretary \u2014 but stay sharp.\r\n\r\nHiding on both sides won\u2019t
+    always make sense, so sometimes one side will be blocked off.\r\n\r\nIf you head
+    left from the hallway, you\u2019ll end up back in the office.\r\n\r\nIf you make
+    it out to the right, you can finally roll yourself a cigarette."
+  smokingMiniGameHintText: In the Smoking mini game, keep calm and complete the task
     carefully.
-  bossRoomHintText: The boss room is dangerous. Watch the situation first and act
-    at the right moment.
+  bossRoomHintText: "The boss\u2019s office is a dangerous place\u2026 more dangerous
+    than it looks.\r\n\r\nEvery single step you take in there could decide your fate.\r\n\r\nBut
+    if, by some miracle, the boss allows you to go for a smoke, you won\u2019t have
+    to sneak out anymore.\r\n\r\nHe will most likely test you\u2026 asking you to
+    spell the words you were given.\r\n\r\nThose words were your task.\r\n\r\nIf
+    you manage to spell them correctly, he might let you leave.\r\n\r\nIf not\u2026
+    well.\r\n\r\nGood luck.\r\n\r\nYou\u2019re going to need it\u2026"
 --- !u!1 &1547532797
 GameObject:
   m_ObjectHideFlags: 0
@@ -8815,7 +8831,7 @@ MonoBehaviour:
   m_fontColor32:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -8832,8 +8848,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 15
-  m_fontSizeBase: 15
+  m_fontSize: 14
+  m_fontSizeBase: 14
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -8843,7 +8859,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
-  m_wordSpacing: 0
+  m_wordSpacing: 15
   m_lineSpacing: 0
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0

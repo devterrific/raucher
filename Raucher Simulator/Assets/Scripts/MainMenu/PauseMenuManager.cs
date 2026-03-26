@@ -283,18 +283,6 @@ public class PauseMenuManager : MonoBehaviour
             pauseMenuPanel.SetActive(IsPaused);
         }
 
-        if (PlayerHUDManager.Instance != null)
-        {
-            if (IsPaused)
-            {
-                PlayerHUDManager.Instance.HideHud();
-            }
-            else
-            {
-                PlayerHUDManager.Instance.ShowHud();
-            }
-        }
-
         RefreshHintUI();
         OnPauseStateChanged?.Invoke(IsPaused);
     }

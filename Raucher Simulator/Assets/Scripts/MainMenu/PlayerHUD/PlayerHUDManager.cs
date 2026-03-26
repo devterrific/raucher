@@ -10,6 +10,8 @@ public class PlayerHUDManager : MonoBehaviour
     [Header("HUD")]
     [SerializeField] private GameObject hudRoot;
     [SerializeField] private string mainMenuSceneName = "MainMenu";
+    [SerializeField] private string smokingMiniGameSceneName = "SmokingMiniGame";
+    [SerializeField] private string bossRoomSceneName = "BossRoom";
 
     [Header("UI")]
     [SerializeField] private TMP_Text timerText;
@@ -208,7 +210,12 @@ public class PlayerHUDManager : MonoBehaviour
 
     private void UpdateHudAvailability(Scene activeScene)
     {
-        hudAllowed = activeScene.name != mainMenuSceneName;
+        bool isHudBlockedScene =
+            activeScene.name == mainMenuSceneName ||
+            activeScene.name == smokingMiniGameSceneName ||
+            activeScene.name == bossRoomSceneName;
+
+        hudAllowed = !isHudBlockedScene;
         ApplyHudVisibility();
     }
 
