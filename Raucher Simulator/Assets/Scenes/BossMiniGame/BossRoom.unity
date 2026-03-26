@@ -165,26 +165,53 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _worldList:
-  - Smoke
-  - Ash
-  - Ember
-  - Fumes
-  - Cigarette
-  - Tobacco
-  - Filter
-  - Pipe
-  - Cigar
-  - Nicotine
-  - Lung
-  - Lighter
-  - Smoker
-  - Withdrawal
-  - Dependence
-  - Long-term
+  - smoke
+  - ash
+  - ember
+  - fumes
+  - cig
+  - tobacco
+  - filter
+  - pipe
+  - cigar
+  - nicotine
+  - lung
+  - lighter
+  - smoker
+  - to inhale
+  - secondhand smoke
+  - dependence
+  - addictive substance
+  - combustion
+  - pollutant
+  - tar substances
+  - lung cancer
+  - cigarette butt
+  - smoking cessation
+  - pollution exposure
+  - nicotine addiction
+  - health risk
+  - respiratory disease
+  - pollution exposure
+  - addictive behavior
+  - long-term damage
   _textHolder: {fileID: 2049786722}
   _inputField: {fileID: 1676988774}
-  _maxWorlds: 5
-  _canvesHolder: {fileID: 1403252929}
+  _stages:
+  - wordsToType: 1
+    timeLimit: 8
+    rewardPoints: 10
+  - wordsToType: 2
+    timeLimit: 14
+    rewardPoints: 20
+  - wordsToType: 3
+    timeLimit: 20
+    rewardPoints: 30
+  - wordsToType: 4
+    timeLimit: 30
+    rewardPoints: 40
+  _successSceneName: SmokingMiniGame
+  _failSceneName: Buro
 --- !u!1 &103619209
 GameObject:
   m_ObjectHideFlags: 0
