@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
+using UnityEngine.UI;
 
 public class StringManger : MonoBehaviour
 {
@@ -24,6 +25,17 @@ public class StringManger : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _timerText;
     [SerializeField] private TextMeshProUGUI _progressText;
 
+    [Header("Countdown Panel")]
+    [SerializeField] private GameObject _countdownPanel;
+    [SerializeField] private Image _stagePreviewImage;
+    [SerializeField] private float _countdownDuration = 2f;
+
+    [Header("Stage Preview Sprites")]
+    [SerializeField] private Sprite _stage1Sprite;
+    [SerializeField] private Sprite _stage2Sprite;
+    [SerializeField] private Sprite _stage3Sprite;
+    [SerializeField] private Sprite _stage4Sprite;
+
     [Header("Stages")]
     [SerializeField] private List<StageData> _stages = new();
 
@@ -34,6 +46,9 @@ public class StringManger : MonoBehaviour
     [Header("Player Freeze")]
     [SerializeField] private string _playerTag = "Player";
     [SerializeField] private List<Behaviour> _componentsToDisable = new();
+
+    [Header("MiniGame Canvas")]
+    [SerializeField] private GameObject _miniGameCanvas;
 
     private SpawnManager _spawnManager;
     private GameObject _player;
@@ -77,13 +92,33 @@ public class StringManger : MonoBehaviour
         if (_worldList.Count == 0 || _stages.Count == 0 || _textHolder == null || _inputField == null)
             yield break;
 
+        // Gameplay UI AUS
+        if (_miniGameCanvas != null)
+            _miniGameCanvas.SetActive(false);
+
+        // Countdown Panel AUS (sicherheitshalber)
+        if (_countdownPanel != null)
+            _countdownPanel.SetActive(false);
+
         yield return FindPlayer();
         FreezePlayer();
 
         int randomStageIndex = UnityEngine.Random.Range(0, _stages.Count);
 
-        yield return new WaitForSeconds(2f);
+        // Countdown anzeigen
+        ShowStagePreview(randomStageIndex);
 
+        yield return new WaitForSeconds(_countdownDuration);
+
+        // Countdown aus
+        if (_countdownPanel != null)
+            _countdownPanel.SetActive(false);
+
+        // Gameplay UI AN
+        if (_miniGameCanvas != null)
+            _miniGameCanvas.SetActive(true);
+
+        // Jetzt erst echtes Spiel starten
         StartStage(randomStageIndex);
     }
 
@@ -138,6 +173,27 @@ public class StringManger : MonoBehaviour
 
         if (_rb != null)
             _oldConstraints = _rb.constraints;
+    }
+
+    private void ShowStagePreview(int stageIndex)
+    {
+        if (_countdownPanel != null)
+            _countdownPanel.SetActive(true);
+
+        if (_stagePreviewImage != null)
+            _stagePreviewImage.sprite = GetStagePreviewSprite(stageIndex);
+    }
+
+    private Sprite GetStagePreviewSprite(int stageIndex)
+    {
+        switch (stageIndex)
+        {
+            case 0: return _stage1Sprite;
+            case 1: return _stage2Sprite;
+            case 2: return _stage3Sprite;
+            case 3: return _stage4Sprite;
+            default: return null;
+        }
     }
 
     private void StartStage(int stageIndex)
