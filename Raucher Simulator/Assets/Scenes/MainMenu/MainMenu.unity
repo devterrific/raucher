@@ -2560,7 +2560,7 @@ MonoBehaviour:
   - {fileID: -4719701569255027762, guid: a39c1df80cd5cac43903720770f0ffc8, type: 3}
   - {fileID: 7751591749446328904, guid: ad69ace5d3d22414c907246c089b1ac2, type: 3}
   - {fileID: 1316734391144057893, guid: 13a63cc785161114096dd8a5afc4f846, type: 3}
-  roundDurationSeconds: 150
+  roundDurationSeconds: 100
   lastSecondsTickAudioSource: {fileID: 83915160}
   tickStartSeconds: 10
   hudFader: {fileID: 1223447524}
@@ -6622,7 +6622,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1223447519}
-  m_LocalRotation: {x: 0, y: 0, z: -0.13052624, w: 0.9914449}
+  m_LocalRotation: {x: 0, y: 0, z: -0.078459024, w: 0.99691737}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -6631,7 +6631,7 @@ RectTransform:
   - {fileID: 1933149746}
   - {fileID: 373641886}
   m_Father: {fileID: 1186144452}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -15}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -9}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -754, y: 442}
@@ -6731,8 +6731,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2e7775211e8bae42a2b78bc731f3945, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  visiblePosition: {x: -754, y: 442}
-  hiddenPosition: {x: -971, y: 442}
+  visiblePosition: {x: -700, y: 442}
+  hiddenPosition: {x: -930, y: 442}
   startOutsidePosition: {x: -1300, y: 442}
   slideDuration: 1
   fadeDuration: 0.6
@@ -9015,7 +9015,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetRectTransform: {fileID: 1627331447}
-  mainMenuY: 910
+  mainMenuY: 880
   highscoreY: 100
   creditsY: 100
   moveSpeed: 3

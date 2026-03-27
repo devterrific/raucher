@@ -73,7 +73,7 @@ public class PlayerHUDManager : MonoBehaviour
 
     private void Update()
     {
-        if (!hudAllowed || !IsRoundRunning)
+        if (!IsRoundRunning)
         {
             StopLastSecondsTicking();
             RefreshStaminaDisplay();
@@ -131,7 +131,8 @@ public class PlayerHUDManager : MonoBehaviour
 
         if (!hudAllowed)
         {
-            ResetHudDisplay();
+            StopLastSecondsTicking();
+            ApplyHudVisibility();
 
             if (hudFader != null)
             {
