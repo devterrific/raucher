@@ -128,7 +128,8 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      "Boss_R\xFCckseite_0": 6012483346178458703
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
