@@ -207,17 +207,17 @@ MonoBehaviour:
   _stage3Sprite: {fileID: 0}
   _stage4Sprite: {fileID: 0}
   _stages:
-  - wordsToType: 1
-    timeLimit: 8
-    rewardPoints: 10
-  - wordsToType: 2
+  - wordsToType: 10
     timeLimit: 14
+    rewardPoints: 10
+  - wordsToType: 15
+    timeLimit: 19
     rewardPoints: 20
-  - wordsToType: 3
-    timeLimit: 20
+  - wordsToType: 20
+    timeLimit: 24
     rewardPoints: 30
-  - wordsToType: 4
-    timeLimit: 30
+  - wordsToType: 30
+    timeLimit: 34
     rewardPoints: 40
   _successSceneName: SmokingMiniGame
   _failSceneName: Buro
