@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -21,6 +21,8 @@ public class StringManger : MonoBehaviour
     [Header("UI")]
     [SerializeField] private TextMeshProUGUI _textHolder;
     [SerializeField] private TMP_InputField _inputField;
+    [SerializeField] private TextMeshProUGUI _timerText;
+    [SerializeField] private TextMeshProUGUI _progressText;
 
     [Header("Stages")]
     [SerializeField] private List<StageData> _stages = new();
@@ -32,9 +34,6 @@ public class StringManger : MonoBehaviour
     [Header("Player Freeze")]
     [SerializeField] private string _playerTag = "Player";
     [SerializeField] private List<Behaviour> _componentsToDisable = new();
-
-    [Header("Stage Intro")]
-    [SerializeField] private StagePanelController _stagePanelController;
 
     private SpawnManager _spawnManager;
     private GameObject _player;
@@ -83,10 +82,7 @@ public class StringManger : MonoBehaviour
 
         int randomStageIndex = UnityEngine.Random.Range(0, _stages.Count);
 
-        if (_stagePanelController != null)
-            yield return _stagePanelController.ShowStagePanel(randomStageIndex);
-        else
-            yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(2f);
 
         StartStage(randomStageIndex);
     }
@@ -100,9 +96,12 @@ public class StringManger : MonoBehaviour
         if (_remainingTime <= 0f)
         {
             _remainingTime = 0f;
+            UpdateUI();
             FailMinigame();
             return;
         }
+
+        UpdateUI();
 
         if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
             CheckEvent();
@@ -154,6 +153,7 @@ public class StringManger : MonoBehaviour
         _inputField.Select();
 
         GetNextWord();
+        UpdateUI();
     }
 
     public void CheckEvent()
@@ -170,6 +170,7 @@ public class StringManger : MonoBehaviour
 
         _inputField.text = "";
         _wordCounter++;
+        UpdateUI();
 
         if (_wordCounter >= _stages[_currentStageIndex].wordsToType)
         {
@@ -188,6 +189,7 @@ public class StringManger : MonoBehaviour
 
         _gameEnded = true;
         _stageRunning = false;
+        UpdateUI();
 
         if (GameSessionManager.Instance != null && GameSessionManager.Instance.IsSessionActive)
             GameSessionManager.Instance.AddScore(_stages[_currentStageIndex].rewardPoints);
@@ -204,6 +206,7 @@ public class StringManger : MonoBehaviour
 
         _gameEnded = true;
         _stageRunning = false;
+        UpdateUI();
         UnfreezePlayer();
 
         if (_spawnManager != null)
@@ -274,6 +277,18 @@ public class StringManger : MonoBehaviour
     {
         _currentWordIndex = UnityEngine.Random.Range(0, _worldList.Count);
         _textHolder.text = _worldList[_currentWordIndex];
+    }
+
+    private void UpdateUI()
+    {
+        if (_timerText != null)
+            _timerText.text = $"{Mathf.CeilToInt(_remainingTime)}";
+
+        if (_progressText != null)
+        {
+            int targetWords = _currentStageIndex >= 0 ? _stages[_currentStageIndex].wordsToType : 0;
+            _progressText.text = $"{_wordCounter} / {targetWords}";
+        }
     }
 
     public float GetRemainingTime() => _remainingTime;
